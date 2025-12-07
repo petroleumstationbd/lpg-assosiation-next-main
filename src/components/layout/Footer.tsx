@@ -29,7 +29,7 @@ const paymentIcons = [
   '/icons/nagad.svg',
 ];
 
-export function Footer() {
+export default function Footer() {
   return (
     <footer className="mt-20 bg-gradient-to-r from-[#00468D] via-[#007D6E] to-[#00A651] text-white  py-22">
       <div className="page-shell lpg-container ">

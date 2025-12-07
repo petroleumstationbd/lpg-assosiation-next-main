@@ -15,16 +15,16 @@ const MAIN_NAV = [
    {label: 'NOTICES', href: '/notices'},
 ];
 
-export function Header() {
+export default function Header() {
    const pathname = usePathname();
    const [open, setOpen] = useState(false);
 
    const isActive = (href: string) => pathname.startsWith(href);
 
    return (
-      <header className='relative z-20 mt-16 flex justify-center'>
+      <header className='relative z-20 flex justify-center py-10 pt-[80px]'>
          {/* White pill bar */}
-         <div className='relative flex w-full lpg-container items-center justify-between rounded-full shadow-[0_12px_40px_rgba(0,0,0,0.25)] backdrop-blur h-[85px]'>
+         <div className='relative flex w-full lpg-container bg-[#fff] items-center justify-between rounded-full shadow-[0_12px_40px_rgba(0,0,0,0.25)] backdrop-blur h-[85px]'>
             {/* Logo bubble */}
             <div className='pointer-events-none bg-[#EEF0FB] h-full w-[225px] rounded-l-full absolute left-0 flex justify-center items-center'>
                <div className='flex items-center h-full justify-center rounded-full   absolute  left-10 '>
@@ -50,28 +50,26 @@ export function Header() {
                   ))}
                </nav>
 
-{/* Auth buttons */}
-{/* Auth buttons (Figma pill) */}
-<div className="hidden items-center lg:flex">
-  {/* light inner pill */}
-  <div className="flex h-[52px] items-center rounded-full border border-[#d0cece75] bg-linear-to-br from-[#d0d0d0] to-[#fff] px-1.5 shadow-[0_6px_18px_rgba(0,0,0,0.08)] p-2">
-    {/* LOGIN */}
-    <Link
-      href="/"
-      className="flex h-8 items-center justify-center px-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#1C2537]"
-    >
-      Login
-    </Link>
+               {/* Auth buttons */}
+               {/* Auth buttons (Figma pill) */}
+               <div className='hidden items-center lg:flex'>
+                  {/* light inner pill */}
+                  <div className='flex h-[52px] items-center rounded-full border border-[#d0cece75] bg-linear-to-br from-[#d0d0d0] to-[#fff] px-1.5 shadow-[0_6px_18px_rgba(0,0,0,0.08)] p-2'>
+                     {/* LOGIN */}
+                     <Link
+                        href='/'
+                        className='flex h-8 items-center justify-center px-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#1C2537]'>
+                        Login
+                     </Link>
 
-    {/* REGISTER */}
-    <Link
-      href="/"
-      className="flex h-[42px] items-center justify-center rounded-full bg-[#009970] px-5 text-[13px] font-semibold uppercase tracking-[0.18em] text-white shadow-[0_6px_18px_rgba(0,166,81,0.15)]"
-    >
-      Register
-    </Link>
-  </div>
-</div>
+                     {/* REGISTER */}
+                     <Link
+                        href='/'
+                        className='flex h-[42px] items-center justify-center rounded-full bg-[#009970] px-5 text-[13px] font-semibold uppercase tracking-[0.18em] text-white shadow-[0_6px_18px_rgba(0,166,81,0.15)]'>
+                        Register
+                     </Link>
+                  </div>
+               </div>
 
                {/* Mobile hamburger */}
                <button
