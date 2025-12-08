@@ -32,6 +32,7 @@ const sponsors: Sponsor[] = [
    {name: 'Beximco LPG', logo: sponserImg1},
    {name: 'Petromax LPG', logo: sponserImg1},
    {name: 'Universal Gas', logo: sponserImg1},
+   {name: 'Universal Gas1', logo: sponserImg1},
 ];
 
 const leaders: Leader[] = [
@@ -68,10 +69,16 @@ compliance while expanding autogas services across Bangladesh.`,
 ];
 
 export default function SponsorsSection() {
+   const sponsorRows: Sponsor[][] = [
+      sponsors.slice(0,2), // top row
+      sponsors.slice(3, 6), // middle row (4 items)
+      sponsors.slice(6, 11), // bottom row (3 items)  -> adjust if you add more logos
+   ];
+
    return (
       <section className='relative bg-[#F4F9F4] pb-20 pt-12'>
          {/* top green line */}
-         <div className='pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-[#6ACF4F] via-[#C7F0D1] to-[#6ACF4F]' />
+         <div className='pointer-events-none absolute inset-x-0 top-0 h-4 bg-gradient-to-r from-[#6ACF4F] via-[#C7F0D1] to-[#6ACF4F]' />
 
          <div className='relative flex flex-col gap-24'>
             {/* sponsors title + grid */}
@@ -91,32 +98,41 @@ export default function SponsorsSection() {
                </div>
 
                <div className='lpg-container'>
-                  <h2 className='text-primary text-[20px] font-semibold tracking-[0.22em]'>
+                  <h2 className=' text-[45px] font-semibold tracking-[0.22em]'>
                      SPONSORS
                   </h2>
-                  <p className='mt-2 max-w-2xl text-[12px] leading-relaxed text-[#7B8EA5]'>
+                  <p className='mt-2 max-w-2xl text-[12px] leading-relaxed '>
                      Lorem ipsum dolor sit amet consectetur. Ultrices volutpat
                      sollicitudin quis at in. In urna fermentum nunc sapien
                      tortor.
                   </p>
-
-                  {/* fixed-width centered grid: 4 x 3 like Figma */}
-                  <div className='mt-7 flex justify-center'>
-                     <div className='grid max-w-[540px] grid-cols-2 gap-x-6 gap-y-5 sm:grid-cols-3 lg:grid-cols-4'>
-                        {sponsors.map(sponsor => (
-                           <div
-                              key={sponsor.name}
-                              className='flex h-11 min-w-[120px] items-center justify-center rounded-[14px] bg-white px-6 text-[12px] font-semibold text-[#243552] shadow-[0_16px_32px_rgba(0,0,0,0.10)]'>
-                              <Image
-                                 src={sponsor.logo}
-                                 alt={sponsor.name}
-                                 width={80}
-                                 height={26}
-                                 className='object-contain'
-                              />
-                           </div>
-                        ))}
-                     </div>
+                  {/* sponsor cards, pyramid layout */}
+                  <div className='mt-7 flex flex-col items-center gap-3'>
+                     {sponsorRows.map((row, rowIndex) => (
+                        <div
+                           key={rowIndex}
+                           className={[
+                              'flex justify-center gap-4',
+                              rowIndex === 1 ? 'mt-1' : '',
+                              rowIndex === 2 ? 'mt-1' : '',
+                           ]
+                              .filter(Boolean)
+                              .join(' ')}>
+                           {row.map(sponsor => (
+                              <div
+                                 key={sponsor.name}
+                                 className='flex h-[50px] min-w-[130px] items-center justify-center rounded-[12px] bg-white px-6 shadow-[0_18px_32px_rgba(0,0,0,0.12)]'>
+                                 <Image
+                                    src={sponsor.logo}
+                                    alt={sponsor.name}
+                                    width={100}
+                                    height={32}
+                                    className='object-contain'
+                                 />
+                              </div>
+                           ))}
+                        </div>
+                     ))}
                   </div>
                </div>
             </div>
