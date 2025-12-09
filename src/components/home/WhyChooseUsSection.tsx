@@ -9,6 +9,7 @@ import pillimg1 from './img/Mask group (15).png';
 import pillimg2 from './img/Mask group (16).png';
 import pillimg3 from './img/Mask group (17).png';
 import minigridbg from './img/Group 68.png';
+import maskgridbg from './img/Mask group (19).png';
 
 type PillId = 'mission' | 'vision' | 'activities';
 type ContentId = 'who' | PillId;
@@ -278,17 +279,16 @@ export default function WhyChooseUsSection() {
                      className='object-cover'
                   />
 
-                  <div className='absolute inset-x-0 bottom-0 flex justify-between gap-6  pb-6 pt-5 w-full bg-[#22875ad0] px-4'>
-                     <div className='opacity-90 z-1'>
+                  <div className='absolute inset-x-0 bottom-0 flex justify-between gap-6  pb-6 pt-5 w-full bg-[#228759da] px-4'>
+                     <div className='opacity-100 z-1'>
                         <Image
                            fill
-                           src={minigridbg}
+                           src={maskgridbg}
                            alt={'background'}
                            className='object-cover'
                         />
                      </div>
                      <div className='w-full text-white'>
-                        <div className='mb-2   flex w-full rounded-none'></div>
                         <div className='flex items-center gap-2'>
                            <div className='flex h-7 w-7 items-center justify-center rounded-full border border-white/60 bg-white/10 text-[13px] font-semibold'>
                               {activeContent.badge}
@@ -325,7 +325,7 @@ export default function WhyChooseUsSection() {
                         onMouseLeave={() => setHoveredId(null)}
                         className='
                   relative flex h-full w-[145px] cursor-pointer items-center justify-center
-                  overflow-hidden rounded-[26px]
+                  overflow-hidden rounded-[15px]
                   bg-gradient-to-b from-[#00b06d30] via-[#00A261] to-[#00894e32]
                   shadow-[0_22px_36px_rgba(0,0,0,0.22)]
                 '>
@@ -349,12 +349,13 @@ export default function WhyChooseUsSection() {
                         <div className='pointer-events-none absolute inset-[1px] rounded-[24px] bg-[linear-gradient(180deg,#16C17C33_0%,transparent_40%,#00693F66_100%)]' />
 
                         <div className='absolute top-5 left-1/2 flex -translate-x-1/2 items-center justify-center rounded-full bg-white/10 p-2 z-2'>
-                           <span className='h-5 w-5 rounded-full border border-white/70 bg-white/20 ' />
+                           {/* <span className='h-5 w-5 rounded-full border border-white/70 bg-white/20 ' /> */}
+                           {pill.icon}
                         </div>
 
                         <p
                            className=' relative
-                    text-[11px] font-semibold tracking-[0.18em] text-white
+                    text-[22px] font-bold tracking-[0.05em] text-white
                     [writing-mode:vertical-rl] rotate-180 z-2
                   '>
                            {pill.label}
