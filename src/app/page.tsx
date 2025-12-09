@@ -13,7 +13,6 @@ export default function Home() {
          <SponsorsSection/>
          <OurPartnersSection/>
          <AboutUsSection/>
-         <SponsorsSection/>
          <CentralCommitteeSection/>
          <Footer/>
       </div>

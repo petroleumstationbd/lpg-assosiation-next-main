@@ -19,7 +19,7 @@ export default function SectionHeading({
 
   return (
     <div className={`flex flex-col ${alignment} ${className ?? ''}`}>
-      <h2 className="text-[22px] font-semibold tracking-[0.22em] text-primary uppercase">
+      <h2 className="text-[45px] font-medium tracking-[0.0em]  uppercase">
         {title}
       </h2>
 

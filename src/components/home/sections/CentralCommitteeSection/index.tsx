@@ -4,6 +4,8 @@ import Image, {type StaticImageData} from 'next/image';
 import SectionHeading from '@components/ui/SectionHeading';
 import CommitteeMemberCard from './CommitteeMemberCard';
 
+
+
 import leaderImg1 from '@assets/leader-img/md-serajul-mawla.png';
 import leaderImg2 from '@assets/leader-img/hasin-parfez.png';
 
