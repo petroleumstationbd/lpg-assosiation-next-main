@@ -13,6 +13,7 @@ export default function Home() {
    return (
       <div className=''>
          <PageHero
+            overlayFrom='top'
             title={
                <>
                   Bangladesh LPG Autogas Station &amp; Conversion

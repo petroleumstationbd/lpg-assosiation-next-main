@@ -13,6 +13,7 @@ type PageHeroProps = {
    backgroundImage?: StaticImageData;
    height?: 'full' | 'compact';
    showHeader?: boolean;
+   overlayFrom?: string
 };
 
 const heightClass: Record<NonNullable<PageHeroProps['height']>, string> = {
@@ -28,6 +29,7 @@ export default function PageHero({
    backgroundImage = defaultBanner,
    height = 'full',
    showHeader = true,
+   overlayFrom = 'down',
 }: PageHeroProps) {
    return (
       <div className={`relative w-full ${heightClass[height]} `}>
@@ -40,7 +42,11 @@ export default function PageHero({
          />
 
          {/* overlay */}
-         <div className='pointer-events-none absolute inset-0 bg-gradient-to-t from-[#00000054] to-[#122047]' />
+         <div
+            className={`pointer-events-none absolute inset-0 ${
+               overlayFrom === 'top' ? 'bg-gradient-to-t' : 'bg-gradient-to-b'
+            } from-[#00000054] to-[#122047]`}
+         />
 
          {showHeader && <Header />}
 
