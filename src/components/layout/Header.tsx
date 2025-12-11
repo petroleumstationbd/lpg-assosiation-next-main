@@ -26,11 +26,15 @@ export default function Header() {
          {/* White pill bar */}
          <div className='relative flex w-full lpg-container bg-[#fff] items-center justify-between rounded-full shadow-[0_12px_40px_rgba(0,0,0,0.25)] backdrop-blur h-[85px]'>
             {/* Logo bubble */}
-            <div className='pointer-events-none bg-[#EEF0FB] h-full w-[225px] rounded-l-full absolute left-0 flex justify-center items-center'>
+            <Link
+               className='pointer-events-none bg-[#EEF0FB] h-full w-[225px] rounded-l-full absolute left-0 flex justify-center items-center'
+                   href='/'
+               
+               >
                <div className='flex items-center h-full justify-center rounded-full   absolute  left-10 '>
                   <Logo style={'!w-[180px !h-[180px bg-red-400'} />
                </div>
-            </div>
+            </Link>
 
             {/* Left spacer because of absolute logo */}
             <div className='ml-16 flex flex-1 items-center justify-between gap-6'>

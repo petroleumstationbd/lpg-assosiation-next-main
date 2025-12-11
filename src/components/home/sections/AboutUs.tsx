@@ -5,7 +5,7 @@ import aboutImg from './../img/Group 46.png';
 import SectionHeading from '@components/ui/SectionHeading';
 import iconImg1 from './../img/Group 360.png';
 import iconImg2 from './../img/Group 51.png';
-import subtrackImg from './../img/Subtract.png';
+import subtrackImg from '@assets/wrappers/Subtract.png';
 import objectanimation from './../../../assets/ui-icons/OBJECTS.png';
 
 type VisionStat = {
@@ -51,7 +51,7 @@ export default function AboutUsSection() {
             <div className='grid gap-10 items-start lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]'>
                {/* left: vision + stats */}
                <div className='max-w-xl'>
-                  <h3 className='text-[14px] font-semibold  text-[#203566]'>
+                  <h3 className='text-[14px] font-semibold '>
                      OUR VISION
                   </h3>
 
@@ -86,7 +86,7 @@ export default function AboutUsSection() {
                   {/* <div className='pointer-events-none absolute inset-x-6 bottom-0 top-6 rounded-[32px] bg-[radial-gradient(circle_at_center,_#7CDF6A55,_transparent_70%)]' /> */}
                   <div className='relative w-full overflow-hidden rounded-[26px] '>
                      <Image
-                        src={aboutImg} // put your 3D station render in public/images
+                        src={aboutImg} 
                         alt='LPG autogas station illustration'
                         width={720}
                         height={480}
