@@ -1,0 +1,60 @@
+import type { UserRow } from './types';
+
+export const MOCK_USERS: UserRow[] = [
+  {
+    id: 'u1',
+    name: 'Mary Ernser',
+    email: 'Mary.Ernser@hotmail.com',
+    avatarUrl: 'https://i.pravatar.cc/120?img=32',
+    roles: ['MANAGER', 'ADMIN', 'AUTHOR'],
+    lastLoginAt: null,
+  },
+  {
+    id: 'u2',
+    name: 'Alfred Bahringer',
+    email: 'Alfred93@yahoo.com',
+    avatarUrl: 'https://i.pravatar.cc/120?img=12',
+    roles: ['MANAGER', 'ADMIN'],
+    lastLoginAt: null,
+  },
+  {
+    id: 'u3',
+    name: 'Lindsey Boyer',
+    email: 'Lindsey.Boyer90@yahoo.com',
+    avatarUrl: 'https://i.pravatar.cc/120?img=56',
+    roles: ['MANAGER', 'AUTHOR'],
+    lastLoginAt: '2025-12-15T10:12:00Z',
+  },
+  {
+    id: 'u4',
+    name: 'Jorge Cruickshank',
+    email: '@Jorge.Cruickshank',
+    avatarUrl: 'https://i.pravatar.cc/120?img=14',
+    roles: ['MANAGER', 'AUTHOR'],
+    lastLoginAt: '2025-12-12T08:15:00Z',
+  },
+  {
+    id: 'u5',
+    name: 'Georgia Rath',
+    email: 'Georgia_Rath92@gmail.com',
+    avatarUrl: 'https://i.pravatar.cc/120?img=5',
+    roles: ['ADMIN', 'AUTHOR'],
+    lastLoginAt: '2025-12-19T16:30:00Z',
+  },
+  {
+    id: 'u6',
+    name: 'Connie Lockman',
+    email: 'Janedow@gmail.com',
+    avatarUrl: 'https://i.pravatar.cc/120?img=47',
+    roles: ['MANAGER', 'AUTHOR'],
+    lastLoginAt: '2025-12-18T06:22:00Z',
+  },
+  {
+    id: 'u7',
+    name: 'Jane Doe',
+    email: 'Janedow@gmail.com',
+    avatarUrl: 'https://i.pravatar.cc/120?img=44',
+    roles: ['AUTHOR'],
+    lastLoginAt: null,
+  },
+];

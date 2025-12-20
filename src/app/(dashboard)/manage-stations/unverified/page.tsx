@@ -1,4 +1,4 @@
-import UnverifiedStationsSection from '@/features/stations/unverified/UnverifiedStationsSection';
+import UnverifiedStationsSection from '@/features/dashboard/stations/unverified/UnverifiedStationsSection';
 
 export default function UnverifiedStationsPage() {
   return <UnverifiedStationsSection />;

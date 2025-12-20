@@ -1,4 +1,4 @@
-import InvoiceTable from '@/features/invoices/InvoiceTable';
+import InvoiceTable from '@/features/dashboard/invoices/InvoiceTable';
 
 export default function InvoicePage() {
   return <InvoiceTable />;

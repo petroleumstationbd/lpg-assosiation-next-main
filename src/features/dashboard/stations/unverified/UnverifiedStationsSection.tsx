@@ -4,7 +4,7 @@ import {useMemo} from 'react';
 import TablePanel from '@/components/ui/table-panel/TablePanel';
 import type {ColumnDef} from '@/components/ui/table-panel/types';
 import {Database, Eye, FileSpreadsheet, Pencil, Trash2, BadgeCheck} from 'lucide-react';
-import type {StationRow} from './types.ts';
+import type {StationRow} from './types.js';
 
 const BRAND = '#009970';
 

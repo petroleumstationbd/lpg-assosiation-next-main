@@ -1,4 +1,4 @@
-import VerifiedStationsSection from '@/features/stations/verified/VerifiedStationsSection';
+import VerifiedStationsSection from '@/features/dashboard/stations/verified/VerifiedStationsSection';
 
 export default function VerifiedStationsPage() {
   return <VerifiedStationsSection />;

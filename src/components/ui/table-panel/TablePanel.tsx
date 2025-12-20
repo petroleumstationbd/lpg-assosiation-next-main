@@ -89,6 +89,10 @@ type Props<T> = {
    showExport?: boolean; // default true
    topSlot?: ReactNode; // renders between top bar and controls row
    cellWrapClassName?: string; // controls row height (for pixel match)
+
+   controlsRightSlot?: ReactNode;
+   showControlsRow?: boolean; // default true
+   showFooter?: boolean; // default true
 };
 
 export default function TablePanel<T>({
@@ -104,6 +108,9 @@ export default function TablePanel<T>({
    showExport = true,
    topSlot,
    cellWrapClassName,
+   controlsRightSlot,
+   showControlsRow = true,
+   showFooter = true,
 }: Props<T>) {
    const s = useTablePanel({rows, columns, searchText});
 
@@ -170,30 +177,39 @@ export default function TablePanel<T>({
          {topSlot ? <div className='mt-4'>{topSlot}</div> : null}
 
          {/* controls row */}
-         <div className='mt-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between'>
-            <div className='flex items-center gap-2 text-[11px] text-[#6F8093]'>
-               <span>Show</span>
-               <select
-                  value={s.pageSize}
-                  onChange={e => s.setPageSize(Number(e.target.value))}
-                  className='h-8 w-[64px] rounded-[6px] border border-black/10 bg-white px-2 text-[11px] text-[#2B3A4A] shadow-sm outline-none focus:border-[#0B8B4B]'>
-                  {s.pageSizeOptions.map(n => (
-                     <option key={n} value={n}>
-                        {n}
-                     </option>
-                  ))}
-               </select>
-            </div>
+         {showControlsRow && (
+            <div className='mt-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between'>
+               <div className='flex items-center gap-2 text-[11px] text-[#6F8093]'>
+                  <span>Show</span>
+                  <select
+                     value={s.pageSize}
+                     onChange={e => s.setPageSize(Number(e.target.value))}
+                     className='h-8 w-[64px] rounded-[6px] border border-black/10 bg-white px-2 text-[11px] text-[#2B3A4A] shadow-sm outline-none focus:border-[#0B8B4B]'>
+                     {s.pageSizeOptions.map(n => (
+                        <option key={n} value={n}>
+                           {n}
+                        </option>
+                     ))}
+                  </select>
+               </div>
 
-            <label className='flex items-center gap-2 text-[11px] text-[#6F8093]'>
-               <span>Search:</span>
-               <input
-                  value={s.query}
-                  onChange={e => s.setQuery(e.target.value)}
-                  className='h-8 w-full rounded-[6px] border border-black/10 bg-white px-3 text-[11px] text-[#2B3A4A] shadow-sm outline-none focus:border-[#0B8B4B] md:w-[220px]'
-               />
-            </label>
-         </div>
+               <div className='flex w-full items-center gap-3 md:w-auto'>
+                  <label className='flex w-full items-center gap-2 text-[11px] text-[#6F8093] md:w-auto'>
+                     <span className='shrink-0'>Search:</span>
+                     <input
+                        value={s.query}
+                        onChange={e => s.setQuery(e.target.value)}
+                        className='h-8 w-full rounded-[6px] border border-black/10 bg-white px-3 text-[11px] text-[#2B3A4A] shadow-sm outline-none focus:border-[#0B8B4B] md:w-[220px]'
+                     />
+                  </label>
+
+                  {/* Add User button slot */}
+                  {controlsRightSlot ? (
+                     <div className='shrink-0'>{controlsRightSlot}</div>
+                  ) : null}
+               </div>
+            </div>
+         )}
 
          {/* table */}
          <div className='mt-4 overflow-hidden rounded-[12px] border border-black/10 bg-white'>
@@ -284,53 +300,55 @@ export default function TablePanel<T>({
          </div>
 
          {/* footer */}
-         <div className='mt-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between'>
-            <p className='text-[11px] text-[#7B8EA3]'>
-               Showing {s.showingFrom} to {s.showingTo} of {s.filteredTotal}{' '}
-               entries
-            </p>
+         {showFooter && (
+            <div className='mt-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between'>
+               <p className='text-[11px] text-[#7B8EA3]'>
+                  Showing {s.showingFrom} to {s.showingTo} of {s.filteredTotal}{' '}
+                  entries
+               </p>
 
-            <div className='flex items-center gap-2 border border-black/10 rounded-[9px] '>
-               <button
-                  type='button'
-                  disabled={s.page <= 1}
-                  onClick={() => s.setPage(s.page - 1)}
-                  className='h-7  border-none bg-white px-3 text-[11px] text-[#6F8093] disabled:opacity-60'>
-                  Previous
-               </button>
+               <div className='flex items-center gap-2 border border-black/10 rounded-[9px] '>
+                  <button
+                     type='button'
+                     disabled={s.page <= 1}
+                     onClick={() => s.setPage(s.page - 1)}
+                     className='h-7  border-none bg-white px-3 text-[11px] text-[#6F8093] disabled:opacity-60'>
+                     Previous
+                  </button>
 
-               <div className='flex items-center gap-1 bg-[#F5F7F9] p-[2px]'>
-                  {getPages(s.page, s.pageCount).map((p, idx) =>
-                     p === '...' ? (
-                        <span
-                           key={`e-${idx}`}
-                           className='px-2 text-[11px] text-[#6F8093]'>
-                           ...
-                        </span>
-                     ) : (
-                        <button
-                           key={p}
-                           type='button'
-                           onClick={() => s.setPage(p)}
-                           className={cx(
-                              'h-7 min-w-7 rounded-none  px-2 text-[11px]',
-                              p === s.page ? ' bg-[#75B551] text-white' : ' '
-                           )}>
-                           {String(p).padStart(2, '0')}
-                        </button>
-                     )
-                  )}
+                  <div className='flex items-center gap-1 bg-[#F5F7F9] p-[2px]'>
+                     {getPages(s.page, s.pageCount).map((p, idx) =>
+                        p === '...' ? (
+                           <span
+                              key={`e-${idx}`}
+                              className='px-2 text-[11px] text-[#6F8093]'>
+                              ...
+                           </span>
+                        ) : (
+                           <button
+                              key={p}
+                              type='button'
+                              onClick={() => s.setPage(p)}
+                              className={cx(
+                                 'h-7 min-w-7 rounded-none  px-2 text-[11px]',
+                                 p === s.page ? ' bg-[#75B551] text-white' : ' '
+                              )}>
+                              {String(p).padStart(2, '0')}
+                           </button>
+                        )
+                     )}
+                  </div>
+
+                  <button
+                     type='button'
+                     disabled={s.page >= s.pageCount}
+                     onClick={() => s.setPage(s.page + 1)}
+                     className='h-7  bg-white px-3 text-[11px] text-[#6F8093] disabled:opacity-60'>
+                     Next
+                  </button>
                </div>
-
-               <button
-                  type='button'
-                  disabled={s.page >= s.pageCount}
-                  onClick={() => s.setPage(s.page + 1)}
-                  className='h-7  bg-white px-3 text-[11px] text-[#6F8093] disabled:opacity-60'>
-                  Next
-               </button>
             </div>
-         </div>
+         )}
       </div>
    );
 }

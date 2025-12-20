@@ -1,4 +1,4 @@
-import RegisterOwnerSection from '@/features/owners/register-owner/RegisterOwnerSection';
+import RegisterOwnerSection from '@/features/dashboard/owners/register-owner/RegisterOwnerSection';
 
 export default function RegisterOwnerPage() {
   return <RegisterOwnerSection />;
