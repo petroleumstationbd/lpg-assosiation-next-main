@@ -1,9 +1,5 @@
-import React from 'react'
+import DashboardOverviewSection from '@/features/dashboard/DashboardOverviewSection';
 
-export default function page() {
-  return (
-    <div>
-      
-    </div>
-  )
+export default function DashboardPage() {
+  return <DashboardOverviewSection />;
 }
