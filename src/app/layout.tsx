@@ -26,13 +26,17 @@ export default function RootLayout({
 }>) {
    return (
       <html lang='en'>
-         <div className="text-center w-full">
-            see dashboard only testing mode{' '}
-            <Link className="text-blue-700 font-bold text-center w-full " href={'/dashboard'}>Dashboard</Link>
-         </div>
          <body
             className={`${geistSans.variable} ${geistMono.variable} antialiased `}>
-            <Providers>{children}</Providers>
+            <div className='text-center w-full'>
+               see dashboard only testing mode{' '}
+               <Link
+                  className='text-blue-700 font-bold text-center w-full '
+                  href={'/dashboard'}>
+                  Dashboard
+               </Link>
+            </div>
+            <Providers>{children}</Providers>F
          </body>
       </html>
    );

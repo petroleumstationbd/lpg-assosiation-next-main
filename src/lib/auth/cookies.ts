@@ -5,7 +5,6 @@ const NAME = process.env.AUTH_TOKEN_COOKIE ?? 'lpg_token';
 
 export async function getToken(): Promise<string | null> {
   const c = await cookies();
-  console.log(c.get(NAME))
   return c.get(NAME)?.value ?? null;
 }
 
