@@ -1,18 +1,21 @@
 'use client';
 
 import Link from 'next/link';
-import {Plus} from 'lucide-react';
-import {useMemo} from 'react';
+import { Plus } from 'lucide-react';
+import { useMemo, useState } from 'react';
 
 import TablePanel from '@/components/ui/table-panel/TablePanel';
-import type {ColumnDef} from '@/components/ui/table-panel/types';
+import type { ColumnDef } from '@/components/ui/table-panel/types';
 
-import {useDeleteNotice, useNoticesList} from './queries';
-import type {NoticeRow} from './types';
+import { useDeleteNotice, useNoticesList } from './queries';
+import type { NoticeRow } from './types';
+import AddNoticeModal from './AddNoticeModal';
 
 export default function NoticesOverviewSection() {
-  const {data = [], isLoading} = useNoticesList();
+  const { data = [], isLoading } = useNoticesList();
   const del = useDeleteNotice();
+
+  const [addOpen, setAddOpen] = useState(false);
 
   const columns = useMemo<ColumnDef<NoticeRow>[]>(() => {
     return [
@@ -20,21 +23,21 @@ export default function NoticesOverviewSection() {
         id: 'sl',
         header: 'SL#',
         sortable: true,
-        sortValue: r => r.sl,
+        sortValue: (r) => r.sl,
         csvHeader: 'SL',
-        csvValue: r => r.sl,
+        csvValue: (r) => r.sl,
         headerClassName: 'w-[90px]',
         minWidth: 90,
-        cell: r => String(r.sl).padStart(2, '0'),
+        cell: (r) => String(r.sl).padStart(2, '0'),
       },
       {
         id: 'title',
         header: 'Notice List',
         sortable: true,
-        sortValue: r => r.title,
+        sortValue: (r) => r.title,
         csvHeader: 'Notice',
-        csvValue: r => r.title,
-        cell: r => (
+        csvValue: (r) => r.title,
+        cell: (r) => (
           <div className="max-w-[520px]">
             {r.href ? (
               <Link
@@ -44,7 +47,9 @@ export default function NoticesOverviewSection() {
                 {r.title}
               </Link>
             ) : (
-              <span className="text-[11px] font-medium text-[#2B69C7]">{r.title}</span>
+              <span className="text-[11px] font-medium text-[#2B69C7]">
+                {r.title}
+              </span>
             )}
           </div>
         ),
@@ -53,12 +58,14 @@ export default function NoticesOverviewSection() {
         id: 'publishDate',
         header: 'Publish Date',
         sortable: true,
-        sortValue: r => r.publishDate,
+        sortValue: (r) => r.publishDate,
         csvHeader: 'Publish Date',
-        csvValue: r => r.publishDate,
+        csvValue: (r) => r.publishDate,
         headerClassName: 'w-[150px]',
         minWidth: 150,
-        cell: r => <span className="text-[11px] text-[#2B3A4A]">{r.publishDate}</span>,
+        cell: (r) => (
+          <span className="text-[11px] text-[#2B3A4A]">{r.publishDate}</span>
+        ),
       },
       {
         id: 'view',
@@ -68,7 +75,7 @@ export default function NoticesOverviewSection() {
         csvValue: () => '',
         headerClassName: 'w-[120px]',
         minWidth: 120,
-        cell: r => (
+        cell: (r) => (
           <Link
             href={r.href ?? '#'}
             className="inline-flex h-6 items-center justify-center rounded-[3px] bg-[#12306B] px-4 text-[10px] font-semibold text-white"
@@ -85,7 +92,7 @@ export default function NoticesOverviewSection() {
         csvValue: () => '',
         headerClassName: 'w-[130px]',
         minWidth: 130,
-        cell: r => (
+        cell: (r) => (
           <button
             type="button"
             onClick={() => del.mutate(r.id)}
@@ -108,6 +115,7 @@ export default function NoticesOverviewSection() {
       <div className="mt-4 flex items-center justify-end">
         <button
           type="button"
+          onClick={() => setAddOpen(true)}
           className="inline-flex h-8 items-center gap-2 rounded-[4px] bg-[#009970] px-4 text-[11px] font-semibold text-white shadow-sm hover:brightness-110 active:brightness-95"
         >
           <Plus size={14} />
@@ -130,6 +138,8 @@ export default function NoticesOverviewSection() {
           cellWrapClassName="min-h-[58px] py-2 flex items-center"
         />
       </div>
+
+      <AddNoticeModal open={addOpen} onClose={() => setAddOpen(false)} />
     </section>
   );
 }
