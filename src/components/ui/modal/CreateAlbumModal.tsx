@@ -1,166 +1,112 @@
 'use client';
 
-import {useMemo, useRef, useState} from 'react';
-import Modal from '../modal/Modal';
-
-function cx(...v: Array<string | false | null | undefined>) {
-  return v.filter(Boolean).join(' ');
-}
-
-export type CreateAlbumPayload = {
-  title: string;
-  description: string;
-  publishDate: string; // yyyy-mm-dd
-  coverPhoto: File | null;
-};
-
-type Props = {
-  open: boolean;
-  onClose: () => void;
-  onCreate?: (payload: CreateAlbumPayload) => void | Promise<void>;
-  defaultValues?: Partial<CreateAlbumPayload>;
-};
+import { useEffect, useState } from 'react';
+import Modal from '@/components/ui/modal/Modal';
 
 export default function CreateAlbumModal({
   open,
   onClose,
   onCreate,
-  defaultValues,
-}: Props) {
-  const fileRef = useRef<HTMLInputElement | null>(null);
+}: {
+  open: boolean;
+  onClose: () => void;
+  onCreate: (payload: { title: string; eventDate?: string; cover?: File | null }) => void | Promise<void>;
+}) {
+  const [title, setTitle] = useState('');
+  const [eventDate, setEventDate] = useState('');
+  const [cover, setCover] = useState<File | null>(null);
 
-  const [title, setTitle] = useState(defaultValues?.title ?? '');
-  const [description, setDescription] = useState(defaultValues?.description ?? '');
-  const [publishDate, setPublishDate] = useState(defaultValues?.publishDate ?? '');
-  const [coverPhoto, setCoverPhoto] = useState<File | null>(
-    defaultValues?.coverPhoto ?? null
-  );
-  const [submitting, setSubmitting] = useState(false);
+  const [err, setErr] = useState('');
+  const [saving, setSaving] = useState(false);
 
-  const coverName = useMemo(() => coverPhoto?.name ?? '', [coverPhoto]);
+  useEffect(() => {
+    if (!open) return;
+    setTitle('');
+    setEventDate('');
+    setCover(null);
+    setErr('');
+    setSaving(false);
+  }, [open]);
 
-  const reset = () => {
-    setTitle(defaultValues?.title ?? '');
-    setDescription(defaultValues?.description ?? '');
-    setPublishDate(defaultValues?.publishDate ?? '');
-    setCoverPhoto(defaultValues?.coverPhoto ?? null);
-  };
+  const submit = async () => {
+    setErr('');
 
-  const close = () => {
-    onClose();
-    reset();
-  };
+    if (!title.trim()) {
+      setErr('Title is required');
+      return;
+    }
 
-  const inputBase =
-    'h-8 w-full rounded-[3px] border border-black/15 bg-white px-3 text-[12px] text-slate-700 outline-none focus:border-[#009970]';
-
-  const labelClass = 'text-[11px] text-slate-600';
-
-  const submit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (submitting) return;
-
-    const payload: CreateAlbumPayload = {
-      title: title.trim(),
-      description: description.trim(),
-      publishDate,
-      coverPhoto,
-    };
-
-    setSubmitting(true);
+    setSaving(true);
     try {
-      await onCreate?.(payload);
-      close();
+      await onCreate({
+        title: title.trim(),
+        eventDate: eventDate || undefined, // yyyy-mm-dd
+        cover,
+      });
+    } catch {
+      setErr('Failed to create album');
     } finally {
-      setSubmitting(false);
+      setSaving(false);
     }
   };
 
   return (
-    <Modal open={open} onClose={close} title='Create a new album' maxWidthClassName='max-w-[520px]'>
-      <form onSubmit={submit} className='p-4'>
-        <div className='space-y-3'>
+    <Modal open={open} title="Create Album" onClose={onClose} maxWidthClassName="max-w-[560px]">
+      <div className="p-4">
+        <div className="space-y-3">
           <div>
-            <div className={labelClass}>Album Title</div>
+            <label className="mb-1 block text-[11px] font-semibold text-[#173A7A]">Title</label>
             <input
               value={title}
-              onChange={e => setTitle(e.target.value)}
-              className={inputBase}
-              placeholder=''
+              onChange={(e) => setTitle(e.target.value)}
+              className="h-9 w-full rounded-[6px] border border-black/10 px-3 text-[12px] outline-none focus:border-black/20"
+              placeholder="Album title"
             />
           </div>
 
           <div>
-            <div className={labelClass}>Album Description</div>
+            <label className="mb-1 block text-[11px] font-semibold text-[#173A7A]">Event date (optional)</label>
             <input
-              value={description}
-              onChange={e => setDescription(e.target.value)}
-              className={inputBase}
-              placeholder=''
+              type="date"
+              value={eventDate}
+              onChange={(e) => setEventDate(e.target.value)}
+              className="h-9 w-full rounded-[6px] border border-black/10 px-3 text-[12px] outline-none focus:border-black/20"
             />
           </div>
 
           <div>
-            <div className={labelClass}>Publish date</div>
+            <label className="mb-1 block text-[11px] font-semibold text-[#173A7A]">Cover (optional)</label>
             <input
-              type='date'
-              value={publishDate}
-              onChange={e => setPublishDate(e.target.value)}
-              className={inputBase}
+              type="file"
+              accept="image/png,image/jpeg,image/webp"
+              onChange={(e) => setCover(e.target.files?.[0] ?? null)}
+              className="block w-full text-[12px]"
             />
           </div>
 
-          <div>
-            <div className={labelClass}>Cover Photo</div>
+          {err && <p className="text-[12px] font-medium text-red-600">{err}</p>}
 
-            <div className='flex items-center'>
-              <input
-                value={coverName}
-                readOnly
-                className={cx(inputBase, 'rounded-r-none')}
-                placeholder='No file chosen'
-              />
+          <div className="mt-4 flex justify-end gap-2">
+            <button
+              type="button"
+              onClick={onClose}
+              disabled={saving}
+              className="h-9 rounded-[6px] border border-black/10 px-4 text-[12px] font-semibold text-[#173A7A] hover:bg-black/5 disabled:opacity-60"
+            >
+              Cancel
+            </button>
 
-              <button
-                type='button'
-                onClick={() => fileRef.current?.click()}
-                className={cx(
-                  'h-8 rounded-[3px] rounded-l-none border border-l-0 border-black/15 bg-[#E9EDF2]',
-                  'px-4 text-[12px] text-slate-700 hover:brightness-105 active:brightness-95'
-                )}>
-                Browse
-              </button>
-
-              <input
-                ref={fileRef}
-                type='file'
-                className='hidden'
-                accept='image/*'
-                onChange={e => {
-                  const f = e.currentTarget.files?.[0] ?? null;
-                  setCoverPhoto(f);
-                }}
-              />
-            </div>
+            <button
+              type="button"
+              onClick={submit}
+              disabled={saving}
+              className="h-9 rounded-[6px] bg-[#009970] px-4 text-[12px] font-semibold text-white shadow-sm hover:brightness-110 active:brightness-95 disabled:opacity-60"
+            >
+              {saving ? 'Saving...' : 'Create'}
+            </button>
           </div>
         </div>
-
-        <div className='mt-4 flex items-center justify-end gap-2'>
-          <button
-            type='button'
-            onClick={close}
-            className='h-8 rounded-[3px] bg-[#133374] px-4 text-[12px] font-semibold text-white hover:brightness-110 active:brightness-95'>
-            Close
-          </button>
-
-          <button
-            type='submit'
-            disabled={submitting}
-            className='h-8 rounded-[3px] bg-[#009970] px-4 text-[12px] font-semibold text-white hover:brightness-110 active:brightness-95 disabled:opacity-60'>
-            Create
-          </button>
-        </div>
-      </form>
+      </div>
     </Modal>
   );
 }

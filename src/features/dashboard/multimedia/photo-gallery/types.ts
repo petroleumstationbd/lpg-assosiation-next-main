@@ -1,7 +1,8 @@
-import type {StaticImageData} from 'next/image';
+import type { StaticImageData } from 'next/image';
 
-export type GalleryPhoto = {
-  id: string;
-  image: StaticImageData;
-  alt?: string;
+export type GalleryAlbum = {
+  id: number;
+  title: string;
+  cover: string | StaticImageData | null;
+  eventDate?: string | null;
 };
