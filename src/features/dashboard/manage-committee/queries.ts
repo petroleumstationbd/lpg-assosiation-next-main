@@ -36,7 +36,7 @@ export function useDeleteCommitteeMember() {
       const prev = qc.getQueryData<CommitteeRow[]>(['committee', 'members']) ?? [];
       qc.setQueryData<CommitteeRow[]>(
         ['committee', 'members'],
-        prev.filter((m) => m.id !== id)
+        prev.filter((m) => m.id !== String(id))
       );
 
       return { prev };
