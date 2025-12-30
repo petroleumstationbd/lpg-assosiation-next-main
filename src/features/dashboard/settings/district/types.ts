@@ -3,4 +3,6 @@ export type DistrictRow = {
   sl: number;
   divisionName: string;
   districtName: string;
+  divisionId?: number;
+  isActive?: boolean;
 };

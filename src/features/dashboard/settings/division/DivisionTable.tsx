@@ -1,10 +1,16 @@
 'use client';
 
-import {useMemo} from 'react';
+import {useMemo, useState} from 'react';
 import TablePanel from '@/components/ui/table-panel/TablePanel';
 import type {ColumnDef} from '@/components/ui/table-panel/types';
 import type {DivisionRow} from './types';
-import {useDeleteDivision, useDivisions} from './queries';
+import {
+  useCreateDivision,
+  useDeleteDivision,
+  useDivisions,
+  useUpdateDivision,
+} from './queries';
+import DivisionFormModal from './DivisionFormModal';
 
 const BRAND = '#009970';
 
@@ -17,6 +23,13 @@ const btnTop =
 export default function DivisionTable() {
   const q = useDivisions();
   const del = useDeleteDivision();
+  const createM = useCreateDivision();
+  const updateM = useUpdateDivision();
+
+  const [open, setOpen] = useState(false);
+  const [mode, setMode] = useState<'create' | 'edit'>('create');
+  const [activeRow, setActiveRow] = useState<DivisionRow | null>(null);
+  const [formError, setFormError] = useState('');
 
   const columns = useMemo<ColumnDef<DivisionRow>[]>(() => {
     return [
@@ -52,8 +65,10 @@ export default function DivisionTable() {
           <button
             type="button"
             onClick={() => {
-              // TODO: open "Edit Division" modal using r.id
-              void r;
+              setFormError('');
+              setMode('edit');
+              setActiveRow(r);
+              setOpen(true);
             }}
             className={`${btnBase} bg-[#133374]`}
           >
@@ -81,7 +96,7 @@ export default function DivisionTable() {
         ),
       },
     ];
-  }, [del]);
+  }, [del.isPending]);
 
   if (q.isLoading) return <div className="text-sm text-slate-600">Loading...</div>;
   if (q.isError) return <div className="text-sm text-red-600">Failed to load divisions.</div>;
@@ -107,7 +122,10 @@ export default function DivisionTable() {
           <button
             type="button"
             onClick={() => {
-              // TODO: open "Add Division" modal
+              setFormError('');
+              setMode('create');
+              setActiveRow(null);
+              setOpen(true);
             }}
             className={btnTop}
             style={{backgroundColor: BRAND}}
@@ -115,6 +133,39 @@ export default function DivisionTable() {
             Add Division
           </button>
         }
+      />
+
+      <DivisionFormModal
+        open={open}
+        mode={mode}
+        initial={activeRow}
+        onClose={() => {
+          setOpen(false);
+          setActiveRow(null);
+          setFormError('');
+        }}
+        saving={createM.isPending || updateM.isPending}
+        error={formError}
+        onSubmit={async (payload) => {
+          setFormError('');
+
+          try {
+            if (mode === 'create') {
+              await createM.mutateAsync(payload);
+            } else {
+              if (!activeRow?.id) {
+                setFormError('Invalid division id');
+                return;
+              }
+              await updateM.mutateAsync({id: activeRow.id, patch: payload});
+            }
+
+            setOpen(false);
+            setActiveRow(null);
+          } catch (e: any) {
+            setFormError(e?.message ?? 'Failed to save division');
+          }
+        }}
       />
     </div>
   );

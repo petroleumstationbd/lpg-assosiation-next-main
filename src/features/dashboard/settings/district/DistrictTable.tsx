@@ -1,16 +1,28 @@
-
 'use client';
 
-import {useMemo} from 'react';
-import {Plus} from 'lucide-react';
+import { useMemo, useState } from 'react';
+import { Plus } from 'lucide-react';
 import TablePanel from '@/components/ui/table-panel/TablePanel';
-import type {ColumnDef} from '@/components/ui/table-panel/types';
-import type {DistrictRow} from './types';
-import {useDeleteDistrict, useDistricts} from './queries';
+import type { ColumnDef } from '@/components/ui/table-panel/types';
+import type { DistrictRow } from './types';
+import {
+  useCreateDistrict,
+  useDeleteDistrict,
+  useDistricts,
+  useUpdateDistrict,
+} from './queries';
+import DistrictFormModal from './DistrictFormModal';
 
 export default function DistrictTable() {
   const q = useDistricts();
   const del = useDeleteDistrict();
+  const createM = useCreateDistrict();
+  const updateM = useUpdateDistrict();
+
+  const [modalOpen, setModalOpen] = useState(false);
+  const [mode, setMode] = useState<'create' | 'edit'>('create');
+  const [activeRow, setActiveRow] = useState<DistrictRow | null>(null);
+  const [formError, setFormError] = useState('');
 
   const columns = useMemo<ColumnDef<DistrictRow>[]>(() => {
     return [
@@ -55,8 +67,10 @@ export default function DistrictTable() {
           <button
             type="button"
             onClick={() => {
-              // TODO: open modal later
-              console.log('edit', r.id);
+              setFormError('');
+              setMode('edit');
+              setActiveRow(r);
+              setModalOpen(true);
             }}
             className="h-7 rounded-[4px] bg-[#133374] px-4 text-[11px] font-semibold text-white shadow-sm hover:brightness-110 active:brightness-95"
           >
@@ -84,22 +98,24 @@ export default function DistrictTable() {
         ),
       },
     ];
-  }, [del]);
+  }, [del.isPending]);
 
   if (q.isLoading) return <div className="text-sm text-slate-600">Loading...</div>;
   if (q.isError) return <div className="text-sm text-red-600">Failed to load districts.</div>;
 
   return (
     <div className="space-y-4">
-      {/* Header row (simple like your Invoice page style) */}
+      {/* Header row (keep design same) */}
       <div className="flex items-center justify-between">
         <h2 className="text-[16px] font-semibold text-[#2B3A4A]">Overview of Districts</h2>
 
         <button
           type="button"
           onClick={() => {
-            // TODO: open "Add District" modal later
-            console.log('add district');
+            setFormError('');
+            setMode('create');
+            setActiveRow(null);
+            setModalOpen(true);
           }}
           className="inline-flex h-9 items-center justify-center gap-2 rounded-[6px] bg-[#009970] px-4 text-[12px] font-medium text-white shadow-sm transition hover:brightness-110 active:brightness-95"
         >
@@ -115,9 +131,40 @@ export default function DistrictTable() {
         searchText={(r) => `${r.sl} ${r.divisionName} ${r.districtName}`}
         exportFileName="districts.csv"
         exportLabel="Export to Excel"
-        // screenshot e total/show na thakleo, table panel default top bar "Total Members" show kore,
-        // so settings pages e eta hide kore dilam:
         showTopBar={false}
+      />
+
+      <DistrictFormModal
+        open={modalOpen}
+        mode={mode}
+        initial={activeRow}
+        onClose={() => {
+          setModalOpen(false);
+          setActiveRow(null);
+          setFormError('');
+        }}
+        saving={createM.isPending || updateM.isPending}
+        error={formError}
+        onSubmit={async (payload) => {
+          setFormError('');
+
+          try {
+            if (mode === 'create') {
+              await createM.mutateAsync(payload);
+            } else {
+              if (!activeRow?.id) {
+                setFormError('Invalid district id');
+                return;
+              }
+              await updateM.mutateAsync({ id: activeRow.id, patch: payload });
+            }
+
+            setModalOpen(false);
+            setActiveRow(null);
+          } catch (e: any) {
+            setFormError(e?.message ?? 'Failed to save district');
+          }
+        }}
       />
     </div>
   );
