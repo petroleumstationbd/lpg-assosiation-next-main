@@ -28,7 +28,7 @@ export function ServiceCard({ item }: { item: ServiceItem }) {
         className="
           pointer-events-none
           absolute -left-1 top-[33%] -translate-y-1/2 -translate-x-1/2
-          h-[116px] w-[34px]
+          h-[90px] w-[28px] sm:h-[116px] sm:w-[34px]
           rounded-[10px]
           bg-[#75B551]
           shadow-[0_12px_26px_rgba(6,142,76,0.55)] -z-1
@@ -36,7 +36,7 @@ export function ServiceCard({ item }: { item: ServiceItem }) {
       />
 
       {/* icon */}
-      <div className="mt-2 flex h-[250px] w-[250px] items-center justify-center scale-[1.2]">
+      <div className="mt-2 flex h-[180px] w-[180px] items-center justify-center sm:h-[220px] sm:w-[220px] lg:h-[250px] lg:w-[250px] lg:scale-[1.2]">
         <Icon className="h-full w-full drop-shadow-[0_20px_32px_rgba(0,176,109,0.55)] " />
       </div>
 
@@ -44,7 +44,7 @@ export function ServiceCard({ item }: { item: ServiceItem }) {
       <h3
         className="
           mt-6 text-center
-          text-[24px] font-semibold uppercase text-[#153976]
+          text-[18px] font-semibold uppercase text-[#153976] sm:text-[22px] lg:text-[24px]
         "
       >
         {item.title}

@@ -49,8 +49,8 @@ function FieldRow({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex items-center justify-center gap-3">
-      <label className="w-[140px] text-right text-[10px] text-[#6F8093]">
+    <div className="flex flex-col items-start justify-center gap-2 sm:flex-row sm:items-center sm:gap-3">
+      <label className="w-full text-left text-[10px] text-[#6F8093] sm:w-[140px] sm:text-right">
         {label}
       </label>
       {children}
@@ -191,7 +191,7 @@ export default function RegisterSection() {
                       value={form.stationOwnerName}
                       onChange={onChange('stationOwnerName')}
                       className={cx(
-                        'h-7 w-[200px] rounded-[6px] border border-black/10 bg-[#F5F7F9] px-3 text-[11px] text-[#2B3A4A] outline-none',
+                        'h-8 w-full rounded-[6px] border border-black/10 bg-[#F5F7F9] px-3 text-[11px] text-[#2B3A4A] outline-none sm:h-7 sm:w-[200px]',
                         'focus:border-[#0B8B4B]'
                       )}
                     />
@@ -204,7 +204,7 @@ export default function RegisterSection() {
                       inputMode="email"
                       autoComplete="email"
                       className={cx(
-                        'h-7 w-[200px] rounded-[6px] border border-black/10 bg-[#F5F7F9] px-3 text-[11px] text-[#2B3A4A] outline-none',
+                        'h-8 w-full rounded-[6px] border border-black/10 bg-[#F5F7F9] px-3 text-[11px] text-[#2B3A4A] outline-none sm:h-7 sm:w-[200px]',
                         'focus:border-[#0B8B4B]'
                       )}
                     />
@@ -217,7 +217,7 @@ export default function RegisterSection() {
                       inputMode="tel"
                       autoComplete="tel"
                       className={cx(
-                        'h-7 w-[200px] rounded-[6px] border border-black/10 bg-[#F5F7F9] px-3 text-[11px] text-[#2B3A4A] outline-none',
+                        'h-8 w-full rounded-[6px] border border-black/10 bg-[#F5F7F9] px-3 text-[11px] text-[#2B3A4A] outline-none sm:h-7 sm:w-[200px]',
                         'focus:border-[#0B8B4B]'
                       )}
                     />
@@ -230,7 +230,7 @@ export default function RegisterSection() {
                       type="password"
                       autoComplete="new-password"
                       className={cx(
-                        'h-7 w-[200px] rounded-[6px] border border-black/10 bg-[#F5F7F9] px-3 text-[11px] text-[#2B3A4A] outline-none',
+                        'h-8 w-full rounded-[6px] border border-black/10 bg-[#F5F7F9] px-3 text-[11px] text-[#2B3A4A] outline-none sm:h-7 sm:w-[200px]',
                         'focus:border-[#0B8B4B]'
                       )}
                     />
@@ -243,7 +243,7 @@ export default function RegisterSection() {
                       type="password"
                       autoComplete="new-password"
                       className={cx(
-                        'h-7 w-[200px] rounded-[6px] border border-black/10 bg-[#F5F7F9] px-3 text-[11px] text-[#2B3A4A] outline-none',
+                        'h-8 w-full rounded-[6px] border border-black/10 bg-[#F5F7F9] px-3 text-[11px] text-[#2B3A4A] outline-none sm:h-7 sm:w-[200px]',
                         'focus:border-[#0B8B4B]'
                       )}
                     />
@@ -254,7 +254,7 @@ export default function RegisterSection() {
                       value={form.address}
                       onChange={onChange('address')}
                       className={cx(
-                        'h-7 w-[200px] rounded-[6px] border border-black/10 bg-[#F5F7F9] px-3 text-[11px] text-[#2B3A4A] outline-none',
+                        'h-8 w-full rounded-[6px] border border-black/10 bg-[#F5F7F9] px-3 text-[11px] text-[#2B3A4A] outline-none sm:h-7 sm:w-[200px]',
                         'focus:border-[#0B8B4B]'
                       )}
                     />

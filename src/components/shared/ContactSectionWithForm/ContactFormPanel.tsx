@@ -49,7 +49,7 @@ function CaptchaRow({
       <div className="flex flex-1 items-center gap-3">
         <div
           className="
-            relative h-[54px] flex-1 overflow-hidden
+            relative h-12 flex-1 overflow-hidden sm:h-[54px]
             rounded-[999px]
             border border-[#E1EBF7]
             bg-white
@@ -62,7 +62,7 @@ function CaptchaRow({
         <button
           type="button"
           className="
-            flex h-[54px] w-[54px] items-center justify-center
+            flex h-12 w-12 items-center justify-center sm:h-[54px] sm:w-[54px]
             rounded-[12px]
             border border-[#E1EBF7]
             bg-white text-[#1E2F4D]
@@ -80,7 +80,7 @@ function CaptchaRow({
       <input
         type="text"
         placeholder="Enter Captcha"
-        className={`h-[54px] px-4 md:flex-[0.9] ${fieldBase}`}
+        className={`h-12 px-4 sm:h-[54px] md:flex-[0.9] ${fieldBase}`}
         value={value}
         onChange={(e) => onChange(e.target.value)}
       />
@@ -162,7 +162,7 @@ export default function ContactFormPanel({ mapUrl }: ContactFormPanelProps) {
       {/* MAP */}
       <div
         className="
-          relative h-[288px] w-full overflow-hidden
+          relative min-h-[220px] w-full overflow-hidden sm:min-h-[288px]
           rounded-[12px]
           neon-pill
           bg-white
@@ -184,7 +184,7 @@ export default function ContactFormPanel({ mapUrl }: ContactFormPanelProps) {
           <input
             type="text"
             placeholder="Your Name*"
-            className={`h-[80px] px-4 ${fieldBase}`}
+            className={`h-12 px-4 sm:h-[60px] md:h-[80px] ${fieldBase}`}
             required
             value={form.sender_name}
             onChange={(e) => setForm((p) => ({ ...p, sender_name: e.target.value }))}
@@ -192,7 +192,7 @@ export default function ContactFormPanel({ mapUrl }: ContactFormPanelProps) {
           <input
             type="email"
             placeholder="Your Email*"
-            className={`h-[80px] px-4 ${fieldBase}`}
+            className={`h-12 px-4 sm:h-[60px] md:h-[80px] ${fieldBase}`}
             required
             value={form.sender_email}
             onChange={(e) => setForm((p) => ({ ...p, sender_email: e.target.value }))}
@@ -204,7 +204,7 @@ export default function ContactFormPanel({ mapUrl }: ContactFormPanelProps) {
           <input
             type="text"
             placeholder="Subject*"
-            className={`h-[80px] px-4 ${fieldBase}`}
+            className={`h-12 px-4 sm:h-[60px] md:h-[80px] ${fieldBase}`}
             required
             value={form.subject}
             onChange={(e) => setForm((p) => ({ ...p, subject: e.target.value }))}
@@ -212,7 +212,7 @@ export default function ContactFormPanel({ mapUrl }: ContactFormPanelProps) {
           <input
             type="tel"
             placeholder="Your Phone*"
-            className={`h-[80px] px-4 ${fieldBase}`}
+            className={`h-12 px-4 sm:h-[60px] md:h-[80px] ${fieldBase}`}
             required
             value={form.sender_phone}
             onChange={(e) => setForm((p) => ({ ...p, sender_phone: e.target.value }))}
@@ -224,7 +224,7 @@ export default function ContactFormPanel({ mapUrl }: ContactFormPanelProps) {
           placeholder="Message*"
           required
           className={`
-            min-h-[170px] w-full resize-none
+            min-h-[140px] w-full resize-none sm:min-h-[170px]
             px-4 py-3
             ${fieldBase}
           `}
