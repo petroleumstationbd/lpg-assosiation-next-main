@@ -11,7 +11,7 @@ import ContactUsSection from './../components/home/sections/ContactUsSection';
 
 export default function Home() {
    return (
-      <div className=''>
+      <div className='w-full'>
          <PageHero
             overlayFrom='top'
             title={
@@ -25,15 +25,21 @@ export default function Home() {
             ctaHref='/login'
             height='full'
          />
-         <SponsorsSection />
-         <OurPartnersSection />
+        <SponsorsSection />
+
+
+          <OurPartnersSection />
          <AboutUsSection />
          <WhyChooseUsSection />
          <JoinWithUsSection />
+
+
          <ServicesSection />
-         <CentralCommitteeSection />
+         {/* <CentralCommitteeSection /> */}
+
+
          <ContactUsSection />
-         <Footer />
+         <Footer /> 
       </div>
    );
 }

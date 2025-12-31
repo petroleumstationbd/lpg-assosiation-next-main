@@ -29,7 +29,7 @@ const visionStats: VisionStat[] = [
 
 export default function AboutUsSection() {
    return (
-      <section className='relative  py-16'>
+      <section className='relative  md:py-16'>
          {/* subtle background geometry */}
 
          <div className='lpg-container relative'>
@@ -81,7 +81,7 @@ export default function AboutUsSection() {
                </div>
 
                {/* right: station illustration */}
-               <div className='relative mx-auto mt-6 flex w-full max-w-[580px] items-center justify-center lg:mt-0'>
+               <div className='relative mx-auto mt-6  w-full max-w-[580px] items-center justify-center lg:mt-0 hidden lg:flex'>
                   {/* soft glow behind image */}
                   {/* <div className='pointer-events-none absolute inset-x-6 bottom-0 top-6 rounded-[32px] bg-[radial-gradient(circle_at_center,_#7CDF6A55,_transparent_70%)]' /> */}
                   <div className='relative w-full overflow-hidden rounded-[26px] '>

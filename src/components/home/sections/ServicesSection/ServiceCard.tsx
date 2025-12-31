@@ -36,7 +36,7 @@ export function ServiceCard({ item }: { item: ServiceItem }) {
       />
 
       {/* icon */}
-      <div className="mt-2 flex h-[180px] w-[180px] items-center justify-center sm:h-[220px] sm:w-[220px] lg:h-[250px] lg:w-[250px] lg:scale-[1.2]">
+      <div className="mt-2 flex h-[80px] md:h-[80px]  w-[180px] items-center justify-center sm:h-[220px] sm:w-[220px] lg:h-[250px] lg:w-[250px] lg:scale-[1.2]">
         <Icon className="h-full w-full drop-shadow-[0_20px_32px_rgba(0,176,109,0.55)] " />
       </div>
 

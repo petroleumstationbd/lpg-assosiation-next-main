@@ -19,8 +19,6 @@ import beximco from '@/assets/sponser-img/beximco.png';
 import prtromax from '@/assets/sponser-img/prtromax.png';
 import universal from '@/assets/sponser-img/universal.png';
 
-
-
 import arrowuiIcon from '@/assets/ui-icons/Layer_1 (3).png';
 import SectionHeading from '@components/ui/SectionHeading';
 import FramerMarqueeRow from './FramerMarqueeRow';
@@ -170,14 +168,14 @@ export default function SponsorsSection() {
                   />
                </div>
 
-               <div className='lpg-container relative mt-24 grid items-center justify-center gap-6 lg:grid-cols-2'>
+               <div className='lpg-container relative mt-24 grid items-center justify-center gap-18 lg:grid-cols-2'>
                   {leaders.map(leader => (
                      <article
                         key={leader.name}
-                        className='relative min-h-[520px] w-full max-w-[480px] place-self-center overflow-visible rounded-t-[98px] rounded-b-[12px] border-[4px] border-[#CCD2F4] bg-white/95 px-6 pb-7 pt-10 shadow-[0_18px_40px_rgba(0,0,0,0.06)] md:min-h-[620px]'>
+                        className='relative min-h-[350px] w-full max-w-[430px] lg:min-h-[520px] place-self-center overflow-visible rounded-t-[98px] rounded-b-[12px] border-[4px] border-[#CCD2F4] bg-white/95 px-6 pb-7 pt-10 shadow-[0_18px_40px_rgba(0,0,0,0.06)] md:min-h-[620px]'>
                         {/* photo circle */}
                         <div className='absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/3'>
-                           <div className='flex h-[200px] w-[200px] items-center justify-center rounded-full bg-[#CCD2F4] p-[4px] sm:h-[240px] sm:w-[240px] lg:h-[270px] lg:w-[270px]'>
+                           <div className='flex h-[180px] w-[180px] lg:h-[200px] lg:w-[200px] items-center justify-center rounded-full bg-[#CCD2F4] p-[4px] sm:h-[240px] sm:w-[240px] lg:h-[270px] lg:w-[270px]'>
                               <div className='relative h-full w-full overflow-hidden rounded-full bg-white'>
                                  <Image
                                     src={leader.photo}
@@ -198,13 +196,14 @@ export default function SponsorsSection() {
                            </p>
 
                            <div className='mt-2 space-y-2 text-[15px] font-light'>
-                              {leader.lines && leader.lines.map(line => (
-                                 <div
-                                    className='font-light opacity-80'
-                                    key={line}>
-                                    {line}
-                                 </div>
-                              ))}
+                              {leader.lines &&
+                                 leader.lines.map(line => (
+                                    <div
+                                       className='font-light opacity-80'
+                                       key={line}>
+                                       {line}
+                                    </div>
+                                 ))}
                            </div>
 
                            <p className='mt-20 text-[15px] leading-relaxed opacity-80'>
