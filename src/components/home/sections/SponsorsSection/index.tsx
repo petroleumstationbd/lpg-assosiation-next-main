@@ -8,14 +8,19 @@ import leaderImg2 from '@/assets/leader-img/MirAhasanUddinFarvez.jpeg';
 import folio1 from '@/assets/Bento_Grid (7).png';
 import folio2 from '@/assets/Bento_Grid (8).png';
 import sponserImg1 from '@/assets/sponser-img/mgi.png';
-import autogas from '@/assets/partner-logos/autogas.png';
-import bashundara from '@/assets/partner-logos/bashundaralp.png';
-import bmlp from '@/assets/partner-logos/bmlp.png';
-import gftl from '@/assets/partner-logos/gftl.png';
-import greenlp from '@/assets/partner-logos/greenlp.png';
-import mrcl from '@/assets/partner-logos/mrcl.png';
-import onion from '@/assets/partner-logos/onion.png';
-import soiballogo from '@/assets/partner-logos/soiballogo.png';
+import laugfs from '@/assets/sponser-img/laugfs.png';
+import promita from '@/assets/sponser-img/promita.png';
+import total from '@/assets/sponser-img/total.png';
+import omera from '@/assets/sponser-img/omera.png';
+import jsjvl from '@/assets/sponser-img/jsjvl.png';
+import navama from '@/assets/sponser-img/navama.png';
+import ggas from '@/assets/sponser-img/ggas.png';
+import beximco from '@/assets/sponser-img/beximco.png';
+import prtromax from '@/assets/sponser-img/prtromax.png';
+import universal from '@/assets/sponser-img/universal.png';
+
+
+
 import arrowuiIcon from '@/assets/ui-icons/Layer_1 (3).png';
 import SectionHeading from '@components/ui/SectionHeading';
 import FramerMarqueeRow from './FramerMarqueeRow';
@@ -35,14 +40,17 @@ type Leader = {
 
 const sponsors: Sponsor[] = [
    {name: 'MGI', logo: sponserImg1},
-   {name: 'Autogas', logo: autogas},
-   {name: 'Bashundhara LPG', logo: bashundara},
-   {name: 'BMLP', logo: bmlp},
-   {name: 'GFTL', logo: gftl},
-   {name: 'Green LP', logo: greenlp},
-   {name: 'MRCL', logo: mrcl},
-   {name: 'Onion', logo: onion},
-   {name: 'Soibal', logo: soiballogo},
+   {name: 'Laugfs Gas', logo: laugfs},
+   {name: 'Promita LPG', logo: promita},
+   {name: 'Total', logo: total},
+   {name: 'Omera', logo: omera},
+   {name: 'Jsjvl', logo: jsjvl},
+
+   {name: 'Navana LPG', logo: navama},
+   {name: 'G Gas', logo: ggas},
+   {name: 'Beximco LPG', logo: beximco},
+   {name: 'Petromax LPG', logo: prtromax},
+   {name: 'Universal Gas', logo: universal},
 ];
 
 const leaders: Leader[] = [
