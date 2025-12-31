@@ -16,6 +16,11 @@ export const metadata: Metadata = {
   description: 'LPG Association Website',
 };
 
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+};
+
 const SHOW_DASHBOARD_TEST_LINK = process.env.NEXT_PUBLIC_SHOW_DASHBOARD_TEST_LINK === '1';
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
@@ -35,16 +40,8 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   }
 
   return (
-    <html lang="en">
-      <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-        {SHOW_DASHBOARD_TEST_LINK ? (
-          <div className="w-full text-center">
-            <span>see dashboard only testing mode </span>
-            <Link className="font-bold text-blue-700" href="/dashboard">
-              Dashboard
-            </Link>
-          </div>
-        ) : null}
+    <html className="bg-red-600" lang="en">
+      <body className={`${geistSans.variable} ${geistMono.variable} antialiased bg-blue-500 w-full`}>
 
         <Providers>
           <AuthProvider initialUser={user}>{children}</AuthProvider>

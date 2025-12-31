@@ -94,9 +94,9 @@ export default function EditProfileSection() {
             ) : null}
           </label>
 
-          <button type="button" disabled={uploadM.isPending} className={BTN_PRIMARY}>
+          {/* <button type="button" disabled={uploadM.isPending} className={BTN_PRIMARY}>
             {uploadM.isPending ? 'Uploading...' : 'Upload'}
-          </button>
+          </button> */}
         </div>
       </div>
 
