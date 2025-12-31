@@ -13,7 +13,11 @@ import promita from '@/assets/sponser-img/promita.png';
 import total from '@/assets/sponser-img/total.png';
 import omera from '@/assets/sponser-img/omera.png';
 import jsjvl from '@/assets/sponser-img/jsjvl.png';
+<<<<<<< Updated upstream
 import navama from '@/assets/sponser-img/navana.png';
+=======
+import navama from '@/assets/sponser-img/navama.png';
+>>>>>>> Stashed changes
 import ggas from '@/assets/sponser-img/ggas.png';
 import beximco from '@/assets/sponser-img/beximco.png';
 import prtromax from '@/assets/sponser-img/prtromax.png';
