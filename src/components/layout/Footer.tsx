@@ -126,7 +126,7 @@ export default function Footer() {
                   </p>
 
                   <form
-                     className='mt-4 flex rounded-full  neon-pill relative h-[40px] w-full'
+                     className='mt-4 flex rounded-full neon-pill relative h-[44px] w-full'
                      onSubmit={e => e.preventDefault()}>
                      <input
                         type='email'
@@ -135,7 +135,7 @@ export default function Footer() {
                      />
                      <button
                         type='submit'
-                        className='rounded-full bg-[#0D2E65] px-5  text-[11px] font-semibold uppercase tracking-[0.18em] text-white shadow-[0_6px_18px_rgba(0,0,0,0.25)] absolute right-0 h-full'>
+                        className='absolute right-0 h-full rounded-full bg-[#0D2E65] px-4 text-[11px] font-semibold uppercase tracking-[0.18em] text-white shadow-[0_6px_18px_rgba(0,0,0,0.25)] sm:px-5'>
                         Subscribe
                      </button>
                   </form>
@@ -158,9 +158,9 @@ export default function Footer() {
             <div className='mt-8 h-px w-full bg-white/25' />
 
             {/* bottom row: payment icons + copyright */}
-            <div className='mt-5 flex flex-col items-start gap-4 '>
-               <div className="flex items-center gap-[30px]">
-                  <span className='text-white border-r border-[#dddddd86] text-nowrap pr-6 h-[44px] flex items-center'>
+            <div className='mt-5 flex flex-col items-start gap-4'>
+               <div className='flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-[30px]'>
+                  <span className='flex h-[44px] items-center text-nowrap border-r border-[#dddddd86] pr-6 text-white sm:border-r'>
                      Pay With
                   </span>
                   <div className='flex flex-col items-center justify-center gap-1.5 lg:justify-start'>

@@ -13,8 +13,10 @@ export default function JoinWithUsSection() {
             <div
                className='
             relative mx-auto
-            h-[500px] w-full
+            min-h-[360px] w-full
             max-w-none
+            sm:min-h-[420px]
+            lg:min-h-[500px]
           '>
                {/* gradient blob with top/bottom curves */}
                <div className='relative h-full w-full overflow-hidden'>
@@ -43,7 +45,7 @@ export default function JoinWithUsSection() {
                 flex flex-col items-center justify-center
                 text-center text-white lpg-container
               '>
-                     <h2 className='text-[45px] font-medium tracking-[0.05em] '>
+                     <h2 className='text-[28px] font-medium tracking-[0.05em] sm:text-[34px] lg:text-[45px]'>
                         JOIN WITH US
                      </h2>
 

@@ -16,9 +16,9 @@ const ContactInfoCard = ({item}: {item: ContactItem}) => {
    return (
       <article
          className='
-        relative flex h-[100px] items-center
+        relative flex min-h-[140px] items-center
         rounded-[12px]
-       px-6 h-[170px] w-[432px]
+       px-6 w-full max-w-[432px]
         text-white
         overflow-hidden
         shadow-[0_18px_40px_rgba(0,0,0,0.28)]

@@ -73,7 +73,7 @@ export default function AboutUsSection() {
                   </p>
 
                   {/* stats cards */}
-                  <div className='mt-7 grid  gap-4 sm:grid-cols-2'>
+                  <div className='mt-7 grid gap-4 place-items-center sm:grid-cols-2 sm:place-items-start'>
                      {visionStats.map((stat, idx) => (
                         <VisionStatCard key={idx} {...stat} />
                      ))}
@@ -81,7 +81,7 @@ export default function AboutUsSection() {
                </div>
 
                {/* right: station illustration */}
-               <div className='relative mx-auto flex w-[580px] items-center justify-center mt-6'>
+               <div className='relative mx-auto mt-6 flex w-full max-w-[580px] items-center justify-center lg:mt-0'>
                   {/* soft glow behind image */}
                   {/* <div className='pointer-events-none absolute inset-x-6 bottom-0 top-6 rounded-[32px] bg-[radial-gradient(circle_at_center,_#7CDF6A55,_transparent_70%)]' /> */}
                   <div className='relative w-full overflow-hidden rounded-[26px] '>
@@ -98,7 +98,7 @@ export default function AboutUsSection() {
             </div>
          </div>
 
-         <div className='  z-0 absolute  h-[550px]  -bottom-[160px] -left-[0.1%]'>
+         <div className='absolute -left-[0.1%] -bottom-[120px] z-0 h-[320px] md:-bottom-[160px] md:h-[420px] lg:h-[550px]'>
             <Image
                src={objectanimation}
                alt=''
@@ -113,9 +113,9 @@ function VisionStatCard({icon, label, value}: VisionStat) {
    return (
       <article
          className='
-        relative flex h-[250px] w-[220px] flex-col
+        relative flex min-h-[220px] w-full max-w-[220px] flex-col
         overflow-hidden
-        rounded-[22px] '>
+        rounded-[22px] sm:min-h-[250px] '>
          <div className='absolute -top-6 -right-6 inset-1 z-1'>
             <Image src={subtrackImg} fill alt='' />
          </div>

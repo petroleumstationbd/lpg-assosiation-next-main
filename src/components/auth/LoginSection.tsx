@@ -256,8 +256,8 @@ export default function LoginSection() {
 
                      {step === 'PHONE' && (
                         <div className='space-y-5'>
-                           <div className='flex items-center justify-center gap-3'>
-                              <label className='text-[10px] text-[#6F8093]'>
+                           <div className='flex flex-col items-start justify-center gap-2 sm:flex-row sm:items-center sm:gap-3'>
+                              <label className='w-full text-left text-[10px] text-[#6F8093] sm:w-auto sm:text-right'>
                                  Phone
                               </label>
                               <input
@@ -267,7 +267,7 @@ export default function LoginSection() {
                                  inputMode='tel'
                                  autoComplete='tel'
                                  className={cx(
-                                    'h-7 w-[200px] rounded-[6px] border border-black/10 bg-[#F5F7F9] px-3 text-[11px] text-[#2B3A4A] outline-none',
+                                    'h-8 w-full rounded-[6px] border border-black/10 bg-[#F5F7F9] px-3 text-[11px] text-[#2B3A4A] outline-none sm:h-7 sm:w-[200px]',
                                     'focus:border-[#0B8B4B]'
                                  )}
                               />
@@ -307,8 +307,8 @@ export default function LoginSection() {
                               </span>
                            </p>
 
-                           <div className='flex items-center justify-center gap-3'>
-                              <label className='text-[10px] text-[#6F8093]'>
+                           <div className='flex flex-col items-start justify-center gap-2 sm:flex-row sm:items-center sm:gap-3'>
+                              <label className='w-full text-left text-[10px] text-[#6F8093] sm:w-auto sm:text-right'>
                                  OTP
                               </label>
                               <input
@@ -324,7 +324,7 @@ export default function LoginSection() {
                                  inputMode='numeric'
                                  autoComplete='one-time-code'
                                  className={cx(
-                                    'h-7 w-[200px] rounded-[6px] border border-black/10 bg-[#F5F7F9] px-3 text-[11px] tracking-[0.35em] text-[#2B3A4A] outline-none',
+                                    'h-8 w-full rounded-[6px] border border-black/10 bg-[#F5F7F9] px-3 text-[11px] tracking-[0.35em] text-[#2B3A4A] outline-none sm:h-7 sm:w-[200px]',
                                     'focus:border-[#0B8B4B]'
                                  )}
                               />
@@ -385,8 +385,8 @@ export default function LoginSection() {
                            </p>
 
                            <div className='space-y-3'>
-                              <div className='flex items-center justify-center gap-3'>
-                                 <label className='text-[10px] text-[#6F8093]'>
+                              <div className='flex flex-col items-start justify-center gap-2 sm:flex-row sm:items-center sm:gap-3'>
+                                 <label className='w-full text-left text-[10px] text-[#6F8093] sm:w-auto sm:text-right'>
                                     Email
                                  </label>
                                  <input
@@ -395,14 +395,14 @@ export default function LoginSection() {
                                     inputMode='email'
                                     autoComplete='email'
                                     className={cx(
-                                       'h-7 w-[200px] rounded-[6px] border border-black/10 bg-[#F5F7F9] px-3 text-[11px] text-[#2B3A4A] outline-none',
+                                       'h-8 w-full rounded-[6px] border border-black/10 bg-[#F5F7F9] px-3 text-[11px] text-[#2B3A4A] outline-none sm:h-7 sm:w-[200px]',
                                        'focus:border-[#0B8B4B]'
                                     )}
                                  />
                               </div>
 
-                              <div className='flex items-center justify-center gap-3'>
-                                 <label className='text-[10px] text-[#6F8093]'>
+                              <div className='flex flex-col items-start justify-center gap-2 sm:flex-row sm:items-center sm:gap-3'>
+                                 <label className='w-full text-left text-[10px] text-[#6F8093] sm:w-auto sm:text-right'>
                                     Pass
                                  </label>
                                  <input
@@ -411,7 +411,7 @@ export default function LoginSection() {
                                     type='password'
                                     autoComplete='current-password'
                                     className={cx(
-                                       'h-7 w-[200px] rounded-[6px] border border-black/10 bg-[#F5F7F9] px-3 text-[11px] text-[#2B3A4A] outline-none',
+                                       'h-8 w-full rounded-[6px] border border-black/10 bg-[#F5F7F9] px-3 text-[11px] text-[#2B3A4A] outline-none sm:h-7 sm:w-[200px]',
                                        'focus:border-[#0B8B4B]'
                                     )}
                                  />

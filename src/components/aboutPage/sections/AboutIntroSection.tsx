@@ -5,25 +5,20 @@ const AboutIntroSection = () => {
    return (
       <section className='relative py-12 md:py-32'>
          {/* side glows */}
-
-
-
          <div className='pointer-events-none absolute left-[-160px] top-1/2 hidden h-[460px] w-[560px] -translate-y-1/2 rounded-full bg-[radial-gradient(circle_at_center,_#75B5534F,_transparent_70%)] lg:block' />
-
-
          <div className='pointer-events-none absolute right-[-160px] top-1/2 hidden h-[460px] w-[560px] -translate-y-1/2 rounded-full bg-[radial-gradient(circle_at_center,_#75B5534F,_transparent_70%)] lg:block' />
-         <div className='lpg-container relative flex items-center gap-10 '>
+         <div className='lpg-container relative flex flex-col items-center gap-10 lg:flex-row'>
             {/* LEFT: circular logo */}
-            <div className='flex justify-center md:justify-start w-[540px] '>
+            <div className='flex w-full justify-center md:justify-start lg:w-[540px]'>
                <Image
                   src={associationLogo}
                   alt='Association logo'
-                  className='h-[520px] w-[520px]  object-contain'
+                  className='h-[240px] w-[240px] object-contain sm:h-[320px] sm:w-[320px] lg:h-[520px] lg:w-[520px]'
                />
             </div>
 
             {/* RIGHT: heading + text */}
-            <div className='space-y-3 md:space-y-4  w-[60%]'>
+            <div className='w-full space-y-3 md:space-y-4 lg:w-[60%]'>
                <h2 className='text-[22px] md:text-[16px] font-semibold uppercase '>
                   BANGLADESH LPG AUTOGAS STATION &amp; CONVERSION
                   <br className='hidden md:block' />

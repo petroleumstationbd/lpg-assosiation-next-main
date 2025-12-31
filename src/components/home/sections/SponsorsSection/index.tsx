@@ -8,6 +8,14 @@ import leaderImg2 from '@/assets/leader-img/MirAhasanUddinFarvez.jpeg';
 import folio1 from '@/assets/Bento_Grid (7).png';
 import folio2 from '@/assets/Bento_Grid (8).png';
 import sponserImg1 from '@/assets/sponser-img/mgi.png';
+import autogas from '@/assets/partner-logos/autogas.png';
+import bashundara from '@/assets/partner-logos/bashundaralp.png';
+import bmlp from '@/assets/partner-logos/bmlp.png';
+import gftl from '@/assets/partner-logos/gftl.png';
+import greenlp from '@/assets/partner-logos/greenlp.png';
+import mrcl from '@/assets/partner-logos/mrcl.png';
+import onion from '@/assets/partner-logos/onion.png';
+import soiballogo from '@/assets/partner-logos/soiballogo.png';
 import arrowuiIcon from '@/assets/ui-icons/Layer_1 (3).png';
 import SectionHeading from '@components/ui/SectionHeading';
 import FramerMarqueeRow from './FramerMarqueeRow';
@@ -27,27 +35,14 @@ type Leader = {
 
 const sponsors: Sponsor[] = [
    {name: 'MGI', logo: sponserImg1},
-   {name: 'Laugfs Gas', logo: sponserImg1},
-   {name: 'Promita LPG', logo: sponserImg1},
-   {name: 'Total', logo: sponserImg1},
-   {name: 'Omera', logo: sponserImg1},
-   {name: 'Navana LPG', logo: sponserImg1},
-   {name: 'JMI Gas', logo: sponserImg1},
-   {name: 'Beximco LPG', logo: sponserImg1},
-   {name: 'Petromax LPG', logo: sponserImg1},
-   {name: 'Universal Gas', logo: sponserImg1},
-   {name: 'Universal Gas1', logo: sponserImg1},
-   {name: 'MGI', logo: sponserImg1},
-   {name: 'Laugfs Gas', logo: sponserImg1},
-   {name: 'Promita LPG', logo: sponserImg1},
-   {name: 'Total', logo: sponserImg1},
-   {name: 'Omera', logo: sponserImg1},
-   {name: 'Navana LPG', logo: sponserImg1},
-   {name: 'JMI Gas', logo: sponserImg1},
-   {name: 'Beximco LPG', logo: sponserImg1},
-   {name: 'Petromax LPG', logo: sponserImg1},
-   {name: 'Universal Gas', logo: sponserImg1},
-   {name: 'Universal Gas1', logo: sponserImg1},
+   {name: 'Autogas', logo: autogas},
+   {name: 'Bashundhara LPG', logo: bashundara},
+   {name: 'BMLP', logo: bmlp},
+   {name: 'GFTL', logo: gftl},
+   {name: 'Green LP', logo: greenlp},
+   {name: 'MRCL', logo: mrcl},
+   {name: 'Onion', logo: onion},
+   {name: 'Soibal', logo: soiballogo},
 ];
 
 const leaders: Leader[] = [
@@ -171,10 +166,10 @@ export default function SponsorsSection() {
                   {leaders.map(leader => (
                      <article
                         key={leader.name}
-                        className='relative h-[620px] w-[480px] place-self-center overflow-visible rounded-t-[98px] rounded-b-[12px] border-[4px] border-[#CCD2F4] bg-white/95 px-6 pb-7 pt-10 shadow-[0_18px_40px_rgba(0,0,0,0.06)]'>
+                        className='relative min-h-[520px] w-full max-w-[480px] place-self-center overflow-visible rounded-t-[98px] rounded-b-[12px] border-[4px] border-[#CCD2F4] bg-white/95 px-6 pb-7 pt-10 shadow-[0_18px_40px_rgba(0,0,0,0.06)] md:min-h-[620px]'>
                         {/* photo circle */}
                         <div className='absolute left-1/2 top-0 -translate-x-1/2 -translate-y-1/3'>
-                           <div className='flex h-[270px] w-[270px] items-center justify-center rounded-full bg-[#CCD2F4] p-[4px]'>
+                           <div className='flex h-[200px] w-[200px] items-center justify-center rounded-full bg-[#CCD2F4] p-[4px] sm:h-[240px] sm:w-[240px] lg:h-[270px] lg:w-[270px]'>
                               <div className='relative h-full w-full overflow-hidden rounded-full bg-white'>
                                  <Image
                                     src={leader.photo}

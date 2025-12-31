@@ -264,13 +264,10 @@ export default function WhyChooseUsSection() {
                subtitle='Lorem ipsum dolor sit amet consectetur. Urna ultrices amet ultrices sagittis leo in. In urna fermentum nunc sapien tortor.'
             />
 
-            <div className='mt-10 flex gap-4 lg:gap-6   h-[570px]'>
+            <div className='mt-10 flex flex-col gap-6 lg:min-h-[570px] lg:flex-row lg:gap-6'>
                {/* LEFT: main card + dynamic content */}
                <div
-                  className='relative w-[700px]
-              overflow-hidden rounded-[15px]
-              shadow-[0_22px_40px_rgba(0,0,0,0.22)]
-            '>
+                  className='relative w-full overflow-hidden rounded-[15px] shadow-[0_22px_40px_rgba(0,0,0,0.22)] lg:w-[700px]'>
                   <Image
                      src={stationIllustration}
                      alt='Modern LPG station illustration'
@@ -317,17 +314,18 @@ export default function WhyChooseUsSection() {
                </div>
 
                {/* RIGHT: vertical pills */}
-               <div className='flex h-full min-h-[280px] shrink-0 gap-3 flex-1'>
+               <div className='flex w-full flex-1 gap-3 overflow-x-auto pb-2 lg:min-h-[280px] lg:flex-col lg:overflow-visible lg:pb-0'>
                   {PILL_ITEMS.map(pill => (
                      <div
                         key={pill.id}
                         onMouseEnter={() => setHoveredId(pill.id)}
                         onMouseLeave={() => setHoveredId(null)}
                         className='
-                  relative flex h-full w-[145px] cursor-pointer items-center justify-center
+                  relative flex h-[240px] w-[120px] cursor-pointer items-center justify-center
                   overflow-hidden rounded-[15px]
                   bg-gradient-to-b from-[#00b06d30] via-[#00A261] to-[#00894e32]
                   shadow-[0_22px_36px_rgba(0,0,0,0.22)]
+                  sm:h-[280px] sm:w-[145px] lg:h-full
                 '>
                         <div className='opacity-60 z-0'>
                            <Image

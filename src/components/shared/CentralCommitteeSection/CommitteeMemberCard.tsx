@@ -29,10 +29,10 @@ export default function CommitteeMemberCard({
     <article
       className="
         relative flex  flex-col items-center justify-between
-        rounded-[20px]  min-w-[280px] max-w-[300px]
+        rounded-[20px]  w-full max-w-[300px]
         bg-gradient-to-b from-[#FBFEFF] via-[#F7FAFF] to-[#ECF3FF]
         px-7 pb-8 pt-12
-        shadow-[0_18px_40px_rgba(22,101,175,0.14)] h-[500px]
+        shadow-[0_18px_40px_rgba(22,101,175,0.14)] min-h-[440px] md:min-h-[500px]
       "
     >
       {/* role */}
@@ -44,11 +44,12 @@ export default function CommitteeMemberCard({
       <div className="mt-5 flex justify-center">
         <div
           className="
-            flex h-[170px] w-[170px] items-center justify-center
+            flex h-[140px] w-[140px] items-center justify-center
             rounded-full border-[6px] border-[#60B13D] bg-white
+            sm:h-[170px] sm:w-[170px]
           "
         >
-          <div className="relative h-[146px] w-[146px] overflow-hidden rounded-full bg-white">
+          <div className="relative h-[120px] w-[120px] overflow-hidden rounded-full bg-white sm:h-[146px] sm:w-[146px]">
             <Image
               src={member.photo}
               alt={member.name}
@@ -61,7 +62,7 @@ export default function CommitteeMemberCard({
       </div>
 
       {/* name + description */}
-      <div className="mt-6 text-center h-[270px] overflow-hidden flex flex-col justify-evenly">
+      <div className="mt-6 text-center min-h-[220px] overflow-hidden flex flex-col justify-evenly md:min-h-[270px]">
         <h3 className="text-[13px] font-semibold uppercase tracking-[0.14em] text-[#153976]">
           {member.name}
         </h3>
