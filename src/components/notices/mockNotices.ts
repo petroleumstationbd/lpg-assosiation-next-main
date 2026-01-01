@@ -1,4 +1,5 @@
 export type NoticeRow = {
+  id?: string;
   sl: number;
   title: string;
   publishedDate: string;

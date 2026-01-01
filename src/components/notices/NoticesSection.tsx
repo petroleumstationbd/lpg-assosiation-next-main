@@ -1,6 +1,6 @@
 'use client';
 
-import {useMemo} from 'react';
+import {useEffect, useMemo, useState} from 'react';
 import TablePanel from '@/components/ui/table-panel/TablePanel';
 import type {ColumnDef} from '@/components/ui/table-panel/types';
 import MeshCorners from '@/components/ui/MeshCorners';
@@ -28,7 +28,55 @@ function ViewButton({href}: {href?: string}) {
   );
 }
 
+function normalizeList(raw: any) {
+  if (Array.isArray(raw)) return raw;
+  if (Array.isArray(raw?.data)) return raw.data;
+  return [];
+}
+
+function pickDate(v?: string | null) {
+  if (!v) return '';
+  const s = String(v);
+  const m = s.match(/^(\d{4}-\d{2}-\d{2})/);
+  return m ? m[1] : s;
+}
+
 export default function NoticesSection() {
+  const [rows, setRows] = useState<NoticeRow[]>(MOCK_NOTICES);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    async function load() {
+      try {
+        const res = await fetch('/api/public/notices', {
+          cache: 'no-store',
+          signal: controller.signal,
+        });
+
+        if (!res.ok) throw new Error('Failed to load notices');
+        const data = await res.json().catch(() => null);
+        const list = normalizeList(data);
+
+        const mapped = list.map((n: any, idx: number) => ({
+          id: n?.id ? String(n.id) : undefined,
+          sl: idx + 1,
+          title: n?.title ?? '',
+          publishedDate: pickDate(n?.publish_date ?? n?.created_at ?? ''),
+          viewUrl: n?.id ? `/notices/${n.id}` : undefined,
+        }));
+
+        setRows(mapped);
+      } catch (error: any) {
+        if (error?.name === 'AbortError') return;
+        console.error('Failed to load notices', error);
+      }
+    }
+
+    load();
+    return () => controller.abort();
+  }, []);
+
   const columns = useMemo<ColumnDef<NoticeRow>[]>(() => [
     {
       id: 'sl',
@@ -86,9 +134,9 @@ export default function NoticesSection() {
 
       <div className="lpg-container relative z-10">
         <TablePanel
-          rows={MOCK_NOTICES}
+          rows={rows}
           columns={columns}
-          getRowKey={(r) => String(r.sl)}
+          getRowKey={(r) => r.id ?? String(r.sl)}
           // screenshot has no export button
           exportFileName=""
           searchText={(r) => [r.title, r.publishedDate].join(' ')}
