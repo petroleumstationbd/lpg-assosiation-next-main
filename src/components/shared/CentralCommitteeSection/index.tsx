@@ -1,26 +1,39 @@
 'use client';
 
+import {useEffect, useMemo, useState} from 'react';
 import {type StaticImageData} from 'next/image';
 import SectionHeading from '@components/ui/SectionHeading';
 import CommitteeMemberCard from './CommitteeMemberCard';
 
-
-
 import leaderImg1 from '@assets/leader-img/md-serajul-mawla.png';
 import leaderImg2 from '@assets/leader-img/hasin-parfez.png';
 
-type SocialKind = 'facebook' | 'twitter' | 'linkedin' | 'globe';
+type SocialKind = 'facebook' | 'twitter' | 'linkedin' | 'phone';
+
+type CommitteeApiItem = {
+   id: number;
+   position_name: string;
+   position_order: number;
+   full_name: string;
+   designation: string;
+   company_name: string;
+   profile_image: string | null;
+   facebook_url: string | null;
+   linkedin_url: string | null;
+   whatsapp_url: string | null;
+   is_active: boolean;
+};
 
 export type CommitteeMember = {
    id: string;
    role: string;
    name: string;
    descriptionLines: string[];
-   photo: StaticImageData;
+   photo: StaticImageData | string;
    socials: {kind: SocialKind; href: string}[];
 };
 
-const committeeMembers: CommitteeMember[] = [
+const fallbackCommitteeMembers: CommitteeMember[] = [
    {
       id: 'president-1',
       role: 'PRESIDENT',
@@ -34,7 +47,7 @@ const committeeMembers: CommitteeMember[] = [
          {kind: 'facebook', href: '#'},
          {kind: 'twitter', href: '#'},
          {kind: 'linkedin', href: '#'},
-         {kind: 'globe', href: '#'},
+         {kind: 'phone', href: '#'},
       ],
    },
    {
@@ -47,7 +60,7 @@ const committeeMembers: CommitteeMember[] = [
          {kind: 'facebook', href: '#'},
          {kind: 'twitter', href: '#'},
          {kind: 'linkedin', href: '#'},
-         {kind: 'globe', href: '#'},
+         {kind: 'phone', href: '#'},
       ],
    },
    {
@@ -63,7 +76,7 @@ const committeeMembers: CommitteeMember[] = [
          {kind: 'facebook', href: '#'},
          {kind: 'twitter', href: '#'},
          {kind: 'linkedin', href: '#'},
-         {kind: 'globe', href: '#'},
+         {kind: 'phone', href: '#'},
       ],
    },
    {
@@ -76,7 +89,7 @@ const committeeMembers: CommitteeMember[] = [
          {kind: 'facebook', href: '#'},
          {kind: 'twitter', href: '#'},
          {kind: 'linkedin', href: '#'},
-         {kind: 'globe', href: '#'},
+         {kind: 'phone', href: '#'},
       ],
    },
    {
@@ -89,7 +102,7 @@ const committeeMembers: CommitteeMember[] = [
          {kind: 'facebook', href: '#'},
          {kind: 'twitter', href: '#'},
          {kind: 'linkedin', href: '#'},
-         {kind: 'globe', href: '#'},
+         {kind: 'phone', href: '#'},
       ],
    },
    {
@@ -102,7 +115,7 @@ const committeeMembers: CommitteeMember[] = [
          {kind: 'facebook', href: '#'},
          {kind: 'twitter', href: '#'},
          {kind: 'linkedin', href: '#'},
-         {kind: 'globe', href: '#'},
+         {kind: 'phone', href: '#'},
       ],
    },
    {
@@ -117,7 +130,7 @@ const committeeMembers: CommitteeMember[] = [
          {kind: 'facebook', href: '#'},
          {kind: 'twitter', href: '#'},
          {kind: 'linkedin', href: '#'},
-         {kind: 'globe', href: '#'},
+         {kind: 'phone', href: '#'},
       ],
    },
    {
@@ -130,12 +143,92 @@ const committeeMembers: CommitteeMember[] = [
          {kind: 'facebook', href: '#'},
          {kind: 'twitter', href: '#'},
          {kind: 'linkedin', href: '#'},
-         {kind: 'globe', href: '#'},
+         {kind: 'phone', href: '#'},
       ],
    },
 ];
 
+const LARAVEL_ORIGIN =
+   process.env.NEXT_PUBLIC_LARAVEL_ORIGIN ?? 'https://admin.petroleumstationbd.com';
+
+function toAbsoluteUrl(pathOrUrl: string | null | undefined) {
+   if (!pathOrUrl) return null;
+   if (/^https?:\/\//i.test(pathOrUrl)) return pathOrUrl;
+   const p = pathOrUrl.startsWith('/') ? pathOrUrl : `/${pathOrUrl}`;
+   return `${LARAVEL_ORIGIN}${p}`;
+}
+
+function normalizeList(raw: unknown): CommitteeApiItem[] {
+   if (Array.isArray(raw)) return raw as CommitteeApiItem[];
+   if (Array.isArray((raw as {data?: CommitteeApiItem[]})?.data)) {
+      return (raw as {data: CommitteeApiItem[]}).data;
+   }
+   return [];
+}
+
+function buildDescriptionLines(designation?: string, company?: string) {
+   return [designation, company].filter(Boolean) as string[];
+}
+
+function buildSocials(item: CommitteeApiItem) {
+   const socials: {kind: SocialKind; href: string}[] = [];
+   if (item.facebook_url) socials.push({kind: 'facebook', href: item.facebook_url});
+   if (item.linkedin_url) socials.push({kind: 'linkedin', href: item.linkedin_url});
+   if (item.whatsapp_url) socials.push({kind: 'phone', href: item.whatsapp_url});
+   return socials;
+}
+
 export default function CentralCommitteeSection() {
+   const [members, setMembers] = useState<CommitteeMember[]>(fallbackCommitteeMembers);
+
+   useEffect(() => {
+      let active = true;
+      const controller = new AbortController();
+
+      const loadMembers = async () => {
+         try {
+            const res = await fetch('/api/central-committees', {
+               cache: 'no-store',
+               signal: controller.signal,
+            });
+            if (!res.ok) return;
+            const raw = await res.json().catch(() => null);
+            const list = normalizeList(raw)
+               .filter(item => item.is_active)
+               .sort((a, b) => Number(a.position_order) - Number(b.position_order))
+               .map(item => {
+                  const photoUrl = toAbsoluteUrl(item.profile_image);
+                  return {
+                     id: String(item.id),
+                     role: item.position_name?.toUpperCase() ?? 'COMMITTEE MEMBER',
+                     name: item.full_name,
+                     descriptionLines: buildDescriptionLines(
+                        item.designation,
+                        item.company_name
+                     ),
+                     photo: photoUrl ?? leaderImg1,
+                     socials: buildSocials(item),
+                  } satisfies CommitteeMember;
+               });
+
+            if (active && list.length > 0) {
+               setMembers(list);
+            }
+         } catch (error) {
+            if ((error as DOMException).name === 'AbortError') return;
+         }
+      };
+
+      loadMembers();
+
+      return () => {
+         active = false;
+         controller.abort();
+      };
+   }, []);
+
+   const renderedMembers = useMemo(() => members, [members]);
+
    return (
       <section className='relative bg-[#F4F9F4] py-16'>
          {/* side background glows */}
@@ -149,7 +242,7 @@ export default function CentralCommitteeSection() {
             />
 
             <div className='mt-10 grid gap-7 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 justify-center'>
-               {committeeMembers.map(member => (
+               {renderedMembers.map(member => (
                   <CommitteeMemberCard key={member.id} member={member} />
                ))}
             </div>
