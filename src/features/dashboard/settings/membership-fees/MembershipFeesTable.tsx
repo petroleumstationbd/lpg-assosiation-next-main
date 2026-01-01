@@ -1,10 +1,16 @@
 'use client';
 
-import {useMemo} from 'react';
+import {useMemo, useState} from 'react';
 import TablePanel from '@/components/ui/table-panel/TablePanel';
 import type {ColumnDef} from '@/components/ui/table-panel/types';
 import type {MembershipFeeRow} from './types.ts';
-import {useDeleteMembershipFee, useMembershipFees} from './queries';
+import {
+  useCreateMembershipFee,
+  useDeleteMembershipFee,
+  useMembershipFees,
+  useUpdateMembershipFee,
+} from './queries';
+import MembershipFeeFormModal from './MembershipFeeFormModal';
 
 const BRAND = '#009970';
 
@@ -17,6 +23,13 @@ const btnTop =
 export default function MembershipFeesTable() {
   const q = useMembershipFees();
   const del = useDeleteMembershipFee();
+  const createM = useCreateMembershipFee();
+  const updateM = useUpdateMembershipFee();
+
+  const [open, setOpen] = useState(false);
+  const [mode, setMode] = useState<'create' | 'edit'>('create');
+  const [activeRow, setActiveRow] = useState<MembershipFeeRow | null>(null);
+  const [formError, setFormError] = useState('');
 
   const columns = useMemo<ColumnDef<MembershipFeeRow>[]>(() => {
     return [
@@ -73,8 +86,10 @@ export default function MembershipFeesTable() {
           <button
             type="button"
             onClick={() => {
-              // TODO: open edit modal with r.id
-              void r;
+              setFormError('');
+              setMode('edit');
+              setActiveRow(r);
+              setOpen(true);
             }}
             className={`${btnBase} bg-[#133374]`}
           >
@@ -102,7 +117,7 @@ export default function MembershipFeesTable() {
         ),
       },
     ];
-  }, [del]);
+  }, [del.isPending]);
 
   if (q.isLoading) return <div className="text-sm text-slate-600">Loading...</div>;
   if (q.isError) return <div className="text-sm text-red-600">Failed to load fees.</div>;
@@ -129,7 +144,10 @@ export default function MembershipFeesTable() {
           <button
             type="button"
             onClick={() => {
-              // TODO: open "Add Fee Structure" modal
+              setFormError('');
+              setMode('create');
+              setActiveRow(null);
+              setOpen(true);
             }}
             className={btnTop}
             style={{backgroundColor: BRAND}}
@@ -137,6 +155,43 @@ export default function MembershipFeesTable() {
             Add Fee Structure
           </button>
         }
+      />
+
+      <MembershipFeeFormModal
+        open={open}
+        mode={mode}
+        initial={activeRow}
+        onClose={() => {
+          setOpen(false);
+          setActiveRow(null);
+          setFormError('');
+        }}
+        saving={createM.isPending || updateM.isPending}
+        error={formError}
+        onSubmit={async (payload) => {
+          setFormError('');
+          if (!Number.isFinite(payload.amount)) {
+            setFormError('Amount must be a number');
+            return;
+          }
+
+          try {
+            if (mode === 'create') {
+              await createM.mutateAsync(payload);
+            } else {
+              if (!activeRow?.id) {
+                setFormError('Invalid membership fee id');
+                return;
+              }
+              await updateM.mutateAsync({id: activeRow.id, patch: payload});
+            }
+
+            setOpen(false);
+            setActiveRow(null);
+          } catch (e: any) {
+            setFormError(e?.message ?? 'Failed to save membership fee');
+          }
+        }}
       />
     </div>
   );

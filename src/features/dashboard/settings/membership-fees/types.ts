@@ -6,3 +6,8 @@ export type MembershipFeeRow = {
   amount: number;
   status: FeeStatus;
 };
+
+export type MembershipFeeInput = {
+  amount: number;
+  status: FeeStatus;
+};

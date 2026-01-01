@@ -24,3 +24,32 @@ export function useDeleteMembershipFee() {
     },
   });
 }
+
+export function useCreateMembershipFee() {
+  const qc = useQueryClient();
+
+  return useMutation({
+    mutationFn: (input: Parameters<typeof membershipFeesRepo.create>[0]) =>
+      membershipFeesRepo.create(input),
+    onSuccess: async () => {
+      await qc.invalidateQueries({queryKey: keys.all});
+    },
+  });
+}
+
+export function useUpdateMembershipFee() {
+  const qc = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({
+      id,
+      patch,
+    }: {
+      id: string;
+      patch: Parameters<typeof membershipFeesRepo.update>[1];
+    }) => membershipFeesRepo.update(id, patch),
+    onSuccess: async () => {
+      await qc.invalidateQueries({queryKey: keys.all});
+    },
+  });
+}
