@@ -5,7 +5,7 @@ export async function GET() {
   try {
     const data = await laravelFetch('/central-committees', {
       method: 'GET',
-      auth: true,
+      auth: false,
     });
     return NextResponse.json(data, { status: 200 });
   } catch (e) {
