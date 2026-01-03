@@ -13,7 +13,7 @@ export type CardSlide = {
   id: number;
   title: string;
   description: string;
-  images?: StaticImageData[];
+  images?: Array<StaticImageData | string>;
   colSpan?: ColSpan;
 };
 

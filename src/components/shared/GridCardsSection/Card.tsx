@@ -5,7 +5,7 @@ export type AlbumCardData = {
    title: string;
    date: string;
    description: string;
-   image: StaticImageData;
+   image: StaticImageData | string;
    videos?: boolean;
 };
 

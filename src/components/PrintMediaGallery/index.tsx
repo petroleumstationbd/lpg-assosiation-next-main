@@ -1,3 +1,6 @@
+'use client';
+
+import {useEffect, useMemo, useState} from 'react';
 import PageHero from '@/components/shared/PageHero';
 import Footer from '@/components/layout/Footer';
 import newsHero from '@assets/newsfeed-img/banner.png';
@@ -8,131 +11,111 @@ import news1 from './img/news1.png';
 import AlbumsHeroSliderSection from '../ui/CardSliderwithStack';
 import type {CardSlide} from '@components/ui/CardSliderwithStack';
 import GridCardSection from './../shared/GridCardsSection/index';
+import type {AlbumCardData} from '../shared/GridCardsSection/Card';
+
+const BASE_MEDIA_URL = 'https://admin.petroleumstationbd.com';
+const DEFAULT_DESCRIPTION =
+   "We are Largest one and only LPG Auto Gas Station & Conversion Workshop Owner's Association in Bangladesh. Welcome to our Gallery.";
+
+type Album = {
+   id: number;
+   title?: string | null;
+   description?: string | null;
+   event_date?: string | null;
+   cover_url?: string | null;
+   created_at?: string | null;
+};
+
+function normalizeList(raw: any): Album[] {
+   if (Array.isArray(raw)) return raw;
+   if (Array.isArray(raw?.data)) return raw.data;
+   return [];
+}
+
+function formatDate(value?: string | null) {
+   if (!value) return '';
+   const date = new Date(value);
+   if (Number.isNaN(date.getTime())) return String(value);
+   return date.toLocaleDateString('en-GB', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric',
+   });
+}
+
+function resolveCoverUrl(path?: string | null) {
+   if (!path) return undefined;
+   if (path.startsWith('http')) return path;
+   return `${BASE_MEDIA_URL}${path}`;
+}
 const PrintMediaGallery = () => {
-   const cardSlides: CardSlide[] = [
-      {
-         id: 1,
-         title: 'Print Media Gallery',
-         description:
-            "We are Largest one and only LPG Auto Gas Station & Conversion Workshop Owner's Association in Bangladesh. Welcome to our Gallery",
-         images: [news1, news1, news1],
-         colSpan: 7, // ~58% width
-      },
-      {
-         id: 2,
-         title: 'Media Coverage',
-         description:
-            "We are Largest one and only LPG Auto Gas Station & Conversion Workshop Owner's Association in Bangladesh. Welcome to our Gallery",
-         colSpan: 5, // ~42% width
-      },
+   const baseSlides: CardSlide[] = useMemo(
+      () => [
+         {
+            id: 1,
+            title: 'Print Media Gallery',
+            description: DEFAULT_DESCRIPTION,
+            images: [news1, news1, news1],
+            colSpan: 7, // ~58% width
+         },
+         {
+            id: 2,
+            title: 'Media Coverage',
+            description: DEFAULT_DESCRIPTION,
+            colSpan: 5, // ~42% width
+         },
+      ],
+      []
+   );
 
-      {
-         id: 3,
-         title: 'Our Albums',
-
-         description:
-            "We are Largest one and only LPG Auto Gas Station & Conversion Workshop Owner's Association in Bangladesh. Welcome to our Gallery.",
-         images: [news1, news1, news1],
-      },
-      {
-         id: 4,
-         title: 'Our Albums',
-         description:
-            "We are Largest one and only LPG Auto Gas Station & Conversion Workshop Owner's Association in Bangladesh. Welcome to our Gallery.",
-         images: [news1, news1, news1],
-      },
-      {
-         id: 5,
-         title: 'Our Albums',
-         description:
-            "We are Largest one and only LPG Auto Gas Station & Conversion Workshop Owner's Association in Bangladesh. Welcome to our Gallery.",
-         images: [news1, news1, news1],
-      },
-      {
-         id: 6,
-         title: 'Print Media Gallery',
-         description:
-            "We are Largest one and only LPG Auto Gas Station & Conversion Workshop Owner's Association in Bangladesh. Welcome to our Gallery.",
-         // no images → just text card
-      },
-   ];
+   const [cardSlides, setCardSlides] = useState<CardSlide[]>(baseSlides);
 
    const CARDS_PER_PAGE = 2;
 
-   const sectionCardData = [
-      {
-         id: 1,
-         title: 'Press Xpress Roundtable',
-         date: '8 july, 2019',
-         description:
-            'Lorem ipsum dolor sit amet consectetur. Et sed elementum ut tellus euismod. Eleifend nullam.',
-         image: news1,
-      },
-      {
-         id: 2,
-         title: 'E-bortoman news',
-         date: '11 JAN, 2020',
-         description:
-            'Lorem ipsum dolor sit amet consectetur. Et sed elementum ut tellus euismod. Eleifend nullam.',
-         image: news1,
-      },
-      {
-         id: 3,
-         title: 'Ajker desh',
-         date: '27 FEB, 2021',
-         description:
-            'Lorem ipsum dolor sit amet consectetur. Et sed elementum ut tellus euismod. Eleifend nullam.',
-         image: news1,
-      },
-      {
-         id: 4,
-         title: 'RANGPUR GENERAL MEETING',
-         date: '20 AUG, 2019',
-         description:
-            'Lorem ipsum dolor sit amet consectetur. Et sed elementum ut tellus euismod. Eleifend nullam.',
-         image: news1,
-      },
-      {
-         id: 5,
-         title: 'doinik jono kontho',
-         date: '13 SEP, 2021',
-         description:
-            'Lorem ipsum dolor sit amet consectetur. Et sed elementum ut tellus euismod. Eleifend nullam.',
-         image: news1,
-      },
-      {
-         id: 6,
-         title: 'GENERAL MEETING',
-         date: '1 JANUARY, 2022',
-         description:
-            'Lorem ipsum dolor sit amet consectetur. Et sed elementum ut tellus euismod. Eleifend nullam.',
-         image: news1,
-      },
-      {
-         id: 7,
-         title: 'PRESS XPRESS ROUNDTABLE',
-         date: '8 JULY, 2019',
-         description:
-            'Lorem ipsum dolor sit amet consectetur. Et sed elementum ut tellus euismod. Eleifend nullam.',
-         image: news1,
-      },
-      {
-         id: 8,
-         title: 'GENERAL MEETING',
-         date: '1 JANUARY, 2022',
-         description:
-            'Lorem ipsum dolor sit amet consectetur. Et sed elementum ut tellus euismod. Eleifend nullam.',
-         image: news1,
-      },
-      {
-         id: 9,
-         title: 'PRESS XPRESS ROUNDTABLE',
-         date: '8 JULY, 2019',
-         description:
-            'Lorem ipsum dolor sit amet consectetur. Et sed elementum ut tellus euismod. Eleifend nullam.',
-         image: news1,
-      },
-   ];
+   const [sectionCardData, setSectionCardData] = useState<AlbumCardData[]>([]);
+
+   useEffect(() => {
+      const controller = new AbortController();
+
+      async function loadAlbums() {
+         try {
+            const res = await fetch('/api/public/albums', {
+               cache: 'no-store',
+               signal: controller.signal,
+            });
+
+            if (!res.ok) throw new Error('Failed to load albums');
+            const data = await res.json().catch(() => null);
+            const list = normalizeList(data);
+
+            const slides: CardSlide[] = list.map(album => ({
+               id: album.id,
+               title: album.title ?? 'Our Albums',
+               description: album.description ?? DEFAULT_DESCRIPTION,
+               images: album.cover_url
+                  ? [resolveCoverUrl(album.cover_url)]
+                  : undefined,
+            }));
+
+            const cards: AlbumCardData[] = list.map(album => ({
+               id: album.id,
+               title: album.title ?? 'Album',
+               date: formatDate(album.event_date ?? album.created_at),
+               description: album.description ?? DEFAULT_DESCRIPTION,
+               image: resolveCoverUrl(album.cover_url) ?? news1,
+            }));
+
+            setCardSlides([...baseSlides, ...slides]);
+            setSectionCardData(cards);
+         } catch (error: any) {
+            if (error?.name === 'AbortError') return;
+            console.error('Failed to load albums', error);
+         }
+      }
+
+      loadAlbums();
+      return () => controller.abort();
+   }, [baseSlides]);
 
    return (
       <main className='relative '>
