@@ -149,7 +149,8 @@ const fallbackCommitteeMembers: CommitteeMember[] = [
 ];
 
 const LARAVEL_ORIGIN =
-   process.env.NEXT_PUBLIC_LARAVEL_ORIGIN ?? 'https://admin.petroleumstationbd.com';
+   process.env.NEXT_PUBLIC_LARAVEL_ORIGIN ??
+   'https://admin.petroleumstationbd.com';
 
 function toAbsoluteUrl(pathOrUrl: string | null | undefined) {
    if (!pathOrUrl) return null;
@@ -172,14 +173,19 @@ function buildDescriptionLines(designation?: string, company?: string) {
 
 function buildSocials(item: CommitteeApiItem) {
    const socials: {kind: SocialKind; href: string}[] = [];
-   if (item.facebook_url) socials.push({kind: 'facebook', href: item.facebook_url});
-   if (item.linkedin_url) socials.push({kind: 'linkedin', href: item.linkedin_url});
-   if (item.whatsapp_url) socials.push({kind: 'phone', href: item.whatsapp_url});
+   if (item.facebook_url)
+      socials.push({kind: 'facebook', href: item.facebook_url});
+   if (item.linkedin_url)
+      socials.push({kind: 'linkedin', href: item.linkedin_url});
+   if (item.whatsapp_url)
+      socials.push({kind: 'phone', href: item.whatsapp_url});
    return socials;
 }
 
 export default function CentralCommitteeSection() {
-   const [members, setMembers] = useState<CommitteeMember[]>(fallbackCommitteeMembers);
+   const [members, setMembers] = useState<CommitteeMember[]>(
+      fallbackCommitteeMembers
+   );
 
    useEffect(() => {
       let active = true;
@@ -195,12 +201,15 @@ export default function CentralCommitteeSection() {
             const raw = await res.json().catch(() => null);
             const list = normalizeList(raw)
                .filter(item => item.is_active)
-               .sort((a, b) => Number(a.position_order) - Number(b.position_order))
+               .sort(
+                  (a, b) => Number(a.position_order) - Number(b.position_order)
+               )
                .map(item => {
                   const photoUrl = toAbsoluteUrl(item.profile_image);
                   return {
                      id: String(item.id),
-                     role: item.position_name?.toUpperCase() ?? 'COMMITTEE MEMBER',
+                     role:
+                        item.position_name?.toUpperCase() ?? 'COMMITTEE MEMBER',
                      name: item.full_name,
                      descriptionLines: buildDescriptionLines(
                         item.designation,

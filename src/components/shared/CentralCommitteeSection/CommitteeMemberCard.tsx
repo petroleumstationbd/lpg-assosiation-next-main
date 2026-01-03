@@ -29,7 +29,7 @@ export default function CommitteeMemberCard({
     <article
       className="
         relative flex  flex-col items-center justify-between
-        rounded-[20px]  w-full max-w-[300px]
+        rounded-[20px]  w-full w-[300px]
         bg-gradient-to-b from-[#FBFEFF] via-[#F7FAFF] to-[#ECF3FF]
         px-7 pb-8 pt-12
         shadow-[0_18px_40px_rgba(22,101,175,0.14)] min-h-[340px] md:min-h-[400px]
