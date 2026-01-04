@@ -1,5 +1,7 @@
 'use client';
 
+import {useState} from 'react';
+import {useRouter} from 'next/navigation';
 import {useForm} from 'react-hook-form';
 import {zodResolver} from '@hookform/resolvers/zod';
 import {registerOwnerSchema} from './schemas';
@@ -9,7 +11,11 @@ import {useRegisterOwner} from './queries';
 const BRAND = '#009970';
 
 export default function RegisterOwnerSection() {
+   const router = useRouter();
    const registerM = useRegisterOwner();
+   const [toast, setToast] = useState<{type: 'ok' | 'err'; text: string} | null>(
+      null
+   );
 
    const form = useForm<RegisterOwnerInput>({
       resolver: zodResolver(registerOwnerSchema),
@@ -27,8 +33,14 @@ export default function RegisterOwnerSection() {
       try {
          await registerM.mutateAsync(values);
          form.reset();
+         setToast({type: 'ok', text: 'Owner registered successfully.'});
+         setTimeout(() => {
+            router.push('/manage-owners/unverified');
+         }, 1200);
       } catch (e: any) {
          const msg = e?.message ?? 'Failed to register';
+
+         setToast({type: 'err', text: msg});
 
          // common Laravel messages
          if (/email/i.test(msg)) form.setError('email', {message: msg});
@@ -42,6 +54,14 @@ export default function RegisterOwnerSection() {
          <h2 className='text-center text-[16px] font-semibold text-[#2B3A4A]'>
             Register a New Station Owner
          </h2>
+
+         {toast ? (
+            <div className='fixed right-6 top-6 z-50 rounded-[10px] border border-black/5 bg-white px-4 py-3 text-[12px] shadow-[0_10px_30px_rgba(0,0,0,0.12)]'>
+               <span className={toast.type === 'ok' ? 'text-[#2D8A2D]' : 'text-[#D64242]'}>
+                  {toast.text}
+               </span>
+            </div>
+         ) : null}
 
          <div className='mx-auto w-full max-w-[640px] overflow-hidden rounded-[10px] bg-white shadow-[0_18px_55px_rgba(0,0,0,0.12)]'>
             {/* Header bar */}
