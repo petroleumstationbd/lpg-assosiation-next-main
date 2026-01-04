@@ -1,9 +1,10 @@
 import AlbumImagesSection from '@/features/dashboard/multimedia/photo-gallery/AlbumImagesSection';
 
 type Props = {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 };
 
-export default function Page({ params }: Props) {
-  return <AlbumImagesSection albumId={params.id} />;
+export default async function Page({ params }: Props) {
+  const { id } = await params;
+  return <AlbumImagesSection albumId={id} />;
 }
