@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Loader from '@/components/shared/Loader';
 import { normalizeList } from '@/lib/http/normalize';
@@ -59,11 +59,14 @@ export default function AlbumImagesSection({ albumId }: { albumId: string }) {
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [file, setFile] = useState<File | null>(null);
+  const [error, setError] = useState('');
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const gridItems = useMemo(() => items, [items]);
 
   const load = async () => {
     setLoading(true);
+    setError('');
     try {
       const res = await fetch(`/api/albums/${encodeURIComponent(albumId)}`, {
         method: 'GET',
@@ -72,7 +75,10 @@ export default function AlbumImagesSection({ albumId }: { albumId: string }) {
       });
 
       const raw = await res.json().catch(() => null);
-      if (!res.ok) return;
+      if (!res.ok) {
+        setError(raw?.message ?? 'Failed to load album images');
+        return;
+      }
 
       const album = normalizeAlbum(raw);
       const rows = normalizeList<AlbumImageApiRow>(album?.images ?? []);
@@ -89,8 +95,20 @@ export default function AlbumImagesSection({ albumId }: { albumId: string }) {
   }, [albumId]);
 
   const onUpload = async () => {
+    setError('');
     if (!file) {
-      window.alert('Please select an image first');
+      setError('Please select an image first');
+      return;
+    }
+
+    const validTypes = ['image/png', 'image/jpeg', 'image/webp'];
+    if (!validTypes.includes(file.type)) {
+      setError('Image must be PNG, JPG, or WEBP');
+      return;
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      setError('Image must be 10MB or smaller');
       return;
     }
 
@@ -108,11 +126,14 @@ export default function AlbumImagesSection({ albumId }: { albumId: string }) {
 
       const data = await res.json().catch(() => null);
       if (!res.ok) {
-        window.alert(data?.message ?? 'Failed to upload image');
+        setError(data?.message ?? 'Failed to upload image');
         return;
       }
 
       setFile(null);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
       await load();
     } finally {
       setUploading(false);
@@ -132,14 +153,14 @@ export default function AlbumImagesSection({ albumId }: { albumId: string }) {
         headers: { Accept: 'application/json' },
       });
 
-      if (!res.ok) {
+    if (!res.ok) {
         const data = await res.json().catch(() => null);
         setItems(snapshot);
-        window.alert(data?.message ?? 'Failed to delete image');
+        setError(data?.message ?? 'Failed to delete image');
       }
     } catch {
       setItems(snapshot);
-      window.alert('Network error. Please try again.');
+      setError('Network error. Please try again.');
     }
   };
 
@@ -164,6 +185,7 @@ export default function AlbumImagesSection({ albumId }: { albumId: string }) {
           <input
             type="file"
             accept="image/*"
+            ref={fileInputRef}
             onChange={(e) => setFile(e.target.files?.[0] ?? null)}
             className="text-[12px]"
           />
@@ -176,6 +198,9 @@ export default function AlbumImagesSection({ albumId }: { albumId: string }) {
             {uploading ? 'Uploading...' : 'Upload Image'}
           </button>
         </div>
+        {error ? (
+          <p className="mt-2 text-[12px] font-medium text-red-600">{error}</p>
+        ) : null}
       </div>
 
       {loading ? <Loader label="Loading..." /> : null}
