@@ -86,6 +86,17 @@ function toId(v: unknown) {
   return str(v);
 }
 
+function toDateInput(value: unknown) {
+  if (!value) return '';
+  const s = String(value).trim();
+  if (!s) return '';
+  if (s.length >= 10) {
+    const first = s.slice(0, 10);
+    if (/^\d{4}-\d{2}-\d{2}$/.test(first)) return first;
+  }
+  return '';
+}
+
 async function listStationOwners(): Promise<StationOwnerOption[]> {
   const res = await fetch('/api/station-owners', {
     method: 'GET',
@@ -146,7 +157,7 @@ function mapStationDetailsToForm(data: any): FormState {
     district_id: districtId,
     upazila_id: upazilaId,
     station_address: str(data?.station_address),
-    commencement_date: str(data?.commencement_date),
+    commencement_date: toDateInput(data?.commencement_date),
     contact_person_name: str(data?.contact_person_name),
     contact_person_phone: str(data?.contact_person_phone),
     other_businesses: mapOtherBusinesses(
@@ -154,7 +165,7 @@ function mapStationDetailsToForm(data: any): FormState {
     ),
     verification_status: str(data?.verification_status, 'PENDING'),
     verified_by: str(data?.verified_by),
-    verified_at: str(data?.verified_at),
+    verified_at: toDateInput(data?.verified_at),
     rejection_reason: str(data?.rejection_reason),
     nid: null,
     tin: null,
@@ -166,6 +177,13 @@ function toNumberOrUndefined(value: string) {
   if (!value) return undefined;
   const n = Number(value);
   return Number.isFinite(n) ? n : undefined;
+}
+
+function toDateOrUndefined(value: string) {
+  if (!value) return undefined;
+  const trimmed = value.trim();
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(trimmed)) return undefined;
+  return trimmed;
 }
 
 export default function StationFormModal({
@@ -279,9 +297,12 @@ export default function StationFormModal({
         .map((id) => toNumberOrUndefined(id) ?? id)
         .filter(Boolean),
       verification_status: form.verification_status || null,
-      verified_by: form.verified_by || null,
-      verified_at: form.verified_at || null,
-      rejection_reason: form.rejection_reason || null,
+      verified_by: toNumberOrUndefined(form.verified_by),
+      verified_at: toDateOrUndefined(form.verified_at),
+      rejection_reason:
+        form.verification_status === 'REJECTED' && form.rejection_reason
+          ? form.rejection_reason
+          : null,
       nid: form.nid,
       tin: form.tin,
       explosive_license: form.explosive_license,
