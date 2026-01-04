@@ -15,3 +15,22 @@ export async function GET() {
     return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
   }
 }
+
+export async function POST(req: Request) {
+  try {
+    const body = await req.json();
+    const data = await laravelFetch<any>('/station-owners', {
+      method: 'POST',
+      auth: false,
+      body: JSON.stringify(body),
+      headers: { 'Content-Type': 'application/json' },
+    });
+    return NextResponse.json(data);
+  } catch (e: any) {
+    if (e instanceof LaravelHttpError) {
+      return NextResponse.json({ message: e.message, errors: e.errors ?? null }, { status: e.status });
+    }
+    console.error(e);
+    return NextResponse.json({ message: 'Internal Server Error' }, { status: 500 });
+  }
+}

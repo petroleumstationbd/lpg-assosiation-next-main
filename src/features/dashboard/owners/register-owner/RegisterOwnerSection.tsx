@@ -1,10 +1,10 @@
 'use client';
 
-import {useForm} from 'react-hook-form';
-import {zodResolver} from '@hookform/resolvers/zod';
-import {registerOwnerSchema} from './schemas';
-import type {RegisterOwnerInput} from './types';
-import {useRegisterOwner} from './queries';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { registerOwnerSchema } from './schemas';
+import type { RegisterOwnerInput } from './types';
+import { useRegisterOwner } from './queries';
 
 const BRAND = '#009970';
 
@@ -14,12 +14,12 @@ export default function RegisterOwnerSection() {
    const form = useForm<RegisterOwnerInput>({
       resolver: zodResolver(registerOwnerSchema),
       defaultValues: {
-         stationOwnerName: '',
+         full_name: '',
          email: '',
-         phone: '',
+         phone_number: '',
          password: '',
          confirmPassword: '',
-         residentialAddress: '',
+         address: '',
       },
    });
 
@@ -31,9 +31,9 @@ export default function RegisterOwnerSection() {
          const msg = e?.message ?? 'Failed to register';
 
          // common Laravel messages
-         if (/email/i.test(msg)) form.setError('email', {message: msg});
-         else if (/phone/i.test(msg)) form.setError('phone', {message: msg});
-         else form.setError('stationOwnerName', {message: msg});
+         if (/email/i.test(msg)) form.setError('email', { message: msg });
+         else if (/phone_number/i.test(msg)) form.setError('phone_number', { message: msg });
+         else form.setError('full_name', { message: msg });
       }
    });
 
@@ -54,14 +54,14 @@ export default function RegisterOwnerSection() {
             <form
                onSubmit={onSubmit}
                className='px-10 pb-10 pt-8'
-               style={{['--brand' as any]: BRAND}}>
+               style={{ ['--brand' as any]: BRAND }}>
                <div className='space-y-4'>
                   <FieldRow
                      label='Station Owner Name'
-                     error={form.formState.errors.stationOwnerName?.message}>
+                     error={form.formState.errors.full_name?.message}>
                      <input
                         className='h-9 w-full rounded-[8px] border border-black/10 bg-[#F7F9FC] px-3 text-[12px] text-[#2B3A4A] outline-none focus:border-[#009970]'
-                        {...form.register('stationOwnerName')}
+                        {...form.register('full_name')}
                      />
                   </FieldRow>
 
@@ -75,11 +75,11 @@ export default function RegisterOwnerSection() {
                   </FieldRow>
 
                   <FieldRow
-                     label='Phone'
-                     error={form.formState.errors.phone?.message}>
+                     label='phone_number'
+                     error={form.formState.errors.phone_number?.message}>
                      <input
                         className='h-9 w-full rounded-[8px] border border-black/10 bg-[#F7F9FC] px-3 text-[12px] text-[#2B3A4A] outline-none focus:border-[#009970]'
-                        {...form.register('phone')}
+                        {...form.register('phone_number')}
                      />
                   </FieldRow>
 
@@ -105,10 +105,10 @@ export default function RegisterOwnerSection() {
 
                   <FieldRow
                      label='Residential Address'
-                     error={form.formState.errors.residentialAddress?.message}>
+                     error={form.formState.errors.address?.message}>
                      <input
                         className='h-9 w-full rounded-[8px] border border-black/10 bg-[#F7F9FC] px-3 text-[12px] text-[#2B3A4A] outline-none focus:border-[#009970]'
-                        {...form.register('residentialAddress')}
+                        {...form.register('address')}
                      />
                   </FieldRow>
                </div>

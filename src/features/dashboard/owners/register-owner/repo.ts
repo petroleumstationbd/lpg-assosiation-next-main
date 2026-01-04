@@ -20,7 +20,7 @@ async function readJsonOrThrow(res: Response) {
 }
 
 export async function registerOwnerRepo(input: RegisterOwnerInput): Promise<RegisterOwnerResult> {
-  const res = await fetch('/api/station-owners/register', {
+  const res = await fetch('/api/station-owners', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
     body: JSON.stringify(input),
