@@ -13,9 +13,10 @@ const BRAND = '#009970';
 export default function RegisterOwnerSection() {
    const router = useRouter();
    const registerM = useRegisterOwner();
-   const [toast, setToast] = useState<{type: 'ok' | 'err'; text: string} | null>(
-      null
-   );
+   const [toast, setToast] = useState<{
+      type: 'ok' | 'err';
+      text: string;
+   } | null>(null);
 
    const form = useForm<RegisterOwnerInput>({
       resolver: zodResolver(registerOwnerSchema),
@@ -57,7 +58,10 @@ export default function RegisterOwnerSection() {
 
          {toast ? (
             <div className='fixed right-6 top-6 z-50 rounded-[10px] border border-black/5 bg-white px-4 py-3 text-[12px] shadow-[0_10px_30px_rgba(0,0,0,0.12)]'>
-               <span className={toast.type === 'ok' ? 'text-[#2D8A2D]' : 'text-[#D64242]'}>
+               <span
+                  className={
+                     toast.type === 'ok' ? 'text-[#2D8A2D]' : 'text-[#D64242]'
+                  }>
                   {toast.text}
                </span>
             </div>

@@ -17,6 +17,7 @@ export type AuthUser = {
   email: string;
   phone_number: string;
   role?: string;
+  avatar_url?: string | null;
 };
 
 type AuthState = {
