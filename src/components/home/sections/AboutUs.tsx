@@ -37,8 +37,6 @@ export default function AboutUsSection() {
             <div className='mb-10 text-center'>
                <SectionHeading
                   title=' ABOUT US'
-                  subtitle=' Lorem ipsum dolor sit amet consectetur. Ultrices volutpat
-                  sollicitudin quis at in. In urna fermentum nunc sapien tortor.'
                />
                <h2 className='text-[22px] font-semibold tracking-[0.22em] text-[#203566]'></h2>
                <p className='mt-2 text-[12px] leading-relaxed text-[#7B8EA5]'>
