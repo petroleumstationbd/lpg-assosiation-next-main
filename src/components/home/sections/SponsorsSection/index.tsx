@@ -111,6 +111,7 @@ export default function SponsorsSection() {
       },
    ];
 
+   
    return (
       <section className='relative z-0 pb-20 pt-12'>
          <div className='pointer-events-none absolute inset-x-0 top-0 h-4' />
