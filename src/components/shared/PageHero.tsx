@@ -51,7 +51,7 @@ export default function PageHero({
          {showHeader && <Header heroSize={heightClass[height]} />}
 
          {/* content */}
-         <div className='relative flex min-h-[70%] flex-col items-center justify-center px-4 pb-6 text-center text-white'>
+         <div className='relative flex min-h-[70%] md:min-h-[500px] flex-col items-center justify-center px-4 pb-6 text-center text-white'>
             <h1 className='text-[24px] md:text-[38px] lg:text-[48px] font-bold leading-tight tracking-[-0.04em] mt-18 md:mt-0 mb-12'>
                {title}
             </h1>

@@ -15,7 +15,7 @@ const CONTACT_ITEMS: ContactItem[] = [
       id: 'person',
       type: 'person',
       label: 'CONTACT PERSON:',
-      value: 'MD. MOSHARAF HOSSAIN',
+      value: 'Mir Ahasan Uddin Parvez',
       img: personIcon,
    },
    {
@@ -29,7 +29,7 @@ const CONTACT_ITEMS: ContactItem[] = [
       id: 'phone',
       type: 'phone',
       label: 'CALL:',
-      value: '01704179247',
+      value: ' +8801730178288, +8801715851373',
       img: callIcon,
    },
    {

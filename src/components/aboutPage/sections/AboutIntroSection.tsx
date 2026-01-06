@@ -26,25 +26,43 @@ const AboutIntroSection = () => {
                </h2>
 
                <p className='text-[15px] leading-relaxed '>
-                  Bangladesh LPG Autogas Station &amp; Conversion Workshop
-                  Owners&apos; Association is a national platform of LPG Autogas
-                  station and conversion workshop owners actively working in
-                  Bangladesh. Our organisation works to ensure development and
-                  safety in every stage of LPG Autogas operations.
+                  The energy sector plays a vital and strategic role in
+                  sustaining Bangladesh’s economic growth and overall
+                  development. The uninterrupted supply of petroleum fuels is
+                  essential for industry, agriculture, transportation, and daily
+                  life, making fuel distribution a cornerstone of national
+                  progress. Petroleum dealers, distributors, agents, and petrol
+                  pump owners across the country have long been working
+                  tirelessly to ensure this continuous supply.
                </p>
 
                <p className='text-[15px] leading-relaxed '>
-                  The Association works closely with the Government, policy
-                  makers and all stakeholders to support safe and modern LPG
-                  infrastructure, improve service quality and protect consumer
-                  interests.
+                  Bangladesh Petroleum Dealer's, Distributor's, Agent's & Petrol
+                  Pump Owner's Association is a nationally representative
+                  organization that serves as a unified platform for
+                  entrepreneurs and stakeholders engaged in the petroleum fuel
+                  distribution system of Bangladesh. The Association is
+                  committed to safeguarding the legitimate rights of its
+                  members, ensuring safe and consumer-friendly fuel services,
+                  and supporting the implementation of government energy
+                  policies.
                </p>
 
                <p className='text-[15px] leading-relaxed '>
-                  Through training, guidelines and regular communication, we
-                  help our members maintain compliance with the latest rules and
-                  standards and promote an efficient, safe and sustainable LPG
-                  Autogas sector across the country.
+                  In the context of changing global energy dynamics, limited
+                  domestic resources, and growing demand, the importance of
+                  sustainable and alternative fuel solutions has increased
+                  significantly. In response, the Association actively
+                  collaborates with the government, regulatory authorities, and
+                  relevant stakeholders to promote a modern, transparent, and
+                  sustainable fuel distribution system.
+               </p>
+               <p className='text-[15px] leading-relaxed '>
+                  With a strong sense of responsibility toward national energy
+                  security, investment protection, and ethical business
+                  practices, the Association remains dedicated to contributing
+                  constructively to the development of Bangladesh’s petroleum
+                  and energy sector, both now and in the future.
                </p>
             </div>
          </div>
