@@ -17,7 +17,8 @@ export default function FramerMarqueeRow({
   durationSec = 10,
   className,
 }: FramerMarqueeRowProps) {
-  const duplicated = [...items, ...items];
+  const repeatCount = items.length < 4 ? 4 : 2;
+  const duplicated = Array.from({ length: repeatCount }, () => items).flat();
   const xKeyframes = direction === 'left' ? ['0%', '-50%'] : ['-50%', '0%'];
 
   return (
@@ -47,45 +48,51 @@ export default function FramerMarqueeRow({
       </div>
 
       {/* marquee track */}
-      <motion.div
+      <div
         className={[
-          // mobile: content-width track from left
-          'absolute inset-y-0 left-0 flex items-center',
-          'max-md:gap-3 max-md:pl-4',
-          // desktop: your old behavior (centered, full area)
-          'md:inset-0 md:justify-center md:gap-4',
+          'absolute inset-y-0 left-0 flex w-full items-center',
+          'max-md:pl-4',
+          'md:justify-center',
         ].join(' ')}
-        style={{ willChange: 'transform' }}
-        animate={{ x: xKeyframes }}
-        transition={{
-          duration: durationSec,
-          ease: 'linear',
-          repeat: Infinity,
-          repeatType: 'loop',
-        }}
       >
-        {duplicated.map((sponsor, index) => (
-          <div
-            key={`${sponsor.name}-${index}`}
-            className={[
-              'flex items-center justify-center bg-white',
-              'h-[50px] min-w-[130px] px-6 rounded-[12px]',
-              'max-md:h-[42px] max-md:min-w-[110px] max-md:px-4 max-md:rounded-[10px]',
-              // FIXED shadow typo (0.2)
-              'shadow-[0_0px_12px_rgba(0,0,0,0.2)]',
-            ].join(' ')}
-          >
-            <Image
-              src={sponsor.logo}
-              alt={sponsor.name}
-              width={100}
-              height={32}
-              sizes="(max-width: 767px) 84px, 100px"
-              className="object-contain h-[32px] w-auto max-md:h-[24px]"
-            />
-          </div>
-        ))}
-      </motion.div>
+        <motion.div
+          className={[
+            'flex w-max flex-nowrap items-center gap-4',
+            'max-md:gap-3',
+          ].join(' ')}
+          style={{ willChange: 'transform' }}
+          initial={{ x: xKeyframes[0] }}
+          animate={{ x: xKeyframes }}
+          transition={{
+            duration: durationSec,
+            ease: 'linear',
+            repeat: Infinity,
+            repeatType: 'loop',
+          }}
+        >
+          {duplicated.map((sponsor, index) => (
+            <div
+              key={`${sponsor.name}-${index}`}
+              className={[
+                'flex items-center justify-center bg-white',
+                'h-[50px] min-w-[130px] px-6 rounded-[12px]',
+                'max-md:h-[42px] max-md:min-w-[110px] max-md:px-4 max-md:rounded-[10px]',
+                // FIXED shadow typo (0.2)
+                'shadow-[0_0px_12px_rgba(0,0,0,0.2)]',
+              ].join(' ')}
+            >
+              <Image
+                src={sponsor.logo}
+                alt={sponsor.name}
+                width={100}
+                height={32}
+                sizes="(max-width: 767px) 84px, 100px"
+                className="object-contain h-[32px] w-auto max-md:h-[24px]"
+              />
+            </div>
+          ))}
+        </motion.div>
+      </div>
     </div>
   );
 }
