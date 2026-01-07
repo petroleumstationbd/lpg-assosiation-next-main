@@ -75,7 +75,7 @@ export const committeeRepo = {
     const raw = await readJsonOrThrow(res);
     const list = normalizeList(raw);
 
-    return list.map((m) => {
+const rows = list.map((m) => {
       const profileImageUrl = toAbsoluteUrl(m.profile_image);
 
       return {
@@ -99,6 +99,11 @@ export const committeeRepo = {
         whatsappUrl: m.whatsapp_url ?? null,
       };
     });
+
+     return rows.sort(
+      (a, b) => (a.positionOrder ?? 0) - (b.positionOrder ?? 0)
+    );
+
   },
 
   async create(input: CreateCommitteeInput) {
