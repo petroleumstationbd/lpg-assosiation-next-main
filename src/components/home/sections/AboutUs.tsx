@@ -1,5 +1,6 @@
 'use client';
 
+import {useEffect, useMemo, useState} from 'react';
 import Image, {StaticImageData} from 'next/image';
 import aboutImg from './../img/Group 46.png';
 import SectionHeading from '@components/ui/SectionHeading';
@@ -14,20 +15,57 @@ type VisionStat = {
    value: string;
 };
 
-const visionStats: VisionStat[] = [
-   {
-      icon: iconImg1,
-      label: 'TOTAL MEMBERS',
-      value: '483',
-   },
-   {
-      icon: iconImg2,
-      label: 'LPG STATIONS',
-      value: '928',
-   },
-];
-
 export default function AboutUsSection() {
+   const [totalMembers, setTotalMembers] = useState('0');
+   const [totalStations, setTotalStations] = useState('0');
+
+   useEffect(() => {
+      const fetchStats = async () => {
+         try {
+            const [stationsResponse, membersResponse] = await Promise.all([
+               fetch('https://admin.petroleumstationbd.com/api/public/gas-stations/approved'),
+               fetch('https://admin.petroleumstationbd.com/api/public/station-owners/list'),
+            ]);
+
+            if (stationsResponse.ok) {
+               const stationsData = await stationsResponse.json();
+               const total = Number(stationsData?.total);
+               if (Number.isFinite(total)) {
+                  setTotalStations(total.toLocaleString());
+               }
+            }
+
+            if (membersResponse.ok) {
+               const membersData = await membersResponse.json();
+               const total = Number(membersData?.total);
+               if (Number.isFinite(total)) {
+                  setTotalMembers(total.toLocaleString());
+               }
+            }
+         } catch (error) {
+            console.error('Failed to load about section stats', error);
+         }
+      };
+
+      fetchStats();
+   }, []);
+
+   const visionStats: VisionStat[] = useMemo(
+      () => [
+         {
+            icon: iconImg1,
+            label: 'TOTAL MEMBERS',
+            value: totalMembers,
+         },
+         {
+            icon: iconImg2,
+            label: 'LPG STATIONS',
+            value: totalStations,
+         },
+      ],
+      [totalMembers, totalStations],
+   );
+
    return (
       <section className='relative  md:py-16'>
          {/* subtle background geometry */}
