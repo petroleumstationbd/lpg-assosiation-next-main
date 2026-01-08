@@ -278,7 +278,8 @@ function DatalistInput({
                const inputValue = e.target.value;
                setSearch(inputValue);
                const match = options.find(
-                  option => option.label === inputValue || option.id === inputValue
+                  option =>
+                     option.label === inputValue || option.id === inputValue
                );
                onValueChange(match ? match.id : inputValue);
             }}
@@ -355,6 +356,7 @@ export default function StationForm({
 
    const ownerOptions = ownersQ.data ?? [];
    const [stationOwnerSearch, setStationOwnerSearch] = useState('');
+
    const divisionOptions = useMemo(
       () =>
          (divisionsQ.data ?? []).map(d => ({
@@ -363,6 +365,21 @@ export default function StationForm({
          })),
       [divisionsQ.data]
    );
+
+   const filteredDistricts = useMemo(() => {
+      const divisionId = toNumberOrUndefined(form.division_id);
+      const rows = districtsQ.data ?? [];
+      if (!divisionId) return rows;
+      return rows.filter(d => d.divisionId === divisionId);
+   }, [districtsQ.data, form.division_id]);
+
+   const filteredUpazilas = useMemo(() => {
+      const districtId = toNumberOrUndefined(form.district_id);
+      const rows = upazilasQ.data ?? [];
+      if (!districtId) return rows;
+      return rows.filter(u => u.districtId === districtId);
+   }, [upazilasQ.data, form.district_id]);
+
    const districtOptions = useMemo(
       () =>
          filteredDistricts.map(d => ({
@@ -371,6 +388,7 @@ export default function StationForm({
          })),
       [filteredDistricts]
    );
+
    const upazilaOptions = useMemo(
       () =>
          filteredUpazilas.map(u => ({
@@ -379,6 +397,7 @@ export default function StationForm({
          })),
       [filteredUpazilas]
    );
+
    const statusOptions = useMemo(
       () => [
          {id: 'PENDING', label: 'PENDING'},
@@ -406,52 +425,6 @@ export default function StationForm({
          setStationOwnerSearch(nextValue);
       }
    }, [form.station_owner_id, ownerOptions, stationOwnerSearch]);
-
-   const filteredDistricts = useMemo(() => {
-      const divisionId = toNumberOrUndefined(form.division_id);
-      const rows = districtsQ.data ?? [];
-      if (!divisionId) return rows;
-      return rows.filter(d => d.divisionId === divisionId);
-   }, [districtsQ.data, form.division_id]);
-
-   const filteredUpazilas = useMemo(() => {
-      const districtId = toNumberOrUndefined(form.district_id);
-      const rows = upazilasQ.data ?? [];
-      if (!districtId) return rows;
-      return rows.filter(u => u.districtId === districtId);
-   }, [form.district_id, upazilasQ.data]);
-   const divisionOptions = useMemo(
-      () =>
-         (divisionsQ.data ?? []).map(d => ({
-            id: toId(d.id),
-            label: d.name,
-         })),
-      [divisionsQ.data]
-   );
-   const districtOptions = useMemo(
-      () =>
-         filteredDistricts.map(d => ({
-            id: toId(d.id),
-            label: d.districtName,
-         })),
-      [filteredDistricts]
-   );
-   const upazilaOptions = useMemo(
-      () =>
-         filteredUpazilas.map(u => ({
-            id: toId(u.id),
-            label: u.upazilaName,
-         })),
-      [filteredUpazilas]
-   );
-   const statusOptions = useMemo(
-      () => [
-         {id: 'PENDING', label: 'PENDING'},
-         {id: 'APPROVED', label: 'APPROVED'},
-         {id: 'REJECTED', label: 'REJECTED'},
-      ],
-      []
-   );
 
    const requiredFilled =
       !!form.station_owner_id &&
@@ -530,6 +503,7 @@ export default function StationForm({
                         Pending
                      </div>
                   ) : null}
+
                   <div>
                      <label className='mb-1 block text-[11px] font-semibold text-[#173A7A]'>
                         Station Owner
@@ -798,6 +772,7 @@ export default function StationForm({
                      </label>
                      <input
                         value={form.contact_person_phone}
+                        type='number'
                         onChange={e =>
                            setForm(prev => ({
                               ...prev,
@@ -918,7 +893,6 @@ export default function StationForm({
                      </>
                   ) : null}
 
-                  {/* NID */}
                   <div>
                      <label className='mb-1 block text-[11px] font-semibold text-[#173A7A]'>
                         NID
@@ -955,7 +929,6 @@ export default function StationForm({
                      </div>
                   </div>
 
-                  {/* TIN */}
                   <div>
                      <label className='mb-1 block text-[11px] font-semibold text-[#173A7A]'>
                         TIN
@@ -992,7 +965,6 @@ export default function StationForm({
                      </div>
                   </div>
 
-                  {/* Explosive License */}
                   <div>
                      <label className='mb-1 block text-[11px] font-semibold text-[#173A7A]'>
                         Explosive License
