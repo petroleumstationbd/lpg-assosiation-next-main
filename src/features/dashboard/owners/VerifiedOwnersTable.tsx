@@ -3,7 +3,7 @@
 import {useCallback, useMemo, useState} from 'react';
 import TablePanel from '@/components/ui/table-panel/TablePanel';
 import type {ColumnDef} from '@/components/ui/table-panel/types';
-import {Check, Pencil, Plus, Trash2} from 'lucide-react';
+import {Check, Eye, Pencil, Plus, Trash2} from 'lucide-react';
 import Loader from '@/components/shared/Loader';
 import type {OwnerRow} from './types';
 import {useVerifiedOwners, useRejectOwner, useUpdateOwner} from './queries';
@@ -294,8 +294,8 @@ export default function VerifiedOwnersTable() {
             cell: r => <span className='text-[#133374]'>{r.address}</span>,
          },
          {
-            id: 'addSection',
-            header: 'ADD SECTION',
+            id: 'carddownload',
+            header: 'Download Card',
             sortable: false,
             align: 'center',
             headerClassName: 'w-[140px]',
@@ -306,17 +306,17 @@ export default function VerifiedOwnersTable() {
                   type='button'
                   onClick={() => onPrint(r)}
                   className='h-7 rounded-[6px] bg-[#DCE6FF] flex items-center gap-2 px-4 text-[11px] font-semibold text-[#2D5BFF] shadow-sm hover:brightness-105 active:brightness-95'>
-                  <Download size={16} /> <span className="mt-1">Card</span>
+                  <Download size={16} /> <span className='mt-1'>Card</span>
                </button>
             ),
          },
          {
-            id: 'upazila',
-            header: 'Upazila',
+            id: 'options',
+            header: 'Options',
             sortable: false,
             align: 'center',
             headerClassName: 'w-[160px]',
-            csvHeader: 'Upazila',
+            csvHeader: 'Options',
             csvValue: () => '',
             cell: r => (
                <div className='flex items-center justify-center gap-2'>
@@ -331,7 +331,7 @@ export default function VerifiedOwnersTable() {
                      title='Verify'
                      onClick={() => onVerify(r.id)}
                      bg='bg-[#22C55E] text-white'>
-                     <Check size={14} />
+                     <Eye size={14} />
                   </ActionDot>
 
                   <ActionDot
