@@ -244,6 +244,10 @@ function toDateOrUndefined(value: string) {
    return trimmed;
 }
 
+function isValidOptionId(options: DatalistOption[], value: string) {
+   return options.some(option => option.id === value);
+}
+
 function DatalistInput({
    value,
    options,
@@ -316,6 +320,7 @@ export default function StationForm({
    initialValues?: StationFormDefaults;
 }) {
    const [form, setForm] = useState<FormState>(emptyForm);
+   const [validationError, setValidationError] = useState<string | null>(null);
    const isView = mode === 'view';
 
    const stationDetailsQ = useQuery({
@@ -357,56 +362,6 @@ export default function StationForm({
    const ownerOptions = ownersQ.data ?? [];
    const [stationOwnerSearch, setStationOwnerSearch] = useState('');
 
-   const divisionOptions = useMemo(
-      () =>
-         (divisionsQ.data ?? []).map(d => ({
-            id: toId(d.id),
-            label: d.name,
-         })),
-      [divisionsQ.data]
-   );
-
-   const filteredDistricts = useMemo(() => {
-      const divisionId = toNumberOrUndefined(form.division_id);
-      const rows = districtsQ.data ?? [];
-      if (!divisionId) return rows;
-      return rows.filter(d => d.divisionId === divisionId);
-   }, [districtsQ.data, form.division_id]);
-
-   const filteredUpazilas = useMemo(() => {
-      const districtId = toNumberOrUndefined(form.district_id);
-      const rows = upazilasQ.data ?? [];
-      if (!districtId) return rows;
-      return rows.filter(u => u.districtId === districtId);
-   }, [upazilasQ.data, form.district_id]);
-
-   const districtOptions = useMemo(
-      () =>
-         filteredDistricts.map(d => ({
-            id: toId(d.id),
-            label: d.districtName,
-         })),
-      [filteredDistricts]
-   );
-
-   const upazilaOptions = useMemo(
-      () =>
-         filteredUpazilas.map(u => ({
-            id: toId(u.id),
-            label: u.upazilaName,
-         })),
-      [filteredUpazilas]
-   );
-
-   const statusOptions = useMemo(
-      () => [
-         {id: 'PENDING', label: 'PENDING'},
-         {id: 'APPROVED', label: 'APPROVED'},
-         {id: 'REJECTED', label: 'REJECTED'},
-      ],
-      []
-   );
-
    useEffect(() => {
       if (!enabled) return;
       if (mode === 'create') {
@@ -426,17 +381,167 @@ export default function StationForm({
       }
    }, [form.station_owner_id, ownerOptions, stationOwnerSearch]);
 
+   useEffect(() => {
+      if (validationError) {
+         setValidationError(null);
+      }
+   }, [form, validationError]);
+
+   const filteredDistricts = useMemo(() => {
+      const divisionId = toNumberOrUndefined(form.division_id);
+      const rows = districtsQ.data ?? [];
+      if (!divisionId) return rows;
+      return rows.filter(d => d.divisionId === divisionId);
+   }, [districtsQ.data, form.division_id]);
+
+   const filteredUpazilas = useMemo(() => {
+      const districtId = toNumberOrUndefined(form.district_id);
+      const rows = upazilasQ.data ?? [];
+      if (!districtId) return rows;
+      return rows.filter(u => u.districtId === districtId);
+   }, [form.district_id, upazilasQ.data]);
+   const divisionOptions = useMemo(
+      () =>
+         (divisionsQ.data ?? []).map(d => ({
+            id: toId(d.id),
+            label: d.name,
+         })),
+      [divisionsQ.data]
+   );
+   const districtOptions = useMemo(
+      () =>
+         filteredDistricts.map(d => ({
+            id: toId(d.id),
+            label: d.districtName,
+         })),
+      [filteredDistricts]
+   );
+   const upazilaOptions = useMemo(
+      () =>
+         filteredUpazilas.map(u => ({
+            id: toId(u.id),
+            label: u.upazilaName,
+         })),
+      [filteredUpazilas]
+   );
+   const statusOptions = useMemo(
+      () => [
+         {id: 'PENDING', label: 'PENDING'},
+         {id: 'APPROVED', label: 'APPROVED'},
+         {id: 'REJECTED', label: 'REJECTED'},
+      ],
+      []
+   );
+
    const requiredFilled =
       !!form.station_owner_id &&
-      !!form.station_name &&
+      !!form.station_name.trim() &&
       !!form.division_id &&
       !!form.district_id &&
       !!form.upazila_id &&
-      !!form.station_address;
+      !!form.station_address.trim();
 
    const canSubmit = !isView && requiredFilled && !saving;
 
    const handleSubmit = () => {
+      setValidationError(null);
+      const trimmedPhone = form.contact_person_phone.trim();
+      const maxFileSizeBytes = 20 * 1024 * 1024;
+
+      if (
+         !form.station_owner_id ||
+         !isValidOptionId(ownerOptions, form.station_owner_id)
+      ) {
+         setValidationError('Please select a valid station owner from the list.');
+         return;
+      }
+
+      if (!form.station_name.trim()) {
+         setValidationError('Station name is required.');
+         return;
+      }
+
+      if (
+         !form.division_id ||
+         !divisionOptions.length ||
+         !isValidOptionId(divisionOptions, form.division_id)
+      ) {
+         setValidationError('Please select a valid division from the list.');
+         return;
+      }
+
+      if (
+         !form.district_id ||
+         !districtOptions.length ||
+         !isValidOptionId(districtOptions, form.district_id)
+      ) {
+         setValidationError('Please select a valid district from the list.');
+         return;
+      }
+
+      if (
+         !form.upazila_id ||
+         !upazilaOptions.length ||
+         !isValidOptionId(upazilaOptions, form.upazila_id)
+      ) {
+         setValidationError('Please select a valid upazila from the list.');
+         return;
+      }
+
+      if (!form.station_address.trim()) {
+         setValidationError('Station address is required.');
+         return;
+      }
+
+      if (trimmedPhone && !/^\d{11}$/.test(trimmedPhone)) {
+         setValidationError('Contact person phone must be exactly 11 digits.');
+         return;
+      }
+
+      if (
+         mode !== 'create' &&
+         form.station_status &&
+         !isValidOptionId(statusOptions, form.station_status)
+      ) {
+         setValidationError('Please select a valid station status.');
+         return;
+      }
+
+      if (
+         mode !== 'create' &&
+         form.verification_status &&
+         !isValidOptionId(statusOptions, form.verification_status)
+      ) {
+         setValidationError('Please select a valid verification status.');
+         return;
+      }
+
+      if (
+         form.verification_status === 'REJECTED' &&
+         !form.rejection_reason.trim()
+      ) {
+         setValidationError('Please provide a rejection reason.');
+         return;
+      }
+
+      if (form.nid && form.nid.size > maxFileSizeBytes) {
+         setValidationError('NID file size must be 20MB or smaller.');
+         return;
+      }
+
+      if (form.tin && form.tin.size > maxFileSizeBytes) {
+         setValidationError('TIN file size must be 20MB or smaller.');
+         return;
+      }
+
+      if (
+         form.explosive_license &&
+         form.explosive_license.size > maxFileSizeBytes
+      ) {
+         setValidationError('Explosive license file size must be 20MB or smaller.');
+         return;
+      }
+
       const statusDefaults: Partial<typeof createDefaults> =
          mode === 'create' ? createDefaults : {};
 
@@ -1003,9 +1108,9 @@ export default function StationForm({
                   </div>
                </div>
 
-               {error ? (
+               {validationError || error ? (
                   <p className='text-[12px] font-medium text-red-600'>
-                     {error}
+                     {validationError ?? error}
                   </p>
                ) : null}
 
