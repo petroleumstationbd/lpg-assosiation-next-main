@@ -1,4 +1,4 @@
-import type { OwnerRow, OwnerStatus, UpdateOwnerInput } from './types';
+import type { OwnerDetails, OwnerRow, OwnerStationRow, OwnerStatus, UpdateOwnerInput } from './types';
 import type { RegisterOwnerInput } from './register-owner/types';
 
 export type RegisterOwnerResult = { id: string };
@@ -7,6 +7,7 @@ export type OwnersRepo = {
   registerOwner(input: RegisterOwnerInput): Promise<RegisterOwnerResult>;
   listUnverified(): Promise<OwnerRow[]>;
   listVerified(): Promise<OwnerRow[]>;
+  getOwnerDetails(id: string): Promise<OwnerDetails>;
   approve(id: string): Promise<void>;
   reject(id: string): Promise<void>;
   update(id: string, input: UpdateOwnerInput): Promise<void>;
@@ -25,6 +26,14 @@ type ApiOwnerRow = {
   // observed: "PENDING" exists; approve should use "APPROVED"
   verification_status: string; // PENDING | APPROVED | REJECTED (likely)
   rejection_reason: string | null;
+};
+
+type ApiOwnerDetails = ApiOwnerRow & {
+  member_id?: string | number | null;
+  membership_id?: string | number | null;
+  stations?: any[];
+  gas_stations?: any[];
+  gasStations?: any[];
 };
 
 async function apiJson<T>(path: string, init?: RequestInit): Promise<T> {
@@ -97,6 +106,77 @@ function mapOwner(r: ApiOwnerRow): OwnerRow {
   };
 }
 
+function normalizeOwnerDetails(payload: any): ApiOwnerDetails {
+  if (!payload) return {} as ApiOwnerDetails;
+  if (payload.station_owner) return payload.station_owner as ApiOwnerDetails;
+  if (payload.owner) return payload.owner as ApiOwnerDetails;
+  if (payload.data) return payload.data as ApiOwnerDetails;
+  return payload as ApiOwnerDetails;
+}
+
+function mapStation(row: any, index: number): OwnerStationRow {
+  const id = String(row?.id ?? row?.station_id ?? index);
+  const name = row?.station_name ?? row?.name ?? row?.title ?? '—';
+  const status = row?.status ?? row?.station_status ?? row?.verification_status ?? row?.approval_status ?? '';
+  const division = row?.division ?? row?.division_name ?? row?.division?.name ?? '';
+  const district = row?.district ?? row?.district_name ?? row?.district?.name ?? '';
+  const upazila = row?.upazila ?? row?.upazila_name ?? row?.upazila?.name ?? '';
+  const address = row?.address ?? row?.location ?? '';
+  const contactPerson = row?.contact_person ?? row?.contact_name ?? row?.owner_name ?? '';
+  const phone = row?.phone_number ?? row?.phone ?? '';
+  const stationType =
+    row?.station_type?.name ??
+    row?.station_type ??
+    row?.station_type_name ??
+    row?.type ??
+    '';
+  const fuelType = row?.fuel_type?.name ?? row?.fuel_type ?? row?.fuel_type_name ?? '';
+  const startDate = row?.start_date ?? row?.started_at ?? row?.created_at ?? '';
+
+  return {
+    id,
+    name,
+    status: status ? String(status) : '',
+    division: division ? String(division) : '',
+    district: district ? String(district) : '',
+    upazila: upazila ? String(upazila) : '',
+    address: address ? String(address) : '',
+    contactPerson: contactPerson ? String(contactPerson) : '',
+    phone: phone ? String(phone) : '',
+    stationType: stationType ? String(stationType) : '',
+    fuelType: fuelType ? String(fuelType) : '',
+    startDate: startDate ? String(startDate) : '',
+  };
+}
+
+function mapOwnerDetails(payload: any): OwnerDetails {
+  const data = normalizeOwnerDetails(payload);
+  const stationsRaw =
+    data?.gas_stations ??
+    data?.stations ??
+    data?.gasStations ??
+    payload?.gas_stations ??
+    payload?.stations ??
+    payload?.gasStations ??
+    [];
+  const stations = Array.isArray(stationsRaw)
+    ? stationsRaw.map((row, index) => mapStation(row, index))
+    : [];
+  const memberId =
+    (data?.member_id ?? data?.membership_id ?? data?.id ?? '')?.toString() || '';
+
+  return {
+    id: String(data?.id ?? ''),
+    memberId,
+    photoUrl: data?.profile_image ? toAbs(data.profile_image) : DEFAULT_AVATAR,
+    ownerName: data?.full_name ?? '',
+    phone: data?.phone_number ?? '',
+    email: data?.email ?? '',
+    address: data?.address ?? '',
+    stations,
+  };
+}
+
 export const ownersRepo: OwnersRepo = {
   async registerOwner(input) {
     const data = await apiJson<any>('/api/station-owners/register', {
@@ -118,6 +198,11 @@ export const ownersRepo: OwnersRepo = {
   async listVerified() {
     const rows = await apiJson<ApiOwnerRow[]>('/api/station-owners/verified');
     return rows.map(mapOwner);
+  },
+
+  async getOwnerDetails(id) {
+    const data = await apiJson<any>(`/api/station-owners/${id}`);
+    return mapOwnerDetails(data);
   },
 
   async approve(id) {
