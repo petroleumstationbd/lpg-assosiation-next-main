@@ -34,7 +34,6 @@ export type OwnerDetails = {
   phone?: string;
   email?: string;
   address?: string;
-  stations: OwnerStationRow[];
 };
 
 export type UpdateOwnerInput = {

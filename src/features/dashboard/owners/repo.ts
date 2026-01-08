@@ -8,6 +8,7 @@ export type OwnersRepo = {
   listUnverified(): Promise<OwnerRow[]>;
   listVerified(): Promise<OwnerRow[]>;
   getOwnerDetails(id: string): Promise<OwnerDetails>;
+  listOwnerStations(ownerId: string): Promise<OwnerStationRow[]>;
   approve(id: string): Promise<void>;
   reject(id: string): Promise<void>;
   update(id: string, input: UpdateOwnerInput): Promise<void>;
@@ -31,9 +32,6 @@ type ApiOwnerRow = {
 type ApiOwnerDetails = ApiOwnerRow & {
   member_id?: string | number | null;
   membership_id?: string | number | null;
-  stations?: any[];
-  gas_stations?: any[];
-  gasStations?: any[];
 };
 
 async function apiJson<T>(path: string, init?: RequestInit): Promise<T> {
@@ -114,24 +112,21 @@ function normalizeOwnerDetails(payload: any): ApiOwnerDetails {
   return payload as ApiOwnerDetails;
 }
 
-function mapStation(row: any, index: number): OwnerStationRow {
+function mapOwnerStation(row: any, index: number): OwnerStationRow {
   const id = String(row?.id ?? row?.station_id ?? index);
   const name = row?.station_name ?? row?.name ?? row?.title ?? '—';
-  const status = row?.status ?? row?.station_status ?? row?.verification_status ?? row?.approval_status ?? '';
-  const division = row?.division ?? row?.division_name ?? row?.division?.name ?? '';
-  const district = row?.district ?? row?.district_name ?? row?.district?.name ?? '';
-  const upazila = row?.upazila ?? row?.upazila_name ?? row?.upazila?.name ?? '';
-  const address = row?.address ?? row?.location ?? '';
-  const contactPerson = row?.contact_person ?? row?.contact_name ?? row?.owner_name ?? '';
-  const phone = row?.phone_number ?? row?.phone ?? '';
+  const status = row?.station_status ?? row?.status ?? row?.verification_status ?? row?.approval_status ?? '';
+  const division = row?.division?.name ?? row?.division_name ?? row?.division ?? '';
+  const district = row?.district?.name ?? row?.district_name ?? row?.district ?? '';
+  const upazila = row?.upazila?.name ?? row?.upazila_name ?? row?.upazila ?? '';
+  const address = row?.station_address ?? row?.address ?? row?.location ?? '';
+  const contactPerson =
+    row?.contact_person_name ?? row?.contact_person ?? row?.contact_name ?? row?.owner_name ?? '';
+  const phone = row?.contact_person_phone ?? row?.phone_number ?? row?.phone ?? '';
   const stationType =
-    row?.station_type?.name ??
-    row?.station_type ??
-    row?.station_type_name ??
-    row?.type ??
-    '';
+    row?.station_type?.name ?? row?.station_type ?? row?.station_type_name ?? row?.type ?? '';
   const fuelType = row?.fuel_type?.name ?? row?.fuel_type ?? row?.fuel_type_name ?? '';
-  const startDate = row?.start_date ?? row?.started_at ?? row?.created_at ?? '';
+  const startDate = row?.commencement_date ?? row?.start_date ?? row?.started_at ?? row?.created_at ?? '';
 
   return {
     id,
@@ -151,17 +146,6 @@ function mapStation(row: any, index: number): OwnerStationRow {
 
 function mapOwnerDetails(payload: any): OwnerDetails {
   const data = normalizeOwnerDetails(payload);
-  const stationsRaw =
-    data?.gas_stations ??
-    data?.stations ??
-    data?.gasStations ??
-    payload?.gas_stations ??
-    payload?.stations ??
-    payload?.gasStations ??
-    [];
-  const stations = Array.isArray(stationsRaw)
-    ? stationsRaw.map((row, index) => mapStation(row, index))
-    : [];
   const memberId =
     (data?.member_id ?? data?.membership_id ?? data?.id ?? '')?.toString() || '';
 
@@ -173,7 +157,6 @@ function mapOwnerDetails(payload: any): OwnerDetails {
     phone: data?.phone_number ?? '',
     email: data?.email ?? '',
     address: data?.address ?? '',
-    stations,
   };
 }
 
@@ -203,6 +186,13 @@ export const ownersRepo: OwnersRepo = {
   async getOwnerDetails(id) {
     const data = await apiJson<any>(`/api/station-owners/${id}`);
     return mapOwnerDetails(data);
+  },
+
+  async listOwnerStations(ownerId) {
+    const rows = await apiJson<any[]>(`/api/gas-stations`);
+    return rows
+      .filter(row => String(row?.station_owner_id ?? '') === String(ownerId))
+      .map((row, index) => mapOwnerStation(row, index));
   },
 
   async approve(id) {

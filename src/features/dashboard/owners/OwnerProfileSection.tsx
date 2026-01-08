@@ -5,7 +5,7 @@ import {useRouter} from 'next/navigation';
 import TablePanel from '@/components/ui/table-panel/TablePanel';
 import type {ColumnDef} from '@/components/ui/table-panel/types';
 import Loader from '@/components/shared/Loader';
-import {useOwnerDetails} from './queries';
+import {useOwnerDetails, useOwnerStations} from './queries';
 import type {OwnerStationRow} from './types';
 
 type Props = {
@@ -31,6 +31,7 @@ function InfoRow({label, value}: {label: string; value?: string}) {
 export default function OwnerProfileSection({ownerId}: Props) {
    const router = useRouter();
    const q = useOwnerDetails(ownerId);
+   const stationsQ = useOwnerStations(ownerId);
 
    const columns = useMemo<ColumnDef<OwnerStationRow>[]>(() => {
       return [
@@ -156,8 +157,9 @@ export default function OwnerProfileSection({ownerId}: Props) {
       ];
    }, []);
 
-   if (q.isLoading) return <Loader label='Loading...' />;
-   if (q.isError || !q.data) {
+   if (q.isLoading || stationsQ.isLoading)
+      return <Loader label='Loading...' />;
+   if (q.isError || stationsQ.isError || !q.data) {
       return (
          <div className='rounded-xl bg-white/70 p-6 text-sm text-red-600 shadow'>
             Failed to load owner profile.
@@ -166,6 +168,7 @@ export default function OwnerProfileSection({ownerId}: Props) {
    }
 
    const owner = q.data;
+   const stations = stationsQ.data ?? [];
 
    return (
       <div className='space-y-6'>
@@ -216,7 +219,7 @@ export default function OwnerProfileSection({ownerId}: Props) {
             </h3>
 
             <TablePanel<OwnerStationRow>
-               rows={owner.stations}
+               rows={stations}
                columns={columns}
                getRowKey={(row, index) => row.id ?? `${index}`}
                searchText={r =>
