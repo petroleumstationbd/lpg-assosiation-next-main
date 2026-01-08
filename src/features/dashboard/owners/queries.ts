@@ -20,6 +20,14 @@ export function useVerifiedOwners() {
   });
 }
 
+export function useOwnerDetails(id?: string) {
+  return useQuery({
+    queryKey: [...KEY, 'detail', id],
+    queryFn: () => ownersRepo.getOwnerDetails(id as string),
+    enabled: Boolean(id),
+  });
+}
+
 export function useApproveOwner() {
   const qc = useQueryClient();
   return useMutation({
