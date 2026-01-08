@@ -81,6 +81,12 @@ export async function downloadOwnerIdCardPng(row: OwnerRow) {
   ctx.textBaseline = 'alphabetic';
   ctx.fillText(String(memberId), FRONT_LAYOUT.memberIdText.x * W, FRONT_LAYOUT.memberIdText.y * H);
 
+  const ownerName = row.ownerName ?? '';
+  if (ownerName) {
+    ctx.font = `600 ${Math.round(FRONT_LAYOUT.memberNameText.size)}px Arial`;
+    ctx.fillText(ownerName, FRONT_LAYOUT.memberNameText.x * W, FRONT_LAYOUT.memberNameText.y * H);
+  }
+
   const origin = typeof window !== 'undefined' ? window.location.origin : '';
   const qrText = `${origin}/members/${row.memberId ?? row.id}`;
   const qrDataUrl = await QRCode.toDataURL(qrText, { margin: 0, width: 600 });
