@@ -420,6 +420,38 @@ export default function StationForm({
       if (!districtId) return rows;
       return rows.filter(u => u.districtId === districtId);
    }, [form.district_id, upazilasQ.data]);
+   const divisionOptions = useMemo(
+      () =>
+         (divisionsQ.data ?? []).map(d => ({
+            id: toId(d.id),
+            label: d.name,
+         })),
+      [divisionsQ.data]
+   );
+   const districtOptions = useMemo(
+      () =>
+         filteredDistricts.map(d => ({
+            id: toId(d.id),
+            label: d.districtName,
+         })),
+      [filteredDistricts]
+   );
+   const upazilaOptions = useMemo(
+      () =>
+         filteredUpazilas.map(u => ({
+            id: toId(u.id),
+            label: u.upazilaName,
+         })),
+      [filteredUpazilas]
+   );
+   const statusOptions = useMemo(
+      () => [
+         {id: 'PENDING', label: 'PENDING'},
+         {id: 'APPROVED', label: 'APPROVED'},
+         {id: 'REJECTED', label: 'REJECTED'},
+      ],
+      []
+   );
 
    const requiredFilled =
       !!form.station_owner_id &&
