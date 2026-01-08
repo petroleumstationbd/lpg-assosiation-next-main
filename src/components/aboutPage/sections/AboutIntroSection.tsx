@@ -20,9 +20,9 @@ const AboutIntroSection = () => {
             {/* RIGHT: heading + text */}
             <div className='w-full space-y-3 md:space-y-4 lg:w-[60%]'>
                <h2 className='text-[22px] md:text-[16px] font-semibold uppercase '>
-                  BANGLADESH LPG AUTOGAS STATION &amp; CONVERSION
+                  Bangladesh petroleum dealer's Distributor's Agent's &
                   <br className='hidden md:block' />
-                  WORKSHOP OWNERS&apos; ASSOCIATION
+                  Petrol Pump Owner's Association
                </h2>
 
                <p className='text-[15px] leading-relaxed '>
