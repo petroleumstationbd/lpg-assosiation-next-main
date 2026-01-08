@@ -62,24 +62,7 @@ export default function OwnerProfileSection({ownerId}: Props) {
             csvValue: r => r.division ?? '',
             cell: r => <span className='text-[#133374]'>{r.division || '—'}</span>,
          },
-         {
-            id: 'district',
-            header: 'District',
-            sortable: true,
-            sortValue: r => r.district ?? '',
-            csvHeader: 'District',
-            csvValue: r => r.district ?? '',
-            cell: r => <span className='text-[#133374]'>{r.district || '—'}</span>,
-         },
-         {
-            id: 'upazila',
-            header: 'Upazila',
-            sortable: true,
-            sortValue: r => r.upazila ?? '',
-            csvHeader: 'Upazila',
-            csvValue: r => r.upazila ?? '',
-            cell: r => <span className='text-[#133374]'>{r.upazila || '—'}</span>,
-         },
+
          {
             id: 'address',
             header: 'Address',
@@ -87,16 +70,6 @@ export default function OwnerProfileSection({ownerId}: Props) {
             csvHeader: 'Address',
             csvValue: r => r.address ?? '',
             cell: r => <span className='text-[#133374]'>{r.address || '—'}</span>,
-         },
-         {
-            id: 'contactPerson',
-            header: 'Contact Person',
-            sortable: false,
-            csvHeader: 'Contact Person',
-            csvValue: r => r.contactPerson ?? '',
-            cell: r => (
-               <span className='text-[#133374]'>{r.contactPerson || '—'}</span>
-            ),
          },
          {
             id: 'phone',
@@ -126,34 +99,7 @@ export default function OwnerProfileSection({ownerId}: Props) {
                <span className='text-[#133374]'>{r.fuelType || '—'}</span>
             ),
          },
-         {
-            id: 'startDate',
-            header: 'Start Date',
-            sortable: false,
-            csvHeader: 'Start Date',
-            csvValue: r => r.startDate ?? '',
-            cell: r => (
-               <span className='text-[#133374]'>
-                  {formatDate(r.startDate)}
-               </span>
-            ),
-         },
-         {
-            id: 'action',
-            header: 'Action',
-            sortable: false,
-            align: 'center',
-            headerClassName: 'w-[120px]',
-            csvHeader: 'Action',
-            csvValue: () => '',
-            cell: () => (
-               <button
-                  type='button'
-                  className='h-7 rounded-[6px] bg-[#EF4444]/10 px-3 text-[11px] font-semibold text-[#EF4444] shadow-sm'>
-                  Detach
-               </button>
-            ),
-         },
+
       ];
    }, []);
 
