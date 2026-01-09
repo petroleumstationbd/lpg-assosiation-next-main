@@ -116,9 +116,16 @@ export default function CentralCommitteeSection() {
             const raw = await res.json();
             const list = normalizeList(raw)
                .filter(item => item.is_active)
-               .sort(
-                  (a, b) => Number(a.position_order) - Number(b.position_order)
-               )
+               .sort((a, b) => {
+                  const orderA = Number.isFinite(Number(a.position_order))
+                     ? Number(a.position_order)
+                     : Number.POSITIVE_INFINITY;
+                  const orderB = Number.isFinite(Number(b.position_order))
+                     ? Number(b.position_order)
+                     : Number.POSITIVE_INFINITY;
+                  if (orderA !== orderB) return orderA - orderB;
+                  return Number(b.id) - Number(a.id);
+               })
                .map(item => {
                   const photoUrl = toAbsoluteUrl(item.profile_image);
                   return {
@@ -181,7 +188,7 @@ export default function CentralCommitteeSection() {
                   No committee members found.
                </div>
             ) : (
-               <div className='mt-10 grid px-4 md:px-1 gap-7 justify-center grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
+               <div className='mt-10 grid gap-7 justify-center px-4 md:px-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4'>
                   {renderedMembers.map(member => (
                      <CommitteeMemberCard key={member.id} member={member} />
                   ))}
