@@ -1,6 +1,7 @@
 'use client';
 
 import {useCallback, useMemo, useState} from 'react';
+import {useRouter} from 'next/navigation';
 import {useQueryClient} from '@tanstack/react-query';
 import {Database, Eye, Pencil, FileText} from 'lucide-react';
 
@@ -56,6 +57,7 @@ function IconDot({
 }
 
 export default function VerifiedStationsTable() {
+   const router = useRouter();
    const q = useVerifiedStations();
    const qc = useQueryClient();
    const createM = useCreateStation();
@@ -86,12 +88,9 @@ export default function VerifiedStationsTable() {
          } catch {
             // If prefetch fails, still navigate; manage page can refetch.
          }
-         setFormError('');
-         setActiveId(id);
-         setModalMode('view');
-         setModalOpen(true);
+         router.push(`/manage-stations/verified/${id}`);
       },
-      [prefetchDetails]
+      [prefetchDetails, router]
    );
 
    const goEdit = useCallback(
