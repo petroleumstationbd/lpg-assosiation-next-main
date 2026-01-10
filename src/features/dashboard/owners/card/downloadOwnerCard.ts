@@ -238,7 +238,7 @@ const createPdfBlobFromCanvas = (canvas: HTMLCanvasElement) => {
    pushString('trailer\n<< /Size 6 /Root 1 0 R >>\n');
    pushString(`startxref\n${xrefOffset}\n%%EOF`);
 
-   return new Blob(parts, {type: 'application/pdf'});
+   // return new Blob(parts, {type: 'application/pdf'});
 };
 
 const drawOwnerOverlay = (ctx: CanvasRenderingContext2D, owner: OwnerRow) => {
