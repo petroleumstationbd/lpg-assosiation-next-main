@@ -151,6 +151,96 @@ const drawQr = (
 
 type Rect = {x: number; y: number; w: number; h: number};
 
+const base64ToBytes = (base64: string) => {
+   const binary = atob(base64);
+   const bytes = new Uint8Array(binary.length);
+   for (let i = 0; i < binary.length; i += 1) {
+      bytes[i] = binary.charCodeAt(i);
+   }
+   return bytes;
+};
+
+const createPdfBlobFromCanvas = (canvas: HTMLCanvasElement) => {
+   const jpegDataUrl = canvas.toDataURL('image/jpeg', 1);
+   const [header, base64Data] = jpegDataUrl.split(',');
+   if (!base64Data || !header) return null;
+
+   const match = /data:image\/jpeg/.exec(header);
+   if (!match) return null;
+
+   const imageBytes = base64ToBytes(base64Data);
+   const width = canvas.width;
+   const height = canvas.height;
+   const encoder = new TextEncoder();
+   const parts: Uint8Array[] = [];
+   const offsets: number[] = [];
+   let offset = 0;
+
+   const pushString = (value: string) => {
+      const bytes = encoder.encode(value);
+      parts.push(bytes);
+      offset += bytes.length;
+   };
+
+   const pushBytes = (bytes: Uint8Array) => {
+      parts.push(bytes);
+      offset += bytes.length;
+   };
+
+   const startObject = (id: number) => {
+      offsets[id] = offset;
+      pushString(`${id} 0 obj\n`);
+   };
+
+   const endObject = () => {
+      pushString('endobj\n');
+   };
+
+   pushString('%PDF-1.4\n');
+
+   startObject(1);
+   pushString('<< /Type /Catalog /Pages 2 0 R >>\n');
+   endObject();
+
+   startObject(2);
+   pushString('<< /Type /Pages /Kids [3 0 R] /Count 1 >>\n');
+   endObject();
+
+   startObject(3);
+   pushString(
+      `<< /Type /Page /Parent 2 0 R /Resources << /XObject << /Im0 4 0 R >> /ProcSet [/PDF /ImageC] >> /MediaBox [0 0 ${width} ${height}] /Contents 5 0 R >>\n`
+   );
+   endObject();
+
+   startObject(4);
+   pushString(
+      `<< /Type /XObject /Subtype /Image /Width ${width} /Height ${height} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${imageBytes.length} >>\nstream\n`
+   );
+   pushBytes(imageBytes);
+   pushString('\nendstream\n');
+   endObject();
+
+   const contentStream = `q\n${width} 0 0 ${height} 0 0 cm\n/Im0 Do\nQ\n`;
+   const contentBytes = encoder.encode(contentStream);
+   startObject(5);
+   pushString(`<< /Length ${contentBytes.length} >>\nstream\n`);
+   pushBytes(contentBytes);
+   pushString('endstream\n');
+   endObject();
+
+   const xrefOffset = offset;
+   pushString('xref\n0 6\n');
+   pushString('0000000000 65535 f \n');
+   for (let i = 1; i <= 5; i += 1) {
+      const entry = `${offsets[i].toString().padStart(10, '0')} 00000 n \n`;
+      pushString(entry);
+   }
+   pushString('trailer\n<< /Size 6 /Root 1 0 R >>\n');
+   pushString(`startxref\n${xrefOffset}\n%%EOF`);
+
+   return new Blob(parts, {type: 'application/pdf'});
+};
+
 const drawOwnerOverlay = (ctx: CanvasRenderingContext2D, owner: OwnerRow) => {
    const width = ctx.canvas.width;
    const height = ctx.canvas.height;
@@ -238,8 +328,19 @@ export async function downloadOwnerCard(row: OwnerRow) {
    drawPhoto(ctx, photo, photoFrame);
    drawQr(ctx, qr, qrFrame);
 
+   const imageDataUrl = canvas.toDataURL('image/png');
    const link = document.createElement('a');
    link.download = `owner-card-${row.memberId ?? row.id}.png`;
-   link.href = canvas.toDataURL('image/png');
+   link.href = imageDataUrl;
    link.click();
+
+   const pdfBlob = createPdfBlobFromCanvas(canvas);
+   if (pdfBlob) {
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+      const pdfLink = document.createElement('a');
+      pdfLink.download = `owner-card-${row.memberId ?? row.id}.pdf`;
+      pdfLink.href = pdfUrl;
+      pdfLink.click();
+      URL.revokeObjectURL(pdfUrl);
+   }
 }
