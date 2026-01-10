@@ -1,6 +1,7 @@
 'use client';
 
 import {useCallback, useMemo, useState} from 'react';
+import {useRouter} from 'next/navigation';
 import {useQueryClient} from '@tanstack/react-query';
 import TablePanel from '@/components/ui/table-panel/TablePanel';
 import type {ColumnDef} from '@/components/ui/table-panel/types';
@@ -64,6 +65,7 @@ function ActionDot({
 }
 
 export default function UnverifiedStationsSection() {
+   const router = useRouter();
    const qc = useQueryClient();
 
    const q = useUnverifiedStations();
@@ -95,12 +97,9 @@ export default function UnverifiedStationsSection() {
          try {
             await prefetchDetails(id);
          } catch {}
-         setFormError('');
-         setActiveId(id);
-         setModalMode('view');
-         setModalOpen(true);
+         router.push(`/manage-stations/unverified/${id}`);
       },
-      [prefetchDetails]
+      [prefetchDetails, router]
    );
 
    const goEdit = useCallback(
