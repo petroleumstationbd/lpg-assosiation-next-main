@@ -88,7 +88,7 @@ const drawPhoto = (
    ctx.shadowColor = 'rgba(15, 23, 42, 0.25)';
    ctx.shadowBlur = 18;
    ctx.shadowOffsetY = 6;
-   ctx.fillStyle = '#FFFFFF';
+   ctx.fillStyle = '#615363';
    drawRoundedRect(ctx, frame.x, frame.y, frame.w, frame.h, 16);
    ctx.fill();
    ctx.restore();
@@ -122,7 +122,11 @@ const drawPhoto = (
    ctx.restore();
 };
 
-const drawQr = (ctx: CanvasRenderingContext2D, qr: HTMLImageElement | null, frame: Rect) => {
+const drawQr = (
+   ctx: CanvasRenderingContext2D,
+   qr: HTMLImageElement | null,
+   frame: Rect
+) => {
    ctx.save();
    ctx.fillStyle = 'rgba(255,255,255,0.92)';
    drawRoundedRect(ctx, frame.x, frame.y, frame.w, frame.h, 12);
@@ -131,7 +135,14 @@ const drawQr = (ctx: CanvasRenderingContext2D, qr: HTMLImageElement | null, fram
 
    if (qr) {
       ctx.save();
-      drawRoundedRect(ctx, frame.x + 4, frame.y + 4, frame.w - 8, frame.h - 8, 10);
+      drawRoundedRect(
+         ctx,
+         frame.x + 4,
+         frame.y + 4,
+         frame.w - 8,
+         frame.h - 8,
+         10
+      );
       ctx.clip();
       ctx.drawImage(qr, frame.x + 4, frame.y + 4, frame.w - 8, frame.h - 8);
       ctx.restore();
@@ -149,16 +160,16 @@ const drawOwnerOverlay = (ctx: CanvasRenderingContext2D, owner: OwnerRow) => {
    const memberIdText = owner.memberId ?? owner.id ?? '—';
 
    const photoFrame: Rect = {
-      x: width * 0.065,
-      y: frontHeight * 0.42,
-      w: width * 0.15,
-      h: frontHeight * 0.34,
+      x: width * 0.075,
+      y: frontHeight * 0.44,
+      w: width * 0.2,
+      h: frontHeight * 0.38,
    };
 
-   const qrSize = width * 0.14;
+   const qrSize = width * 0.22;
    const qrFrame: Rect = {
-      x: width * 0.785,
-      y: frontHeight * 0.45,
+      x: width * 0.685,
+      y: frontHeight * 0.58,
       w: qrSize,
       h: qrSize,
    };
@@ -168,7 +179,7 @@ const drawOwnerOverlay = (ctx: CanvasRenderingContext2D, owner: OwnerRow) => {
       ctx,
       nameText,
       width * 0.34,
-      frontHeight * 0.55,
+      frontHeight * 0.57,
       width * 0.52,
       700,
       Math.round(width * 0.03)
@@ -178,8 +189,8 @@ const drawOwnerOverlay = (ctx: CanvasRenderingContext2D, owner: OwnerRow) => {
    drawFittedText(
       ctx,
       memberIdText,
-      width * 0.415,
-      frontHeight * 0.64,
+      width * 0.472,
+      frontHeight * 0.65,
       width * 0.28,
       600,
       Math.round(width * 0.026)
