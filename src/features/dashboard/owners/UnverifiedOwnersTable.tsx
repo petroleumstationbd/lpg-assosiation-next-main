@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState } from 'react';
+import { useRouter } from 'next/navigation';
 import TablePanel from '@/components/ui/table-panel/TablePanel';
 import type { ColumnDef } from '@/components/ui/table-panel/types';
 import { BadgeCheck, Pencil, Plus, Trash2 } from 'lucide-react';
@@ -8,9 +9,6 @@ import Loader from '@/components/shared/Loader';
 import type { OwnerRow } from './types';
 import { useApproveOwner, useRejectOwner, useUnverifiedOwners, useUpdateOwner } from './queries';
 import EditOwnerModal from './EditOwnerModal';
-import StationFormModal from '@/features/dashboard/stations/StationFormModal';
-import type { StationFormDefaults } from '@/features/dashboard/stations/StationForm';
-import { useCreateStation } from '@/features/dashboard/stations/verified/queries';
 
 function cx(...v: Array<string | false | null | undefined>) {
   return v.filter(Boolean).join(' ');
@@ -44,19 +42,15 @@ function ActionDot({
 }
 
 export default function UnverifiedOwnersTable() {
+  const router = useRouter();
   const q = useUnverifiedOwners();
   const approveM = useApproveOwner();
   const rejectM = useRejectOwner();
   const updateM = useUpdateOwner();
-  const createStationM = useCreateStation();
 
   const [editOpen, setEditOpen] = useState(false);
   const [active, setActive] = useState<OwnerRow | null>(null);
-  const [stationOpen, setStationOpen] = useState(false);
-  const [stationDefaults, setStationDefaults] = useState<StationFormDefaults | null>(null);
-  const [stationError, setStationError] = useState('');
-
-  const busy = approveM.isPending || rejectM.isPending || updateM.isPending || createStationM.isPending;
+  const busy = approveM.isPending || rejectM.isPending || updateM.isPending;
 
   const columns = useMemo<ColumnDef<OwnerRow>[]>(() => {
     const onEdit = (row: OwnerRow) => {
@@ -65,14 +59,14 @@ export default function UnverifiedOwnersTable() {
     };
 
     const onAddStation = (row: OwnerRow) => {
-      setStationDefaults({
-        station_owner_id: row.id,
-        contact_person_name: row.ownerName ?? '',
-        contact_person_phone: row.phone ?? '',
-        station_address: row.address ?? '',
+      const params = new URLSearchParams({
+        returnTo: '/manage-owners/unverified',
+        ownerId: row.id,
+        ownerName: row.ownerName ?? '',
+        ownerPhone: row.phone ?? '',
+        ownerAddress: row.address ?? '',
       });
-      setStationError('');
-      setStationOpen(true);
+      router.push(`/manage-stations/create-station?${params.toString()}`);
     };
 
     return [
@@ -177,7 +171,7 @@ export default function UnverifiedOwnersTable() {
         ),
       },
     ];
-  }, [approveM, rejectM, busy]);
+  }, [approveM, rejectM, busy, router]);
 
   if (q.isLoading) return <Loader label="Loading..." />;
   if (q.isError) return <div className="text-sm text-red-600">Failed to load owners.</div>;
@@ -220,34 +214,6 @@ export default function UnverifiedOwnersTable() {
         }}
       />
 
-      <StationFormModal
-        open={stationOpen}
-        mode="create"
-        saving={createStationM.isPending}
-        error={stationError}
-        initialValues={stationDefaults ?? undefined}
-        onClose={() => {
-          setStationOpen(false);
-          setStationDefaults(null);
-          setStationError('');
-        }}
-        onSubmit={async (payload) => {
-          setStationError('');
-
-          const normalizedPayload = {
-            ...payload,
-            station_owner_id: payload.station_owner_id ?? undefined,
-          };
-
-          try {
-            await createStationM.mutateAsync(normalizedPayload as any);
-            setStationOpen(false);
-            setStationDefaults(null);
-          } catch (e: any) {
-            setStationError(e?.message ?? 'Failed to save station');
-          }
-        }}
-      />
     </div>
   );
 }

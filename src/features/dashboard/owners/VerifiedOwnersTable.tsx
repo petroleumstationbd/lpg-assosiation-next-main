@@ -10,9 +10,6 @@ import type {OwnerRow} from './types';
 import {useVerifiedOwners, useRejectOwner, useUpdateOwner} from './queries';
 import EditOwnerModal from './EditOwnerModal';
 import {Download} from 'lucide-react';
-import StationFormModal from '@/features/dashboard/stations/StationFormModal';
-import type {StationFormDefaults} from '@/features/dashboard/stations/StationForm';
-import {useCreateStation} from '@/features/dashboard/stations/verified/queries';
 import {downloadOwnerCard} from './card/downloadOwnerCard';
 function cx(...v: Array<string | false | null | undefined>) {
    return v.filter(Boolean).join(' ');
@@ -49,14 +46,9 @@ export default function VerifiedOwnersTable() {
    const q = useVerifiedOwners();
    const deleteM = useRejectOwner();
    const updateM = useUpdateOwner();
-   const createStationM = useCreateStation();
 
    const [editOpen, setEditOpen] = useState(false);
    const [active, setActive] = useState<OwnerRow | null>(null);
-   const [stationOpen, setStationOpen] = useState(false);
-   const [stationDefaults, setStationDefaults] =
-      useState<StationFormDefaults | null>(null);
-   const [stationError, setStationError] = useState('');
 
    const handleDownloadCard = useCallback((row: OwnerRow) => {
       void downloadOwnerCard(row);
@@ -68,14 +60,14 @@ export default function VerifiedOwnersTable() {
       };
 
       const onAddStation = (row: OwnerRow) => {
-         setStationDefaults({
-            station_owner_id: row.id,
-            contact_person_name: row.ownerName ?? '',
-            contact_person_phone: row.phone ?? '',
-            station_address: row.address ?? '',
+         const params = new URLSearchParams({
+            returnTo: '/manage-owners/verified',
+            ownerId: row.id,
+            ownerName: row.ownerName ?? '',
+            ownerPhone: row.phone ?? '',
+            ownerAddress: row.address ?? '',
          });
-         setStationError('');
-         setStationOpen(true);
+         router.push(`/manage-stations/create-station?${params.toString()}`);
       };
 
       const onVerify = (id: string) => {
@@ -253,34 +245,6 @@ export default function VerifiedOwnersTable() {
             }}
          />
 
-         <StationFormModal
-            open={stationOpen}
-            mode='create'
-            saving={createStationM.isPending}
-            error={stationError}
-            initialValues={stationDefaults ?? undefined}
-            onClose={() => {
-               setStationOpen(false);
-               setStationDefaults(null);
-               setStationError('');
-            }}
-            onSubmit={async payload => {
-               setStationError('');
-
-               const normalizedPayload = {
-                  ...payload,
-                  station_owner_id: payload.station_owner_id ?? undefined,
-               };
-
-               try {
-                  await createStationM.mutateAsync(normalizedPayload as any);
-                  setStationOpen(false);
-                  setStationDefaults(null);
-               } catch (e: any) {
-                  setStationError(e?.message ?? 'Failed to save station');
-               }
-            }}
-         />
       </div>
    );
 }
