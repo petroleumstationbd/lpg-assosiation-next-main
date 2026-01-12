@@ -716,7 +716,7 @@ export default function StationForm({
          return;
       }
 
-      const statusDefaults: Partial<typeof createDefaults> =
+      const statusDefaults: Partial<Pick<FormState, 'station_status' | 'verification_status'>> =
          mode === 'create' ? createDefaults : {};
 
       const payload: StationUpsertPayload = {
