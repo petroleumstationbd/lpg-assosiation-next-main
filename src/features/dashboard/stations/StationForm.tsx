@@ -1060,6 +1060,7 @@ export default function StationForm({
                            }))
                         }
                         disabled={isView}
+                        placeholder='Type Station Address'
                         rows={2}
                         className='w-full rounded-[6px] border border-black/10 px-3 py-2 text-[12px] outline-none focus:border-black/20 disabled:bg-black/5'
                      />
@@ -1095,6 +1096,7 @@ export default function StationForm({
                               contact_person_name: e.target.value,
                            }))
                         }
+                        placeholder='Type Contact Person Name'
                         disabled={isView}
                         className='h-9 w-full rounded-[6px] border border-black/10 px-3 text-[12px] outline-none focus:border-black/20 disabled:bg-black/5'
                      />
@@ -1113,6 +1115,7 @@ export default function StationForm({
                               contact_person_phone: e.target.value,
                            }))
                         }
+                        placeholder='Type Contact Person 11 digit Phone'
                         disabled={isView}
                         className='h-9 w-full rounded-[6px] border border-black/10 px-3 text-[12px] outline-none focus:border-black/20 disabled:bg-black/5'
                      />

@@ -8,7 +8,10 @@ export default function ContactPage() {
       <div>
          <PageHero
             title='Contact Us'
-            subtitle='We warmly welcome you to our Contact Us page. If you have any questions, inquiries, or need further information about our association, please do not hesitate to contact us. We value your feedback and look forward to assisting you.'
+            subtitle="Welcome to Bangladesh petroleum dealer's Distributor's Agent's &
+Petrol Pump Owner's Association.
+
+We warmly welcome you to our Contact Us page. If you have any questions, inquiries, or need further information about our association, please do not hesitate to contact us. We value your feedback and look forward to assisting you"
             backgroundImage={heroImg}
             height='compact'
          />
