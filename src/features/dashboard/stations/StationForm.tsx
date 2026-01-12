@@ -41,7 +41,6 @@ type FormState = {
    contact_person_name: string;
    contact_person_phone: string;
    other_businesses: string[];
-   verification_status: string;
    verified_by: string;
    verified_at: string;
    rejection_reason: string;
@@ -78,7 +77,6 @@ const emptyForm: FormState = {
    contact_person_name: '',
    contact_person_phone: '',
    other_businesses: [],
-   verification_status: 'PENDING',
    verified_by: '',
    verified_at: '',
    rejection_reason: '',
@@ -89,10 +87,9 @@ const emptyForm: FormState = {
 
 const createDefaults: Pick<
    FormState,
-   'station_status' | 'verification_status'
+   'station_status'
 > = {
    station_status: 'Running',
-   verification_status: 'PENDING',
 };
 
 function pick<T>(...vals: Array<T | null | undefined>) {
