@@ -274,7 +274,7 @@ export default function PaymentRecordSection() {
               />
             </div>
 
-            <div>
+            <div className="border border-black/10  rounded-[6px] ">
               <label className="mb-1 block text-[11px] font-semibold text-[#173A7A]">
                 Choose Documents
               </label>
@@ -324,7 +324,7 @@ export default function PaymentRecordSection() {
         </div>
       </div>
 
-      <div className="rounded-[12px] border border-black/5 bg-white p-5 shadow-sm">
+      {/* <div className="rounded-[12px] border border-black/5 bg-white p-5 shadow-sm">
         <h3 className="mb-4 text-[14px] font-semibold text-[#2B3A4A]">
           Payment Records
         </h3>
@@ -341,7 +341,7 @@ export default function PaymentRecordSection() {
             showExport={false}
           />
         )}
-      </div>
+      </div> */}
     </div>
   );
 }
