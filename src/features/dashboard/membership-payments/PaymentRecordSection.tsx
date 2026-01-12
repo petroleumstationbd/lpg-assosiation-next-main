@@ -144,7 +144,7 @@ export default function PaymentRecordSection() {
   return (
     <div className="space-y-6">
       <h2 className="text-center text-[16px] font-semibold text-[#2B3A4A]">
-        Gas Station&apos;s Payment
+         Station&apos;s Payment
       </h2>
 
       <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_340px]">
