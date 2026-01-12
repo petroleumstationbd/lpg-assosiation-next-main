@@ -299,7 +299,6 @@ function DatalistInput({
             className='h-9 w-full rounded-[6px] border border-black/10 px-3 text-[12px] outline-none focus:border-black/20 disabled:bg-black/5'
          />
          <datalist id={listId}>
-            <option key={placeholder} value={placeholder} />
             {options.map(option => (
                <option key={option.id} value={option.label} />
             ))}
