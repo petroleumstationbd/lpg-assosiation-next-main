@@ -6,6 +6,7 @@ import './globals.css';
 import {AuthProvider, type AuthUser} from '@/features/auth/AuthProvider';
 import {laravelFetch, LaravelHttpError} from '@/lib/http/laravelFetch';
 import {getToken, clearToken} from '@/lib/auth/cookies';
+import WhatsAppStickyButton from '@/components/shared/WhatsAppStickyButton';
 
 const geistSans = Geist({variable: '--font-geist-sans', subsets: ['latin']});
 const geistMono = Geist_Mono({
@@ -60,7 +61,10 @@ export default async function RootLayout({
          <body
             className={`${geistSans.variable} ${geistMono.variable} antialiased  w-full`}>
             <Providers>
-               <AuthProvider initialUser={user}>{children}</AuthProvider>
+               <AuthProvider initialUser={user}>
+                  {children}
+                  <WhatsAppStickyButton />
+               </AuthProvider>
             </Providers>
          </body>
       </html>
