@@ -71,7 +71,7 @@ export default function EditOwnerModal({
                   setProfileImage(file);
                   setPreviewUrl(file ? URL.createObjectURL(file) : null);
                 }}
-                className="text-[12px] text-[#2B3A4A]"
+                className="text-[12px] text-[#2B3A4A] border border-black/10 rounded-[8px] px-2 py-1 bg-[#F7F9FC] outline-none focus:border-[#009970]"
               />
               <span className="text-[11px] text-[#6B7280]">
                 {profileImage ? profileImage.name : 'Choose a new image to replace the current one.'}

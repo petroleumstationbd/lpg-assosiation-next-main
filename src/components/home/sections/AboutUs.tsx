@@ -63,7 +63,7 @@ export default function AboutUsSection() {
          },
          {
             icon: iconImg2,
-            label: 'LPG STATIONS',
+            label: 'Petrol Pump station',
             value: totalStations,
          },
       ],
@@ -174,7 +174,7 @@ function VisionStatCard({icon, label, value}: VisionStat) {
 
             {/* label + value pinned toward bottom like design */}
             <div className='mt-auto'>
-               <p className='text-[18px] font-semibold uppercase tracking-[0.0em] '>
+               <p className='text-[14px] font-semibold uppercase tracking-[0.0em] '>
                   {label}
                </p>
                <p className='mt-2 text-[50px] font-semibold leading-none '>

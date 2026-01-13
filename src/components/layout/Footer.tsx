@@ -177,8 +177,8 @@ export default function Footer() {
                   </div>
                </div>
                <p className='text-center text-[11px] text-white/75  w-full'>
-                  © {new Date().getFullYear()} Bangladesh LPG Autogas Station
-                  &amp; Conversion Workshop Owner&apos;s Association. All Rights
+                  © {new Date().getFullYear()} Bangladesh petroleum dealer's Distributor's Agent's &
+Petrol Pump Owner's Association. All Rights
                   Reserved.
                </p>
             </div>

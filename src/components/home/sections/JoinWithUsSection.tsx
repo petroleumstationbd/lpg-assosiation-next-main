@@ -33,8 +33,7 @@ export default function JoinWithUsSection() {
             </h2>
 
             <p className="mt-3 mx-auto max-w-[720px] text-[12px] sm:text-[13px] leading-relaxed text-[#EEEEEE]">
-              Lorem ipsum dolor sit amet consectetur. Urna dolor amet sed ultricies quis leo.
-              In urna fermentum nunc sapien tortor.
+             Join with us to connect, collaborate, and contribute to a stronger, safer, and more progressive petroleum industry.
             </p>
 
             <div className="mt-6 inline-flex">

@@ -32,7 +32,7 @@ export default function OurPartnersSection() {
             {' '}
             <SectionHeading
                title='OUR PARTNERS'
-               subtitle='Lorem ipsum dolor sit amet consectetur. Ultrices volutpat sollicitudin quis at in. In urna fermentum nunc sapien tortor.'
+               subtitle='We work with trusted partners who share our commitment to quality, safety, innovation, and sustainable growth in the petroleum sector.'
             />{' '}
             <div className='mt-8 rounded-[26px]'>
                {' '}

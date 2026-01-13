@@ -127,7 +127,7 @@ export default function SponsorsSection() {
                <div className='lpg-container'>
                   <SectionHeading
                      title=' SPONSORS'
-                     subtitle=' Lorem ipsum dolor sit amet consectetur. Ultrices volutpat sollicitudin quis at in. In urna fermentum nunc sapien tortor.'
+                     subtitle='Proudly supported by trusted sponsors who contribute to the growth, sustainability, and advancement of Bangladesh’s petroleum and energy sector.'
                   />
 
                   <div className='mt-7 flex w-full flex-col items-center gap-4'>
