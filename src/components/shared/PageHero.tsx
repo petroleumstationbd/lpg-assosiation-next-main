@@ -30,6 +30,7 @@ export default function PageHero({
    height = 'full',
    showHeader = true,
    overlayFrom = 'down',
+   
 }: PageHeroProps) {
    return (
       <div className={`relative w-full ${heightClass[height]}`}>
@@ -49,7 +50,7 @@ export default function PageHero({
          />
 
          {showHeader && <Header heroSize={heightClass[height]} />}
-         <div className="h-[120px]"></div>
+         <div className='h-[120px]'></div>
 
          {/* content */}
          <div className='relative flex min-h-[70%] md:min-h-[500px] flex-col items-center justify-center px-4 lpg-container pb-6 text-center text-white'>
