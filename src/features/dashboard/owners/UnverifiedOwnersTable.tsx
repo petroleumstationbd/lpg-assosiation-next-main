@@ -207,6 +207,7 @@ export default function UnverifiedOwnersTable() {
               phoneNumber: input.phoneNumber,
               email: input.email,
               address: input.address,
+              profileImage: input.profileImage,
             },
           });
           setEditOpen(false);

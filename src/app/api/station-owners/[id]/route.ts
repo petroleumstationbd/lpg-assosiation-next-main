@@ -5,14 +5,25 @@ type Ctx = { params: Promise<{ id: string }> };
 
 export async function PUT(req: Request, ctx: Ctx) {
   const { id } = await ctx.params;
-
-  console.log(id)
-
-  const body = await req.json().catch(() => null);
-  if (!body) return NextResponse.json({ message: 'Invalid JSON body' }, { status: 400 });
+  const contentType = req.headers.get('content-type') ?? '';
 
   try {
-    // JSON update: safest is POST + _method=PUT (works with Laravel patterns consistently)
+    if (contentType.includes('multipart/form-data')) {
+      const formData = await req.formData();
+      if (!formData.has('_method')) formData.set('_method', 'PUT');
+
+      const data = await laravelFetch<any>(`/station-owners/${id}`, {
+        method: 'POST',
+        auth: true,
+        body: formData,
+      });
+
+      return NextResponse.json(data ?? { ok: true });
+    }
+
+    const body = await req.json().catch(() => null);
+    if (!body) return NextResponse.json({ message: 'Invalid JSON body' }, { status: 400 });
+
     const data = await laravelFetch<any>(`/station-owners/${id}?_method=PUT`, {
       method: 'POST',
       auth: true,

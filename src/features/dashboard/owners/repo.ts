@@ -209,16 +209,17 @@ export const ownersRepo: OwnersRepo = {
   },
 
   async update(id, input) {
-    const payload: any = {};
+    const payload = new FormData();
 
-    if (input.fullName !== undefined) payload.full_name = input.fullName;
-    if (input.phoneNumber !== undefined) payload.phone_number = input.phoneNumber;
-    if (input.email !== undefined) payload.email = input.email;
-    if (input.address !== undefined) payload.address = input.address;
+    if (input.fullName !== undefined) payload.set('full_name', input.fullName);
+    if (input.phoneNumber !== undefined) payload.set('phone_number', input.phoneNumber);
+    if (input.email !== undefined) payload.set('email', input.email);
+    if (input.address !== undefined) payload.set('address', input.address);
+    if (input.profileImage) payload.set('profile_image', input.profileImage);
 
     await apiJson(`/api/station-owners/${id}`, {
       method: 'PUT',
-      body: JSON.stringify(payload),
+      body: payload,
     });
   },
 

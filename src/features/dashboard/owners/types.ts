@@ -41,4 +41,5 @@ export type UpdateOwnerInput = {
   phoneNumber?: string;
   email?: string;
   address?: string;
+  profileImage?: File | null;
 };

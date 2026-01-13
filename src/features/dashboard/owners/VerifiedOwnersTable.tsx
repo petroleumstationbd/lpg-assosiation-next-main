@@ -233,13 +233,14 @@ export default function VerifiedOwnersTable() {
                if (!active) return;
                updateM.mutate({
                   id: active.id,
-                  input: {
-                     fullName: input.fullName,
-                     phoneNumber: input.phoneNumber,
-                     email: input.email,
-                     address: input.address,
-                  },
-               });
+               input: {
+                  fullName: input.fullName,
+                  phoneNumber: input.phoneNumber,
+                  email: input.email,
+                  address: input.address,
+                  profileImage: input.profileImage,
+               },
+            });
                setEditOpen(false);
                setActive(null);
             }}
