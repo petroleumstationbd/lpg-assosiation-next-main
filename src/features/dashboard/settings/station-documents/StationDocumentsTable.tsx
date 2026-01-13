@@ -22,6 +22,32 @@ const btnBase =
 const btnTop =
   'inline-flex h-9 items-center justify-center gap-2 rounded-[6px] px-4 text-[12px] font-medium text-white shadow-sm transition hover:brightness-110 active:brightness-95';
 
+const getDownloadName = (url: string, fallback: string) => {
+  try {
+    const parsed = new URL(url);
+    const name = parsed.pathname.split('/').pop();
+    if (name) return name;
+  } catch {
+    const name = url.split('/').pop();
+    if (name) return name;
+  }
+  return fallback;
+};
+
+const downloadFile = async (url: string, fallbackName: string) => {
+  const filename = getDownloadName(url, fallbackName);
+  const response = await fetch(url, { credentials: 'include' });
+  if (!response.ok) throw new Error('Failed to download document');
+  const blob = await response.blob();
+  const link = document.createElement('a');
+  link.href = URL.createObjectURL(blob);
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+  URL.revokeObjectURL(link.href);
+};
+
 export default function StationDocumentsTable() {
   const q = useStationDocuments();
   const del = useDeleteStationDocument();
@@ -81,7 +107,14 @@ export default function StationDocumentsTable() {
           r.fileUrl ? (
             <a
               href={r.fileUrl}
-              download
+              onClick={async (event) => {
+                event.preventDefault();
+                try {
+                  await downloadFile(r.fileUrl ?? '', r.documentType);
+                } catch (err) {
+                  console.error(err);
+                }
+              }}
               aria-label={`Download ${r.documentType} document`}
               className="text-[12px] font-semibold text-[#133374] hover:underline"
             >
