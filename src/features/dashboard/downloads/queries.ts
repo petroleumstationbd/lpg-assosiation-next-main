@@ -1,42 +1,47 @@
 import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
-import {feesRepo} from './repo';
-import type {CreateFeeInput, UpdateFeeInput} from './repo';
+import {downloadDocumentsRepo} from './repo';
+import type {
+  CreateDownloadDocumentInput,
+  UpdateDownloadDocumentInput,
+} from './repo';
 
 const keys = {
-  all: ['fees'] as const,
+  all: ['download-documents'] as const,
 };
 
-export function useFees() {
+export function useDownloadDocuments() {
   return useQuery({
     queryKey: keys.all,
-    queryFn: () => feesRepo.list(),
+    queryFn: () => downloadDocumentsRepo.list(),
   });
 }
 
-export function useCreateFee() {
+export function useCreateDownloadDocument() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (input: CreateFeeInput) => feesRepo.create(input),
+    mutationFn: (input: CreateDownloadDocumentInput) =>
+      downloadDocumentsRepo.create(input),
     onSuccess: async () => {
       await qc.invalidateQueries({queryKey: keys.all});
     },
   });
 }
 
-export function useUpdateFee() {
+export function useUpdateDownloadDocument() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (args: {id: string; patch: UpdateFeeInput}) => feesRepo.update(args.id, args.patch),
+    mutationFn: (args: {id: string; patch: UpdateDownloadDocumentInput}) =>
+      downloadDocumentsRepo.update(args.id, args.patch),
     onSuccess: async () => {
       await qc.invalidateQueries({queryKey: keys.all});
     },
   });
 }
 
-export function useDeleteFee() {
+export function useDeleteDownloadDocument() {
   const qc = useQueryClient();
   return useMutation({
-    mutationFn: (id: string) => feesRepo.remove(id),
+    mutationFn: (id: string) => downloadDocumentsRepo.remove(id),
     onSuccess: async () => {
       await qc.invalidateQueries({queryKey: keys.all});
     },

@@ -4,6 +4,7 @@ import {useEffect, useMemo, useState} from 'react';
 import TablePanel from '@/components/ui/table-panel/TablePanel';
 import type {ColumnDef} from '@/components/ui/table-panel/types';
 import MeshCorners from '@/components/ui/MeshCorners';
+import Modal from '@/components/ui/modal/Modal';
 import {toAbsoluteUrl} from '@/lib/http/url';
 
 import {MOCK_DOWNLOADS, type DownloadRow} from './mockDownloads';
@@ -89,23 +90,34 @@ function ActionButton({
    label,
    href,
    variant,
+   onClick,
 }: {
    label: string;
    href?: string;
    variant: 'view' | 'download';
+   onClick?: () => void;
 }) {
    const base =
       'inline-flex h-6 items-center justify-center rounded-[4px] px-4 text-[10px] font-semibold text-white shadow-sm transition hover:brightness-110 active:brightness-95';
 
    const cls = variant === 'view' ? 'bg-[#133374]' : 'bg-[#009970]';
 
-   // keep it simple for now; replace with modal/file later
+   if (variant === 'view') {
+      return (
+         <button
+            type='button'
+            className={cx(base, cls)}
+            onClick={onClick}
+            disabled={!href}>
+            {label}
+         </button>
+      );
+   }
+
    return (
       <a
          href={href ?? '#'}
          className={cx(base, cls)}
-         target={variant === 'view' && href ? '_blank' : undefined}
-         rel={variant === 'view' && href ? 'noreferrer noopener' : undefined}
          download={variant === 'download' && href ? '' : undefined}
          onClick={e => {
             if (!href || href === '#') e.preventDefault();
@@ -118,6 +130,8 @@ function ActionButton({
 export default function DownloadsSection() {
    const [rows, setRows] = useState<DownloadRow[]>(MOCK_DOWNLOADS);
    const [errorMsg, setErrorMsg] = useState<string | null>(null);
+   const [activeRow, setActiveRow] = useState<DownloadRow | null>(null);
+   const [open, setOpen] = useState(false);
 
    useEffect(() => {
       const controller = new AbortController();
@@ -125,7 +139,7 @@ export default function DownloadsSection() {
       async function loadDownloads() {
          try {
             setErrorMsg(null);
-            const res = await fetch('/api/public/station-documents', {
+            const res = await fetch('/api/public/downloadable-documents', {
                cache: 'no-store',
                signal: controller.signal,
             });
@@ -188,7 +202,16 @@ export default function DownloadsSection() {
             minWidth: 120,
             cell: r => (
                <div className='w-full flex justify-center'>
-                  <ActionButton label='View' href={r.viewUrl} variant='view' />
+                  <ActionButton
+                     label='View'
+                     href={r.viewUrl}
+                     variant='view'
+                     onClick={() => {
+                        if (!r.viewUrl) return;
+                        setActiveRow(r);
+                        setOpen(true);
+                     }}
+                  />
                </div>
             ),
          },
@@ -210,7 +233,7 @@ export default function DownloadsSection() {
             ),
          },
       ],
-      []
+      [setActiveRow, setOpen]
    );
 
    return (
@@ -249,6 +272,61 @@ export default function DownloadsSection() {
                )}
             />
          </div>
+
+         <Modal
+            open={open}
+            title={activeRow?.title ?? 'Document Preview'}
+            onClose={() => {
+               setOpen(false);
+               setActiveRow(null);
+            }}
+            maxWidthClassName='max-w-[960px]'>
+            <div className='p-4'>
+               {activeRow?.viewUrl ? (
+                  (() => {
+                     const url = activeRow.viewUrl ?? '';
+                     const lower = url.toLowerCase();
+                     if (lower.endsWith('.pdf')) {
+                        return (
+                           <iframe
+                              title={activeRow.title}
+                              src={url}
+                              className='h-[70vh] w-full rounded-[6px] border border-[#E5E7EB]'
+                           />
+                        );
+                     }
+                     if (
+                        lower.endsWith('.png') ||
+                        lower.endsWith('.jpg') ||
+                        lower.endsWith('.jpeg') ||
+                        lower.endsWith('.gif')
+                     ) {
+                        return (
+                           <img
+                              src={url}
+                              alt={activeRow.title}
+                              className='max-h-[70vh] w-full rounded-[6px] object-contain'
+                           />
+                        );
+                     }
+                     return (
+                        <div className='space-y-2 text-sm text-[#2B3A4A]'>
+                           <p>Preview is unavailable. Use the link below to view the file.</p>
+                           <a
+                              href={url}
+                              target='_blank'
+                              rel='noreferrer noopener'
+                              className='font-semibold text-[#133374] hover:underline'>
+                              Open document
+                           </a>
+                        </div>
+                     );
+                  })()
+               ) : (
+                  <p className='text-sm text-[#64748B]'>No document available.</p>
+               )}
+            </div>
+         </Modal>
       </section>
    );
 }

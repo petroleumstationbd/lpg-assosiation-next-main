@@ -1,39 +1,56 @@
 'use client';
 
-import {useMemo} from 'react';
+import {useMemo, useState} from 'react';
 import {Plus} from 'lucide-react';
 import TablePanel from '@/components/ui/table-panel/TablePanel';
 import type {ColumnDef} from '@/components/ui/table-panel/types';
-import type {MembershipFeeRow} from './types';
-import {useDeleteFee, useFees, useUpdateFee} from './queries';
-
-const money = (n: number) =>
-  new Intl.NumberFormat('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2}).format(n);
+import Loader from '@/components/shared/Loader';
+import DownloadDocumentFormModal from './DownloadDocumentFormModal';
+import type {DownloadDocumentRow} from './types';
+import {
+  useCreateDownloadDocument,
+  useDeleteDownloadDocument,
+  useDownloadDocuments,
+  useUpdateDownloadDocument,
+} from './queries';
 
 export default function DownloadsOverviewSection() {
-  const feesQ = useFees();
-  const delM = useDeleteFee();
-  const updM = useUpdateFee();
+  const documentsQ = useDownloadDocuments();
+  const delM = useDeleteDownloadDocument();
+  const createM = useCreateDownloadDocument();
+  const updateM = useUpdateDownloadDocument();
 
-  const rows = feesQ.data ?? [];
+  const [open, setOpen] = useState(false);
+  const [mode, setMode] = useState<'create' | 'edit'>('create');
+  const [activeRow, setActiveRow] = useState<DownloadDocumentRow | null>(null);
+  const [formError, setFormError] = useState('');
 
-  const columns = useMemo<ColumnDef<MembershipFeeRow>[]>(() => {
+  const columns = useMemo<ColumnDef<DownloadDocumentRow>[]>(() => {
     return [
       {
         id: 'sl',
         header: 'SL#',
         sortable: true,
         sortValue: (r) => r.sl,
-        headerClassName: 'w-[90px]',
-        minWidth: 90,
+        headerClassName: 'w-[80px]',
+        minWidth: 80,
         cell: (r) => String(r.sl).padStart(2, '0'),
       },
       {
-        id: 'amount',
-        header: 'Amount',
+        id: 'title',
+        header: 'Title',
         sortable: true,
-        sortValue: (r) => r.amount,
-        cell: (r) => money(r.amount),
+        sortValue: (r) => r.title,
+        minWidth: 280,
+        cell: (r) => <span className="text-[#2B3A4A]">{r.title}</span>,
+      },
+      {
+        id: 'publishDate',
+        header: 'Publish Date',
+        sortable: true,
+        sortValue: (r) => r.publishDate,
+        minWidth: 140,
+        cell: (r) => <span className="text-[#2B3A4A]">{r.publishDate}</span>,
       },
       {
         id: 'status',
@@ -41,22 +58,54 @@ export default function DownloadsOverviewSection() {
         sortable: true,
         sortValue: (r) => r.status,
         align: 'center',
+        minWidth: 120,
         cell: (r) => (
-          <span className={r.status === 'ACTIVE' ? 'font-semibold text-[#2D8A2D]' : 'font-semibold text-[#FC7160]'}>
-            {r.status}
+          <span
+            className={
+              r.status === 'active'
+                ? 'font-semibold text-[#2D8A2D]'
+                : 'font-semibold text-[#FC7160]'
+            }
+          >
+            {r.status.toUpperCase()}
           </span>
         ),
+      },
+      {
+        id: 'file',
+        header: 'File',
+        sortable: false,
+        align: 'center',
+        minWidth: 120,
+        cell: (r) =>
+          r.fileUrl ? (
+            <a
+              href={r.fileUrl}
+              download=""
+              className="text-[12px] font-semibold text-[#133374] hover:underline"
+            >
+              Download
+            </a>
+          ) : (
+            <span className="text-[11px] text-[#94A3B8]">No file</span>
+          ),
       },
       {
         id: 'edit',
         header: 'Edit',
         align: 'center',
         sortable: false,
+        minWidth: 120,
         cell: (r) => (
           <button
             type="button"
-            onClick={() => updM.mutate({id: r.id, patch: {status: r.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE'}})}
-            className="h-7 rounded-[3px] bg-[#FFC75A] px-4 text-[11px] font-semibold text-[#2B3A4A] shadow-sm hover:brightness-105 active:brightness-95"
+            onClick={() => {
+              setFormError('');
+              setMode('edit');
+              setActiveRow(r);
+              setOpen(true);
+            }}
+            className="h-7 rounded-[4px] bg-[#FFC75A] px-4 text-[11px] font-semibold text-[#2B3A4A] shadow-sm hover:brightness-105 active:brightness-95"
           >
             Edit
           </button>
@@ -67,48 +116,104 @@ export default function DownloadsOverviewSection() {
         header: 'Delete',
         align: 'center',
         sortable: false,
+        minWidth: 120,
         cell: (r) => (
           <button
             type="button"
             onClick={() => delM.mutate(r.id)}
-            className="h-7 rounded-[3px] bg-[#FC7160] px-4 text-[11px] font-semibold text-white shadow-sm hover:brightness-105 active:brightness-95"
+            disabled={delM.isPending}
+            className="h-7 rounded-[4px] bg-[#FC7160] px-4 text-[11px] font-semibold text-white shadow-sm hover:brightness-105 active:brightness-95 disabled:opacity-60"
           >
             Delete
           </button>
         ),
       },
     ];
-  }, [delM, updM]);
+  }, [delM.isPending]);
+
+  if (documentsQ.isLoading) return <Loader label="Loading..." />;
+  if (documentsQ.isError)
+    return <div className="text-sm text-red-600">Failed to load documents.</div>;
+
+  const rows = documentsQ.data ?? [];
 
   return (
-    <div className="mx-auto max-w-[980px]">
+    <div className="mx-auto max-w-[1040px] space-y-4">
       <TablePanel
         rows={rows}
         columns={columns}
         getRowKey={(r) => r.id}
-        searchText={(r) => `${r.sl} ${r.amount} ${r.status}`}
-        showTopBar={false}      // your screenshot has no "Total Members" header
-        showExport={false}      // not in screenshot
-        topSlot={
-          <div className="relative flex items-center justify-center">
-            <h1 className="text-[14px] font-semibold text-[#133374]">Overview of Membership Fees</h1>
-
-            <div className="absolute right-0">
-              <button
-                type="button"
-                onClick={() => {
-                  // next step: open modal (reusable) like your album popup
-                  // for now keep it clean to match UI without breaking build
-                }}
-                className="inline-flex h-9 items-center gap-2 rounded-[4px] bg-[#009970] px-4 text-[12px] font-semibold text-white shadow-sm hover:brightness-110 active:brightness-95"
-              >
-                <Plus size={16} />
-                Add Fee Structure
-              </button>
-            </div>
+        searchText={(r) => `${r.sl} ${r.title} ${r.publishDate} ${r.status}`}
+        showTopBar={false}
+        showExport={false}
+        totalLabel={(total) => (
+          <div className="text-[14px] font-semibold text-[#2D8A2D]">
+            Total Documents : <span className="text-[#133374]">{total}</span>
           </div>
+        )}
+        controlsRightSlot={
+          <button
+            type="button"
+            onClick={() => {
+              setFormError('');
+              setMode('create');
+              setActiveRow(null);
+              setOpen(true);
+            }}
+            className="inline-flex h-9 items-center gap-2 rounded-[6px] bg-[#009970] px-4 text-[12px] font-semibold text-white shadow-sm hover:brightness-110 active:brightness-95"
+          >
+            <Plus size={16} />
+            Add Document
+          </button>
         }
         className="bg-white/80"
+      />
+
+      <DownloadDocumentFormModal
+        open={open}
+        mode={mode}
+        initial={activeRow}
+        saving={createM.isPending || updateM.isPending}
+        error={formError}
+        onClose={() => {
+          setOpen(false);
+          setActiveRow(null);
+          setFormError('');
+        }}
+        onSubmit={async (payload) => {
+          setFormError('');
+
+          if (!payload.title.trim()) {
+            setFormError('Title is required');
+            return;
+          }
+
+          if (!payload.publishDate) {
+            setFormError('Publish date is required');
+            return;
+          }
+
+          if (mode === 'create' && !payload.file) {
+            setFormError('Document file is required');
+            return;
+          }
+
+          try {
+            if (mode === 'create') {
+              await createM.mutateAsync(payload);
+            } else {
+              if (!activeRow?.id) {
+                setFormError('Invalid document id');
+                return;
+              }
+              await updateM.mutateAsync({id: activeRow.id, patch: payload});
+            }
+            setOpen(false);
+            setActiveRow(null);
+          } catch (error: any) {
+            setFormError(error?.message ?? 'Unable to save document');
+          }
+        }}
       />
     </div>
   );
