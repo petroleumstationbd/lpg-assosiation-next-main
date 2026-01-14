@@ -1,4 +1,5 @@
 import Image, {type StaticImageData} from 'next/image';
+import Link from 'next/link';
 
 export type AlbumCardData = {
    id: number;
@@ -14,19 +15,20 @@ type AlbumCardProps = {
    album: AlbumCardData;
    videos?: boolean;
    onPlay?: (album: AlbumCardData) => void;
+   href?: string;
 };
 
-export default function AlbumCard({album, videos, onPlay}: AlbumCardProps) {
+export default function AlbumCard({album, videos, onPlay, href}: AlbumCardProps) {
    const canPlay = Boolean(videos && onPlay && album.videoUrl);
-   return (
-      <article className='group relative flex h-full flex-col overflow-hidden rounded-[18px] bg-white shadow-[0_18px_40px_rgba(0,0,0,0.12)]'>
+   const content = (
+      <article className='relative flex h-full flex-col overflow-hidden rounded-[18px] bg-white shadow-[0_18px_40px_rgba(0,0,0,0.12)]'>
          {/* top image */}
          <div className='relative h-[185px] w-full md:h-[200px]'>
             <Image
                src={album.image}
                alt={album.title}
                fill
-               className='object-cover'
+               className='object-cover transition-transform duration-300 group-hover:scale-105'
             />
 
             {videos ? (
@@ -79,4 +81,17 @@ export default function AlbumCard({album, videos, onPlay}: AlbumCardProps) {
          <div className='pointer-events-none absolute inset-0 rounded-[18px] border border-transparent transition-all duration-200 group-hover:border-[#6CC12A]/70 group-hover:shadow-[0_24px_70px_rgba(0,0,0,0.18)]' />
       </article>
    );
+   if (href) {
+      return (
+         <Link
+            href={href}
+            className='group block h-full'
+            aria-label={album.title}
+         >
+            {content}
+         </Link>
+      );
+   }
+
+   return <div className='group h-full'>{content}</div>;
 }
