@@ -22,6 +22,8 @@ type DownloadApiItem = {
    published_at?: string | null;
    created_at?: string | null;
    updated_at?: string | null;
+   document?: string | null;
+   document_url?: string | null;
    file_url?: string | null;
    file_path?: string | null;
    url?: string | null;
@@ -38,6 +40,7 @@ const LARAVEL_ORIGIN =
 function normalizeList(raw: any) {
    if (Array.isArray(raw)) return raw as DownloadApiItem[];
    if (Array.isArray(raw?.data)) return raw.data as DownloadApiItem[];
+   if (Array.isArray(raw?.data?.data)) return raw.data.data as DownloadApiItem[];
    return [];
 }
 
@@ -50,7 +53,13 @@ function pickDate(value?: string | null) {
 
 function resolveFileUrl(item: DownloadApiItem) {
    const direct =
-      item.file_url ?? item.file_path ?? item.url ?? item.file ?? null;
+      item.document ??
+      item.document_url ??
+      item.file_url ??
+      item.file_path ??
+      item.url ??
+      item.file ??
+      null;
    if (direct) return toAbsoluteUrl(LARAVEL_ORIGIN, direct);
 
    const attachments = item.attachments ?? [];
@@ -118,6 +127,8 @@ function ActionButton({
       <a
          href={href ?? '#'}
          className={cx(base, cls)}
+         target={href ? '_blank' : undefined}
+         rel={href ? 'noreferrer noopener' : undefined}
          download={variant === 'download' && href ? '' : undefined}
          onClick={e => {
             if (!href || href === '#') e.preventDefault();
