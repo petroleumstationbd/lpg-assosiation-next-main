@@ -54,6 +54,7 @@ type FormState = {
    tin: File | null;
    explosive_license: File | null;
    trade_license: File | null;
+   membership_form: File | null;
 };
 
 export type StationFormDefaults = Partial<
@@ -92,6 +93,7 @@ const emptyForm: FormState = {
    tin: null,
    explosive_license: null,
    trade_license: null,
+   membership_form: null,
 };
 
 const createDefaults: Pick<FormState, 'station_status'> = {
@@ -258,6 +260,7 @@ function mapStationDetailsToForm(data: any): FormState {
       tin: null,
       explosive_license: null,
       trade_license: null,
+      membership_form: null,
    };
 }
 
@@ -738,6 +741,16 @@ export default function StationForm({
          return;
       }
 
+      if (
+         form.membership_form &&
+         form.membership_form.size > maxFileSizeBytes
+      ) {
+         setValidationError(
+            'Membership form file size must be 20MB or smaller.'
+         );
+         return;
+      }
+
       const statusDefaults: Partial<
          Pick<FormState, 'station_status' | 'verification_status'>
       > = mode === 'create' ? createDefaults : {};
@@ -780,6 +793,7 @@ export default function StationForm({
          tin: form.tin,
          explosive_license: form.explosive_license,
          trade_license: form.trade_license,
+         membership_form: form.membership_form,
       };
 
       console.log(payload);
@@ -1451,6 +1465,43 @@ export default function StationForm({
                               setForm(prev => ({
                                  ...prev,
                                  trade_license: e.target.files?.[0] ?? null,
+                              }))
+                           }
+                           className='absolute inset-0 cursor-pointer opacity-0'
+                        />
+                     </div>
+                  </div>
+
+                  <div>
+                     <label className='mb-1 block text-[11px] font-semibold text-[#173A7A]'>
+                        Membership Form
+                     </label>
+
+                     <div
+                        className={[
+                           'relative flex w-full items-center gap-2 rounded-[10px] border bg-white px-3 py-2',
+                           'border-[#D6DFEE] focus-within:border-[#019769] focus-within:ring-2 focus-within:ring-[#019769]/15',
+                           isView ? 'opacity-60' : '',
+                        ].join(' ')}>
+                        <CloudUpload className='h-4 w-4 text-[#019769]' />
+
+                        <span className='flex-1 truncate text-[12px] text-[#2B3A4A]'>
+                           {form.membership_form?.name ??
+                              'Choose file to upload'}
+                        </span>
+
+                        <span className='rounded-full bg-[#F3F6FB] px-3 py-1 text-[11px] font-semibold text-[#173A7A]'>
+                           Browse
+                        </span>
+
+                        <input
+                           type='file'
+                           disabled={isView}
+                           accept='.pdf,.jpg,.jpeg,.png'
+                           onChange={e =>
+                              setForm(prev => ({
+                                 ...prev,
+                                 membership_form: e.target.files?.[0] ?? null,
                               }))
                            }
                            className='absolute inset-0 cursor-pointer opacity-0'
