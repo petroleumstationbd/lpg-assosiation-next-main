@@ -135,6 +135,7 @@ const PhotoGallery = () => {
             sectionCardData={sectionCardData}
             title='Photo Gallery'
             description="We are Largest one and only LPG Auto Gas Station & Conversion Workshop Owner's Association in Bangladesh. Welcome to our Gallery"
+            getHref={album => `/gallery/photo-gallery/${album.id}`}
          />
 
          <Footer />
