@@ -205,7 +205,7 @@ export default function Header({heroSize = ''}: {heroSize?: string}) {
                </Link>
 
                <div className='ml-12 flex flex-1 items-center justify-between gap-6 overflow-visible md:ml-16'>
-                  <nav className='hidden flex-1 items-center justify-end lg:gap-2 lg:flex  xl:gap-4 overflow-visible'>
+                  <nav className='hidden flex-1 items-center justify-end lg:gap-2 lg:flex  xl:gap-2 overflow-visible'>
                      {MAIN_NAV.map(item => {
                         const hasChildren = !!item.children?.length;
                         const isDropdownOpen = openDropdownKey === item.key;
@@ -266,12 +266,11 @@ export default function Header({heroSize = ''}: {heroSize?: string}) {
                                     style={{marginTop: 8}} // same as mt-2 but keeps hover-bridge predictable
                                     onPointerEnter={clearCloseTimer}
                                     onPointerLeave={scheduleCloseDropdowns}>
-                                    {/* Hover bridge: fixes your screenshot gap */}
                                     <div className='absolute -top-2 left-0 right-0 h-2' />
 
-                                    {/* Use your old classes so it looks like before */}
+
                                     <div className='dropdown-panel'>
-                                       <ul className='dropdown-list'>
+                                       <ul className='dropdown-list flex flex-col gap-0'>
                                           {item.children!.map(child => (
                                              <li
                                                 key={child.href ?? child.label}>
@@ -290,7 +289,7 @@ export default function Header({heroSize = ''}: {heroSize?: string}) {
                                                    <Link
                                                       href={child.href}
                                                       prefetch={false}
-                                                      className='dropdown-item'
+                                                      className='dropdown-item  p-0'
                                                       role='menuitem'
                                                       onClick={() =>
                                                          closeDropdowns()

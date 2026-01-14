@@ -145,10 +145,10 @@ body {
 /* item typography like figma */
 .dropdown-item {
    display: block;
-   padding: 14px 18px;
+   padding: 7px 7px;
    border-radius: 18px;
 
-   font-size: 18px;
+   font-size: 15px;
    font-weight: 500;
    letter-spacing: 0.06em;
    text-transform: uppercase;
