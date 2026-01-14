@@ -1,18 +1,12 @@
 import {NextResponse} from 'next/server';
 import {LaravelHttpError, laravelFetch} from '@/lib/http/laravelFetch';
 
-export async function GET(
-  _req: Request,
-  ctx: {params: Promise<{id: string}>}
-) {
+export async function GET() {
   try {
-    const {id} = await ctx.params;
-
-    const data = await laravelFetch(`/notices/${id}`, {
+    const data = await laravelFetch('/station-documents', {
       method: 'GET',
       auth: false,
     });
-
     return NextResponse.json(data, {status: 200});
   } catch (e) {
     if (e instanceof LaravelHttpError) {
@@ -22,7 +16,7 @@ export async function GET(
       );
     }
     return NextResponse.json(
-      {message: 'Failed to load notice details'},
+      {message: 'Failed to load station documents'},
       {status: 500}
     );
   }

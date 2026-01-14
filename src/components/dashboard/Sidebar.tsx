@@ -151,9 +151,11 @@ export default function Sidebar({
    const sidebarInner = (
       <div className='flex h-full flex-col px-4 py-6'>
          <div className='mb-6 flex items-center justify-center'>
-            <div className='relative h-[76px] w-[76px] overflow-hidden rounded-full border border-slate-200 bg-white'>
+            <Link
+               href='/'
+               className='relative h-[76px] w-[76px] overflow-hidden rounded-full border border-slate-200 bg-white'>
                <Logo />
-            </div>
+            </Link>
          </div>
 
          <nav className='min-h-0 flex-1 overflow-auto pr-1'>{DASH_NAV.map(renderItem)}</nav>

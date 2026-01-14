@@ -140,8 +140,11 @@ export default function NoticesSection() {
           // screenshot has no export button
           exportFileName=""
           searchText={(r) => [r.title, r.publishedDate].join(' ')}
-          // screenshot top-left shows just "Show 10 entries" (no Total Members label)
-          totalLabel={() => null}
+          totalLabel={(total) => (
+            <div className="text-[14px] font-semibold text-[#2D8A2D]">
+              Total Notices : <span className="text-[#133374]">{total}</span>
+            </div>
+          )}
         />
       </div>
     </section>

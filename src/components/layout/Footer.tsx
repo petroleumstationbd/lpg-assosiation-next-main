@@ -48,11 +48,13 @@ export default function Footer() {
                {/* left: logo + org info */}
                <div className='lg:w-[38%]'>
                   <div className='flex items-start flex-col gap-2'>
-                     <div className='flex h-16 w-16 items-center justify-center rounded-full bg-white shadow-[0_10px_30px_rgba(0,0,0,0.35)]'>
+                     <Link
+                        href='/'
+                        className='flex h-16 w-16 items-center justify-center rounded-full bg-white shadow-[0_10px_30px_rgba(0,0,0,0.35)]'>
                         <div className='relative h-14 w-14 overflow-hidden rounded-full'>
                            <Logo />
                         </div>
-                     </div>
+                     </Link>
                      <div className='text-[16px] font-semibold leading-snug tracking-[0.02em] text-white uppercase'>
                         Bangladesh petroleum dealer's Distributor's Agent's &
                         Petrol Pump Owner's Association
