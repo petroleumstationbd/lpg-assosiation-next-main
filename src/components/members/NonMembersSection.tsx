@@ -194,9 +194,7 @@ export default function NonMembersSection() {
           <h2 className="text-[30px] font-semibold tracking-tight text-[#133374] md:text-[36px]">
             Non-Member List
           </h2>
-          <p className="mt-2 text-[11px] leading-relaxed text-[#8A9CB0] md:text-[12px]">
-            List of petroleum businesses currently not registered as association members.
-          </p>
+
           <p className="mt-2 text-[11px] leading-relaxed text-[#8A9CB0] md:text-[12px]">
             List of petroleum businesses currently not registered as association members.
           </p>

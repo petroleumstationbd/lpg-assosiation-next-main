@@ -80,9 +80,6 @@ export default function MembershipFeesSection() {
           <p className="mt-2 text-[11px] leading-relaxed text-[#8A9CB0] md:text-[12px]">
             Clear and affordable membership fees for registered petroleum dealers and owners.
           </p>
-          <p className="mt-2 text-[11px] leading-relaxed text-[#8A9CB0] md:text-[12px]">
-            Clear and affordable membership fees for registered petroleum dealers and owners.
-          </p>
           {statusMessage ? (
             <p className="mt-3 text-[11px] font-medium text-[#FC7160] md:text-[12px]">{statusMessage}</p>
           ) : null}

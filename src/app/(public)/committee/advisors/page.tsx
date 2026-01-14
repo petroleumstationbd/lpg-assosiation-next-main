@@ -8,7 +8,7 @@ export default function AdvisorsPage() {
     <div>
       <PageHero
         title="Advisors"
-        subtitle="Lorem ipsum dolor sit amet consectetur. Neque aliquam amet commodo sollicitudin"
+        // subtitle="Lorem ipsum dolor sit amet consectetur. Neque aliquam amet commodo sollicitudin"
         backgroundImage={heroImg}
         height="compact"
       />

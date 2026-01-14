@@ -1188,10 +1188,10 @@ export default function AdvisorsSection() {
                <h2 className='text-[30px] font-semibold tracking-tight text-[#133374] md:text-[36px]'>
                   Our Advisors
                </h2>
-               <p className='mt-2 text-[11px] leading-relaxed text-[#8A9CB0] md:text-[12px]'>
+               {/* <p className='mt-2 text-[11px] leading-relaxed text-[#8A9CB0] md:text-[12px]'>
                   Lorem ipsum dolor sit amet consectetur. Vitae ornare cursus
                   justo libero venenatis donec.
-               </p>
+               </p> */}
             </div>
 
             <div className='mt-10 space-y-14'>
