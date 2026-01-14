@@ -63,7 +63,7 @@ const MAIN_NAV: NavItem[] = [
          {label: 'Running LPG Stations', href: '/members/running-stations'},
          // {label: 'On Going LPG Stations', href: '/members/on-going-stations'},
          {label: 'Total Station List', href: '/members/total-stations'},
-         {label: 'Membership Fees', href: '/members/membership-fees'},
+         {label: 'Membership Fees', href: '/membership-fees'},
          {
             label: 'Download Membership Form',
             href: '/files/membership-form.pdf',

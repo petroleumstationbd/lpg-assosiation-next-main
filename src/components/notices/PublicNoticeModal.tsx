@@ -115,7 +115,7 @@ export default function PublicNoticeModal({
       try {
         setLoading(true);
         setErrorMsg(null);
-        const res = await fetch(`/api/public/notices/${encodeURIComponent(noticeId)}`, {
+        const res = await fetch(`/api/public/notices/${encodeURIComponent(Number(noticeId))}`, {
           cache: 'no-store',
           signal: controller.signal,
         });
