@@ -6,25 +6,25 @@ import type {ColumnDef} from '@/components/ui/table-panel/types';
 import MeshCorners from '@/components/ui/MeshCorners';
 
 import {MOCK_NOTICES, type NoticeRow} from './mockNotices';
+import PublicNoticeModal from './PublicNoticeModal';
 
 function cx(...v: Array<string | false | null | undefined>) {
   return v.filter(Boolean).join(' ');
 }
 
-function ViewButton({href}: {href?: string}) {
+function ViewButton({onClick}: {onClick: () => void}) {
   return (
-    <a
-      href={href ?? '#'}
+    <button
+      type="button"
       className={cx(
         'inline-flex h-6 items-center justify-center rounded-[4px] px-4',
         'bg-[#133374] text-[10px] font-semibold text-white shadow-sm',
         'transition hover:brightness-110 active:brightness-95'
       )}
-      onClick={(e) => {
-        if (!href || href === '#') e.preventDefault();
-      }}>
+      onClick={onClick}
+    >
       View
-    </a>
+    </button>
   );
 }
 
@@ -43,6 +43,8 @@ function pickDate(v?: string | null) {
 
 export default function NoticesSection() {
   const [rows, setRows] = useState<NoticeRow[]>(MOCK_NOTICES);
+  const [viewOpen, setViewOpen] = useState(false);
+  const [activeRow, setActiveRow] = useState<NoticeRow | null>(null);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -117,8 +119,13 @@ export default function NoticesSection() {
       csvValue: () => '',
       minWidth: 140,
       cell: (r) => (
-        <div className="w-full flex justify-center">
-          <ViewButton href={r.viewUrl} />
+        <div className="flex w-full justify-center">
+          <ViewButton
+            onClick={() => {
+              setActiveRow(r);
+              setViewOpen(true);
+            }}
+          />
         </div>
       ),
     },
@@ -147,6 +154,14 @@ export default function NoticesSection() {
           )}
         />
       </div>
+
+      <PublicNoticeModal
+        open={viewOpen}
+        noticeId={activeRow?.id ?? null}
+        title={activeRow?.title}
+        publishedDate={activeRow?.publishedDate}
+        onClose={() => setViewOpen(false)}
+      />
     </section>
   );
 }
