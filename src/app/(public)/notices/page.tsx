@@ -9,7 +9,6 @@ export default function NoticesPage() {
     <div>
       <PageHero
         title="Notices"
-        subtitle="Lorem ipsum dolor sit amet consectetur. Neque aliquam amet commodo sollicitudin"
         backgroundImage={heroBg}
         height="compact"
       />
