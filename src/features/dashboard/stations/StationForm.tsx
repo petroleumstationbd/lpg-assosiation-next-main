@@ -733,13 +733,8 @@ export default function StationForm({
          return;
       }
 
-      if (
-         form.trade_license &&
-         form.trade_license.size > maxFileSizeBytes
-      ) {
-         setValidationError(
-            'Trade license file size must be 20MB or smaller.'
-         );
+      if (form.trade_license && form.trade_license.size > maxFileSizeBytes) {
+         setValidationError('Trade license file size must be 20MB or smaller.');
          return;
       }
 
@@ -787,11 +782,9 @@ export default function StationForm({
          trade_license: form.trade_license,
       };
 
-         console.log(payload)
+      console.log(payload);
       onSubmit(payload);
    };
-
-
 
    const loadingDetails = mode !== 'create' && stationDetailsQ.isLoading;
    const loadingOptions =
@@ -826,7 +819,9 @@ export default function StationForm({
                                     option.label === value ||
                                     option.id === value
                               );
-                              setExistingStationId(match ? match.id : value);
+                              setExistingStationId(
+                                 `${match?.label}  (${match?.id})`
+                              );
                            }}
                            placeholder='Select existing station'
                            disabled={
