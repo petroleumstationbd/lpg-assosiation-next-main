@@ -4,6 +4,7 @@ import {useMemo} from 'react';
 import {useQuery} from '@tanstack/react-query';
 import TablePanel from '@/components/ui/table-panel/TablePanel';
 import type {ColumnDef} from '@/components/ui/table-panel/types';
+import {toAbsoluteUrl} from '@/lib/http/url';
 
 type ApiStationLocation = {
   division?: string | null;
@@ -40,6 +41,13 @@ type Member = {
 
 const fallbackAvatar = (name: string) =>
   `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=133374&color=ffffff`;
+const LARAVEL_ORIGIN =
+  process.env.NEXT_PUBLIC_LARAVEL_ORIGIN ?? 'https://admin.petroleumstationbd.com';
+
+const resolvePhotoUrl = (path: string | null, name: string) => {
+  if (!path) return fallbackAvatar(name);
+  return toAbsoluteUrl(LARAVEL_ORIGIN, path) || fallbackAvatar(name);
+};
 
 const fetchPublicOwners = async () => {
   const res = await fetch('/api/public/station-owners/list');
@@ -64,7 +72,7 @@ export default function MembersOverviewSection() {
       const location = owner.gas_stations?.[0]?.location ?? null;
       return {
         sl: start + index,
-        photoUrl: owner.profile_image ?? fallbackAvatar(owner.full_name),
+        photoUrl: resolvePhotoUrl(owner.profile_image, owner.full_name),
         ownerName: owner.full_name,
         memberId: String(owner.id),
         stations,

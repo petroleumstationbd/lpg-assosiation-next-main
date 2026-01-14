@@ -120,7 +120,7 @@ const PrintMediaGallery = () => {
    return (
       <main className='relative '>
          <PageHero
-            title='News Feed'
+            title='Print Media Gallery'
             subtitle='Updates, events and media from Bangladesh LPG Autogas Station & Conversion Workshop Owners’ Association'
             backgroundImage={newsHero}
             height='compact'

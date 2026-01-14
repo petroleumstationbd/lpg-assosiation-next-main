@@ -153,7 +153,7 @@ const slides: CardSlide[] = list.map(video => {
    return (
       <main className='relative '>
          <PageHero
-            title='News Feed'
+            title='Video Gallery'
             subtitle='Updates, events and media from Bangladesh LPG Autogas Station & Conversion Workshop Owners’ Association'
             backgroundImage={newsHero}
             height='compact'
