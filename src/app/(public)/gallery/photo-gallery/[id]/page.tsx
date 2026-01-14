@@ -1,13 +1,16 @@
 import AlbumDetail from '@/components/PhotoGallery/AlbumDetail';
 
 type PhotoGalleryAlbumPageProps = {
-  params: {
+  params: Promise<{
     id: string;
-  };
+  }>;
 };
 
-export default function PhotoGalleryAlbumPage({
+export default async function PhotoGalleryAlbumPage({
   params,
 }: PhotoGalleryAlbumPageProps) {
-  return <AlbumDetail albumId={params.id} />;
+  const { id } = await params;
+
+  // console.log(id); // now string
+  return <AlbumDetail albumId={id} />;
 }

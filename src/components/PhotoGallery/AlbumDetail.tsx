@@ -178,12 +178,12 @@ export default function AlbumDetail({albumId}: {albumId: string}) {
                   >
                      Back to albums
                   </Link>
-                  <div className='text-right'>
+                  {/* <div className='text-right'>
                      <SectionHeading title={title} />
                      <p className='mt-2 max-w-xl text-[13px] text-[#5A6B7B] md:text-[14px]'>
                         {description}
                      </p>
-                  </div>
+                  </div> */}
                </div>
 
                {content}
