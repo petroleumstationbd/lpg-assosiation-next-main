@@ -115,6 +115,7 @@ export default function RegisterSection() {
         phone_number: form.phone.trim(),
         password: form.password,
         password_confirmation: form.confirmPassword,
+        address: form.address.trim(),
         // backend supports these, optional:
         // username: '',
         // bio: form.address.trim(),

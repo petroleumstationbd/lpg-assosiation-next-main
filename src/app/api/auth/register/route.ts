@@ -8,7 +8,7 @@ export async function POST(req: Request) {
       // For now, assume JSON (no avatar).
       const body = await req.json();
 
-      const data = await apiFetch<any>('/register', {
+      const data = await apiFetch<any>('/station-owners', {
          method: 'POST',
          body,
          auth: false,

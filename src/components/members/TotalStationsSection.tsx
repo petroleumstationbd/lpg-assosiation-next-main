@@ -153,12 +153,6 @@ export default function TotalStationsSection() {
 
       <div className="lpg-container relative z-10">
         <div className="mx-auto max-w-[860px] text-center">
-          <h2 className="text-[30px] font-semibold tracking-tight text-[#133374] md:text-[36px]">
-            Total Station List
-          </h2>
-          <p className="mt-2 text-[11px] leading-relaxed text-[#8A9CB0] md:text-[12px]">
-            Comprehensive list of all registered petrol stations across Bangladesh.
-          </p>
           <h3 className="mt-4 text-[18px] font-semibold text-[#133374] md:text-[20px]">
             Total Petrol Pump Station List
           </h3>
