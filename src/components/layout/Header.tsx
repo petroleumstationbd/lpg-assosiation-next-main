@@ -204,8 +204,8 @@ export default function Header({heroSize = ''}: {heroSize?: string}) {
                   </div>
                </Link>
 
-               <div className='ml-12 flex flex-1 items-center justify-between gap-2 overflow-visible md:ml-16'>
-                  <nav className='hidden flex-1 items-center justify-end lg:gap-[3px] lg:flex  xl:gap-2 overflow-visible'>
+               <div className='ml-12 flex flex-1 items-center justify-between gap-2 overflow-visible md:ml-36'>
+                  <nav className='hidden flex-1 items-center justify-center lg:gap-[3px] lg:flex  xl:gap-2 overflow-visible'>
                      {MAIN_NAV.map(item => {
                         const hasChildren = !!item.children?.length;
                         const isDropdownOpen = openDropdownKey === item.key;

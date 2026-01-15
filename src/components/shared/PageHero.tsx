@@ -44,7 +44,7 @@ export default function PageHero({
          )}
 
          {/* overlay */}
-
+{/* 
          {height == 'full' && (
             <div
                className={`pointer-events-none absolute inset-0 ${
@@ -53,7 +53,7 @@ export default function PageHero({
                      : 'bg-gradient-to-b'
                } from-[#00000054] to-[#122047]`}
             />
-         )}
+         )} */}
 
          {showHeader && <Header heroSize={heightClass[height]} />}
          <div className='h-[120px]'></div>
@@ -63,14 +63,19 @@ export default function PageHero({
             className={`relative flex min-h-[70%] ${
                height == 'compact'
                   ? 'md:min-h-[220px] mt-2 text-[#133374]'
-                  : 'md:min-h-[600px] text-white'
+                  : 'md:min-h-[600px] text-white text-shadow-xl text-shadow-black'
             } flex-col items-center justify-center px-4 lpg-container pb-6 text-center `}>
-            <h1 className='text-[24px] md:text-[38px] lg:text-[48px] font-bold leading-tight tracking-[-0.04em] mt-18 md:mt-01 mb-0'>
+            <h1 className='text-[24px] md:text-[38px] lg:text-[48px] font-bold leading-tight tracking-[-0.04em] mt-18 md:mt-01 mb-0'
+            style={{ textShadow: "0 6px 18px rgba(0,0,0,0.55)" }}
+            >
                {title}
             </h1>
 
             {subtitle && (
-               <p className={`${height == 'compact' ? 'text-[#133374]' : 'text-white/80'} mt-3 text-[11px] md:text-[14px] font-medium tracking-[0.0em] lpg-container`}>
+               <p
+                  className={`${
+                     height == 'compact' ? 'text-[#133374]' : 'text-white/80'
+                  } mt-3 text-[11px] md:text-[14px] font-medium tracking-[0.0em] lpg-container`}>
                   {subtitle}
                </p>
             )}
