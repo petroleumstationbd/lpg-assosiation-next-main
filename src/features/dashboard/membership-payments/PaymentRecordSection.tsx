@@ -20,6 +20,18 @@ const money = (n: number) =>
     maximumFractionDigits: 2,
   }).format(n);
 
+const getDownloadName = (url: string, fallback: string) => {
+  try {
+    const parsed = new URL(url);
+    const name = parsed.pathname.split('/').pop();
+    if (name) return name;
+  } catch {
+    const name = url.split('/').pop();
+    if (name) return name;
+  }
+  return fallback;
+};
+
 export default function PaymentRecordSection() {
   const recordsQ = usePaymentRecords();
   const stationsQ = useUnverifiedStationOptions(true);
@@ -105,19 +117,32 @@ export default function PaymentRecordSection() {
         headerClassName: 'w-[140px]',
         csvHeader: 'Document',
         csvValue: (r) => r.paymentDocUrl ?? '',
-        cell: (r) =>
-          r.paymentDocUrl ? (
-            <a
-              href={r.paymentDocUrl ?? '#'}
-              target="_blank"
-              rel="noreferrer"
-              className="text-[12px] font-semibold text-[#133374] hover:underline"
-            >
-              View
-            </a>
-          ) : (
-            <span className="text-[11px] text-[#94A3B8]">No file</span>
-          ),
+        cell: (r) => {
+          if (!r.paymentDocUrl) {
+            return <span className="text-[11px] text-[#94A3B8]">No file</span>;
+          }
+
+          const downloadName = getDownloadName(
+            r.paymentDocUrl,
+            `payment-record-${r.id}`
+          );
+
+          return (
+            <div className="flex flex-col items-center gap-1 text-[12px] font-semibold text-[#133374]">
+              <a
+                href={r.paymentDocUrl}
+                target="_blank"
+                rel="noreferrer"
+                className="hover:underline"
+              >
+                View
+              </a>
+              <a href={r.paymentDocUrl} download={downloadName} className="hover:underline">
+                Download
+              </a>
+            </div>
+          );
+        },
       },
       {
         id: 'delete',
@@ -324,7 +349,7 @@ export default function PaymentRecordSection() {
         </div>
       </div>
 
-      {/* <div className="rounded-[12px] border border-black/5 bg-white p-5 shadow-sm">
+      <div className="rounded-[12px] border border-black/5 bg-white p-5 shadow-sm">
         <h3 className="mb-4 text-[14px] font-semibold text-[#2B3A4A]">
           Payment Records
         </h3>
@@ -341,7 +366,7 @@ export default function PaymentRecordSection() {
             showExport={false}
           />
         )}
-      </div> */}
+      </div>
     </div>
   );
 }
