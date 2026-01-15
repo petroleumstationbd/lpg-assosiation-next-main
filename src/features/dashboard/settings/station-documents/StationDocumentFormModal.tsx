@@ -119,7 +119,7 @@ export default function StationDocumentFormModal({
           });
         }}
       >
-        <div className="space-y-2">
+        {/* <div className="space-y-2">
           <label className="text-[12px] font-semibold text-[#2B3A4A]">
             Station Name
           </label>
@@ -143,9 +143,9 @@ export default function StationDocumentFormModal({
               <option key={option.id} value={option.label} />
             ))}
           </datalist>
-        </div>
+        </div> */}
 
-        <div className="space-y-2">
+        {/* <div className="space-y-2">
           <label className="text-[12px] font-semibold text-[#2B3A4A]">
             Gas Station ID
           </label>
@@ -157,7 +157,7 @@ export default function StationDocumentFormModal({
             inputMode="numeric"
             required
           />
-        </div>
+        </div> */}
 
         <div className="space-y-2">
           <label className="text-[12px] font-semibold text-[#2B3A4A]">
