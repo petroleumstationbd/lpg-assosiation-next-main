@@ -1,4 +1,5 @@
 import { normalizeList } from '@/lib/http/normalize';
+import { toAbsoluteUrl } from '@/lib/http/url';
 import type { PaymentRecordInput, PaymentRecordRow, StationOption } from './types';
 
 type PaymentRecordApiRow = {
@@ -14,6 +15,9 @@ type PaymentRecordApiRow = {
   payment_doc_url?: string | null;
   created_at?: string | null;
 };
+
+const LARAVEL_ORIGIN =
+  process.env.NEXT_PUBLIC_LARAVEL_ORIGIN ?? 'https://admin.petroleumstationbd.com';
 
 function str(value: any, fallback = '') {
   const s = String(value ?? '').trim();
@@ -63,7 +67,10 @@ function mapRecord(row: PaymentRecordApiRow, idx: number): PaymentRecordRow | nu
   const amountNum = Number(row?.amount_paid ?? 0);
   const amountPaid = Number.isFinite(amountNum) ? amountNum : 0;
   const note = str(row?.note, '');
-  const paymentDocUrl = pick(row?.payment_doc_url, row?.payment_doc);
+  const paymentDocUrlRaw = pick(row?.payment_doc_url, row?.payment_doc);
+  const paymentDocUrl = paymentDocUrlRaw
+    ? toAbsoluteUrl(LARAVEL_ORIGIN, String(paymentDocUrlRaw))
+    : null;
 
   return {
     id,
@@ -141,7 +148,7 @@ export async function listUnverifiedStations(): Promise<StationOption[]> {
         pick(row?.station_name, row?.stationName, row?.name),
         `Station #${id}`
       );
-      return { id, label: `${name} (ID: ${id})` };
+      return { id, label: name };
     })
     .filter(Boolean) as StationOption[];
 }
