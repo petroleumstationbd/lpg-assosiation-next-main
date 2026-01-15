@@ -192,13 +192,8 @@ export default function MembersOverviewSection() {
 
       <div className="lpg-container relative">
         <div className="mx-auto max-w-[860px] text-center">
-          <h2 className="text-[30px] font-semibold tracking-tight text-[#133374] md:text-[36px]">
-            Member List
-          </h2>
 
-          <p className="mt-2 text-[11px] leading-relaxed text-[#8A9CB0] md:text-[12px]">
-            Collective strength of petrol pump owners, dealers, and distributors across Bangladesh.
-          </p>
+
           {statusMessage ? (
             <p className="mt-3 text-[11px] font-medium text-[#FC7160] md:text-[12px]">{statusMessage}</p>
           ) : null}

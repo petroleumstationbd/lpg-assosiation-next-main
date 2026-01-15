@@ -172,10 +172,10 @@ export default function CentralCommitteeSection() {
          <div className='pointer-events-none absolute -left-24 top-[120px] h-[260px] w-[260px] rounded-[40px] bg-[radial-gradient(circle_at_center,_#D5E6FF66,_transparent_70%)]' />
 
          <div className='lpg-container relative'>
-            <SectionHeading
+            {/* <SectionHeading
                title='CENTRAL COMMITTEE'
                subtitle='The current committee has been formed in a general meeting held on 27 February, 2021. About 200 owners of autogas stations and conversion workshops were present at the meeting chaired by Engr. Mohammad Serajul Mawla. The panel of Engr. Mohammad Serajul Mawla and SMT Energy Ltd. was elected to the present committee. The following panel members are playing important roles in promoting LPG Autogas and LPG Conversion Center across the country as the General Secretary of this association.'
-            />
+            /> */}
 
             {loading ? (
                <LoadingBar />

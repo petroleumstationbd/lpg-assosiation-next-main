@@ -18,7 +18,7 @@ type PageHeroProps = {
 
 const heightClass: Record<NonNullable<PageHeroProps['height']>, string> = {
    full: 'min-h-[560px] md:min-h-[680px] lg:min-h-[800px]',
-   compact: 'min-h-[320px] md:min-h-[520px] lg:min-h-[400px]',
+   compact: 'min-h-[220px] lg:min-h-[250px] bg-white',
 };
 
 export default function PageHero({
@@ -30,36 +30,47 @@ export default function PageHero({
    height = 'full',
    showHeader = true,
    overlayFrom = 'down',
-   
 }: PageHeroProps) {
    return (
       <div className={`relative w-full ${heightClass[height]}`}>
-         <Image
-            src={backgroundImage}
-            alt='Page hero background'
-            fill
-            priority
-            className='object-cover'
-         />
+         {height == 'full' && (
+            <Image
+               src={backgroundImage}
+               alt='Page hero background'
+               fill
+               priority
+               className='object-cover'
+            />
+         )}
 
          {/* overlay */}
-         <div
-            className={`pointer-events-none absolute inset-0 ${
-               overlayFrom === 'top' ? 'bg-gradient-to-t' : 'bg-gradient-to-b'
-            } from-[#00000054] to-[#122047]`}
-         />
+
+         {height == 'full' && (
+            <div
+               className={`pointer-events-none absolute inset-0 ${
+                  overlayFrom === 'top'
+                     ? 'bg-gradient-to-t'
+                     : 'bg-gradient-to-b'
+               } from-[#00000054] to-[#122047]`}
+            />
+         )}
 
          {showHeader && <Header heroSize={heightClass[height]} />}
          <div className='h-[120px]'></div>
 
          {/* content */}
-         <div className={`relative flex min-h-[70%] ${height == "compact" ? 'md:min-h-[300px]' : 'md:min-h-[600px]'} flex-col items-center justify-center px-4 lpg-container pb-6 text-center text-white`}>
-            <h1 className='text-[24px] md:text-[38px] lg:text-[48px] font-bold leading-tight tracking-[-0.04em] mt-18 md:mt-0 mb-12'>
+         <div
+            className={`relative flex min-h-[70%] ${
+               height == 'compact'
+                  ? 'md:min-h-[220px] mt-2 text-[#133374]'
+                  : 'md:min-h-[600px] text-white'
+            } flex-col items-center justify-center px-4 lpg-container pb-6 text-center `}>
+            <h1 className='text-[24px] md:text-[38px] lg:text-[48px] font-bold leading-tight tracking-[-0.04em] mt-18 md:mt-01 mb-0'>
                {title}
             </h1>
 
             {subtitle && (
-               <p className='mt-3 text-[11px] md:text-[14px] font-medium tracking-[0.0em] text-white/80 lpg-container'>
+               <p className={`${height == 'compact' ? 'text-[#133374]' : 'text-white/80'} mt-3 text-[11px] md:text-[14px] font-medium tracking-[0.0em] lpg-container`}>
                   {subtitle}
                </p>
             )}
