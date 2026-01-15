@@ -9,7 +9,7 @@ export default function LoginPage() {
     <div>
       <PageHero
         title="Login"
-        subtitle="Lorem ipsum dolor sit amet consectetur. Neque aliquam amet commodo sollicitudin"
+        // subtitle="Lorem ipsum dolor sit amet consectetur. Neque aliquam amet commodo sollicitudin"
         backgroundImage={heroBg}
         height="compact"
       />

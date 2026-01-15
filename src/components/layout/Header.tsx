@@ -204,8 +204,8 @@ export default function Header({heroSize = ''}: {heroSize?: string}) {
                   </div>
                </Link>
 
-               <div className='ml-12 flex flex-1 items-center justify-between gap-6 overflow-visible md:ml-16'>
-                  <nav className='hidden flex-1 items-center justify-end lg:gap-2 lg:flex  xl:gap-2 overflow-visible'>
+               <div className='ml-12 flex flex-1 items-center justify-between gap-2 overflow-visible md:ml-16'>
+                  <nav className='hidden flex-1 items-center justify-end lg:gap-[3px] lg:flex  xl:gap-2 overflow-visible'>
                      {MAIN_NAV.map(item => {
                         const hasChildren = !!item.children?.length;
                         const isDropdownOpen = openDropdownKey === item.key;
@@ -242,7 +242,7 @@ export default function Header({heroSize = ''}: {heroSize?: string}) {
                                        ? 'text-[#75B553]'
                                        : 'text-[#1C2537] hover:text-[#75B553]'
                                  }`}>
-                                 <span className='inline-flex items-center gap-0 tracking-[-0.4]'>
+                                 <span className='inline-flex items-center gap-0 tracking-[-0.5]'>
                                     {item.label}
                                     {hasChildren && (
                                        <Caret open={isDropdownOpen} />
