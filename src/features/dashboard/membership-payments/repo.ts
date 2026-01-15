@@ -141,7 +141,7 @@ export async function listUnverifiedStations(): Promise<StationOption[]> {
         pick(row?.station_name, row?.stationName, row?.name),
         `Station #${id}`
       );
-      return { id, label: `${name} (ID: ${id})` };
+      return { id, label: name };
     })
     .filter(Boolean) as StationOption[];
 }

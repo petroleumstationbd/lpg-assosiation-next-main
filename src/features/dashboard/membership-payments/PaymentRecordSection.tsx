@@ -132,19 +132,13 @@ export default function PaymentRecordSection() {
           );
 
           return (
-            <div className="flex flex-col items-center gap-1 text-[12px] font-semibold text-[#133374]">
-              <a
-                href={r.paymentDocUrl}
-                target="_blank"
-                rel="noreferrer"
-                className="hover:underline"
-              >
-                View
-              </a>
-              <a href={r.paymentDocUrl} download={downloadName} className="hover:underline">
-                Download
-              </a>
-            </div>
+            <a
+              href={r.paymentDocUrl}
+              download={downloadName}
+              className="inline-flex h-7 items-center justify-center rounded-sm bg-[#133374] px-3 text-[11px] font-semibold text-white shadow-sm hover:opacity-90"
+            >
+              Download
+            </a>
           );
         },
       },
@@ -234,11 +228,11 @@ export default function PaymentRecordSection() {
                 value={stationSearch}
                 onChange={(e) => {
                   const value = e.target.value;
-                  setStationSearch(value);
                   const match = stationOptions.find(
                     (option) => option.label === value || option.id === value
                   );
-                  setStationId(match ? match.id : value);
+                  setStationSearch(match ? match.label : value);
+                  setStationId(match ? match.id : '');
                 }}
                 placeholder={loadingStations ? 'Loading stations...' : 'Select station name'}
                 disabled={stationsQ.isError}
@@ -246,7 +240,7 @@ export default function PaymentRecordSection() {
               />
               <datalist id="station-options">
                 {stationOptions.map((option) => (
-                  <option key={option.id} value={option.label} />
+                  <option key={option.id} value={option.label} label={`ID: ${option.id}`} />
                 ))}
               </datalist>
             </div>
