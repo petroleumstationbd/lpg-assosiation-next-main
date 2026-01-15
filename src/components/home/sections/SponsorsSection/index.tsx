@@ -61,7 +61,7 @@ const sponsors: Sponsor[] = [
 
 const leaders: Leader[] = [
    {
-      name: 'Sayed Sajjadul Karim Kabul',
+      name: 'Syed Sajjadul Karim Kabul',
       title: 'PRESIDENT',
       bio: `Bangladesh Petroleum Dealers, Distributors, Agents and Petrol Pump Owners Association
 Petroleum dealers, distributors, agents and petrol pumps are a traditional and ancient business industry sector in Bangladesh. But in the current global context, ensuring energy security along with protecting the environment has become the most important challenge for all nations. Bangladesh is no exception. Due to limited domestic natural gas reserves and the ever-increasing demand for energy, the country is facing a permanent energy crisis. In this reality, the use of alternative and environmentally friendly fuels has emerged as a strategic necessity rather than an option.
