@@ -5,8 +5,8 @@ export const registerOwnerSchema = z
     stationOwnerName: z.string().min(2, 'Name is required'),
     email: z.string().email('Invalid email'),
     phone: z.string().min(6, 'Phone is required'),
-    password: z.string().min(6, 'Password must be at least 6 characters'),
-    confirmPassword: z.string().min(6, 'Confirm password is required'),
+    password: z.string().min(8, 'Password must be at least 8 characters'),
+    confirmPassword: z.string().min(8, 'Confirm password is required'),
     residentialAddress: z.string().min(3, 'Address is required'),
     profileImage: z
       .custom<FileList | null>()

@@ -79,7 +79,7 @@ export default function RegisterSection() {
     if (!form.stationOwnerName.trim()) return false;
     if (!isValidEmail(form.email)) return false;
     if (!isValidPhone(form.phone)) return false;
-    if (form.password.length < 6) return false;
+    if (form.password.length < 8) return false;
     if (form.confirmPassword !== form.password) return false;
     if (!form.address.trim()) return false;
     return true;
@@ -99,8 +99,8 @@ export default function RegisterSection() {
       return setError('Please enter a valid email address.');
     if (!isValidPhone(form.phone))
       return setError('Please enter a valid phone number.');
-    if (form.password.length < 6)
-      return setError('Password must be at least 6 characters.');
+    if (form.password.length < 8)
+      return setError('Password must be at least 8 characters.');
     if (form.confirmPassword !== form.password)
       return setError('Confirm password does not match.');
     if (!form.address.trim())
@@ -114,7 +114,6 @@ export default function RegisterSection() {
         email: form.email.trim(),
         phone_number: form.phone.trim(),
         password: form.password,
-        password_confirmation: form.confirmPassword,
         address: form.address.trim(),
         // backend supports these, optional:
         // username: '',

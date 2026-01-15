@@ -77,7 +77,13 @@ export async function POST(req: Request) {
             {status: 400}
          );
 
-      const payload = {
+      const payload: {
+         full_name: string;
+         email: string;
+         phone_number: string;
+         password: string;
+         address: string;
+      } = {
          full_name: (body.full_name ?? body.stationOwnerName ?? '').trim(),
          email: (body.email ?? '').trim(),
          phone_number: (body.phone_number ?? body.phone ?? '').trim(),

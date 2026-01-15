@@ -21,6 +21,13 @@ async function readJsonOrThrow(res: Response) {
 
 export async function registerOwnerRepo(input: RegisterOwnerInput): Promise<RegisterOwnerResult> {
   const profileImage = input.profileImage?.item(0) ?? null;
+  const payload = {
+    full_name: input.stationOwnerName,
+    email: input.email,
+    phone_number: input.phone,
+    password: input.password,
+    address: input.residentialAddress,
+  };
   const body =
     profileImage != null
       ? (() => {
@@ -33,7 +40,7 @@ export async function registerOwnerRepo(input: RegisterOwnerInput): Promise<Regi
           payload.set('profile_image', profileImage);
           return payload;
         })()
-      : JSON.stringify(input);
+      : JSON.stringify(payload);
 
   const res = await fetch('/api/station-owners/register', {
     method: 'POST',
