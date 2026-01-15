@@ -75,8 +75,8 @@ export default function PaymentRecordSection() {
         cell: (r) => {
           return (
           <span className="text-[#2B3A4A]">
-            {r.stationName}
-            {r.stationId ? ` (ID: ${r.stationId})` : ''}
+            {/* {r.stationName} */}
+            {r.stationId ? ` ID: ${r.stationId}` : ''}
           </span>
         )
         },
