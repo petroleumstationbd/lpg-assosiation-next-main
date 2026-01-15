@@ -154,7 +154,7 @@ export default function StationDocumentsTable() {
         ),
       },
     ];
-  }, [del.isPending]);
+  }, [del]);
 
   if (q.isLoading) return <Loader label="Loading..." />;
   if (q.isError) return <div className="text-sm text-red-600">Failed to load documents.</div>;
