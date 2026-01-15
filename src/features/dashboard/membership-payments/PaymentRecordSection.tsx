@@ -32,6 +32,9 @@ const getDownloadName = (url: string, fallback: string) => {
   return fallback;
 };
 
+const buildDownloadUrl = (url: string) =>
+  `/api/station-documents/download?url=${encodeURIComponent(url)}`;
+
 export default function PaymentRecordSection() {
   const recordsQ = usePaymentRecords();
   const stationsQ = useUnverifiedStationOptions(true);
@@ -130,10 +133,11 @@ export default function PaymentRecordSection() {
             r.paymentDocUrl,
             `payment-record-${r.id}`
           );
+          const downloadUrl = buildDownloadUrl(r.paymentDocUrl);
 
           return (
             <a
-              href={r.paymentDocUrl}
+              href={downloadUrl}
               download={downloadName}
               className="inline-flex h-7 items-center justify-center rounded-sm bg-[#133374] px-3 text-[11px] font-semibold text-white shadow-sm hover:opacity-90"
             >
