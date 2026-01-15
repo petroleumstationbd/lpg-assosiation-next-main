@@ -49,6 +49,8 @@ export default function PaymentRecordSection() {
   const stationOptions = stationsQ.data ?? [];
   const loadingStations = stationsQ.isLoading;
 
+  const { isPending: deleteIsPending, mutate: deleteMutate } = deleteM;
+
   const columns = useMemo<ColumnDef<PaymentRecordRow>[]>(() => {
     return [
       {
@@ -70,12 +72,14 @@ export default function PaymentRecordSection() {
         headerClassName: 'w-[220px]',
         csvHeader: 'Station',
         csvValue: (r) => r.stationName,
-        cell: (r) => (
+        cell: (r) => {
+          return (
           <span className="text-[#2B3A4A]">
             {r.stationName}
             {r.stationId ? ` (ID: ${r.stationId})` : ''}
           </span>
-        ),
+        )
+        },
       },
       {
         id: 'bank',
@@ -97,18 +101,18 @@ export default function PaymentRecordSection() {
         csvValue: (r) => r.amountPaid,
         cell: (r) => <span className="text-[#133374]">{money(r.amountPaid)}</span>,
       },
-      {
-        id: 'note',
-        header: 'Note',
-        sortable: false,
-        csvHeader: 'Note',
-        csvValue: (r) => r.note,
-        cell: (r) => (
-          <span className="block max-w-[220px] truncate text-[#2B3A4A]">
-            {r.note || '—'}
-          </span>
-        ),
-      },
+      // {
+      //   id: 'note',
+      //   header: 'Note',
+      //   sortable: false,
+      //   csvHeader: 'Note',
+      //   csvValue: (r) => r.note,
+      //   cell: (r) => (
+      //     <span className="block max-w-[220px] truncate text-[#2B3A4A]">
+      //       {r.note || '—'}
+      //     </span>
+      //   ),
+      // },
       {
         id: 'doc',
         header: 'Document',
@@ -155,16 +159,16 @@ export default function PaymentRecordSection() {
         cell: (r) => (
           <button
             type="button"
-            onClick={() => deleteM.mutate(r.id)}
-            disabled={deleteM.isPending}
-            className="h-7 rounded-[4px] bg-[#FC7160] px-4 text-[11px] font-semibold text-white shadow-sm disabled:opacity-60"
+            onClick={() => deleteMutate(r.id)}
+            disabled={deleteIsPending}
+            className="h-7 rounded-sm bg-[#FC7160] px-4 text-[11px] font-semibold text-white shadow-sm disabled:opacity-60"
           >
             Delete
           </button>
         ),
       },
     ];
-  }, [deleteM.isPending]);
+  }, [deleteIsPending, deleteMutate]);
 
   return (
     <div className="space-y-6">
