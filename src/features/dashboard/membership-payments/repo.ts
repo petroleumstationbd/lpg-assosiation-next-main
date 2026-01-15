@@ -36,6 +36,15 @@ function toId(value: any) {
   return v || '';
 }
 
+function normalizeStoragePath(pathOrUrl: string) {
+  const trimmed = pathOrUrl.trim();
+  if (!trimmed) return '';
+  if (/^https?:\/\//i.test(trimmed)) return trimmed;
+  const withLeadingSlash = trimmed.startsWith('/') ? trimmed : `/${trimmed}`;
+  if (withLeadingSlash.startsWith('/storage/')) return withLeadingSlash;
+  return `/storage${withLeadingSlash}`;
+}
+
 async function safeJson(res: Response) {
   const text = await res.text();
   if (!text) return null;
@@ -69,7 +78,10 @@ function mapRecord(row: PaymentRecordApiRow, idx: number): PaymentRecordRow | nu
   const note = str(row?.note, '');
   const paymentDocUrlRaw = pick(row?.payment_doc_url, row?.payment_doc);
   const paymentDocUrl = paymentDocUrlRaw
-    ? toAbsoluteUrl(LARAVEL_ORIGIN, String(paymentDocUrlRaw))
+    ? toAbsoluteUrl(
+        LARAVEL_ORIGIN,
+        normalizeStoragePath(String(paymentDocUrlRaw))
+      )
     : null;
 
   return {
