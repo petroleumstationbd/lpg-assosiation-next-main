@@ -18,9 +18,6 @@ export async function POST(req: Request) {
          ).trim();
          const email = String(form.get('email') ?? '').trim();
          const password = String(form.get('password') ?? '');
-         const passwordConfirmation = String(
-            form.get('password_confirmation') ?? form.get('confirmPassword') ?? ''
-         );
          const address = String(
             form.get('address') ?? form.get('residentialAddress') ?? ''
          ).trim();
@@ -38,9 +35,6 @@ export async function POST(req: Request) {
          payload.set('phone_number', phoneNumber);
          payload.set('email', email);
          payload.set('password', password);
-         if (passwordConfirmation) {
-            payload.set('password_confirmation', passwordConfirmation);
-         }
          payload.set('address', address);
 
          if (profileImage instanceof File) {
@@ -73,8 +67,6 @@ export async function POST(req: Request) {
          phone?: string;
          phone_number?: string;
          password?: string;
-         password_confirmation?: string;
-         confirmPassword?: string;
          address?: string;
          residentialAddress?: string;
       } | null;
@@ -91,7 +83,6 @@ export async function POST(req: Request) {
          phone_number: string;
          password: string;
          address: string;
-         password_confirmation?: string;
       } = {
          full_name: (body.full_name ?? body.stationOwnerName ?? '').trim(),
          email: (body.email ?? '').trim(),
@@ -99,12 +90,6 @@ export async function POST(req: Request) {
          password: body.password ?? '',
          address: (body.address ?? body.residentialAddress ?? '').trim(),
       };
-      const passwordConfirmation =
-         body.password_confirmation ?? body.confirmPassword ?? '';
-
-      if (passwordConfirmation) {
-         payload.password_confirmation = passwordConfirmation;
-      }
 
       if (
          !payload.full_name ||

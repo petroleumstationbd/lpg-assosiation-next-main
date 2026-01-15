@@ -26,7 +26,6 @@ export async function registerOwnerRepo(input: RegisterOwnerInput): Promise<Regi
     email: input.email,
     phone_number: input.phone,
     password: input.password,
-    password_confirmation: input.confirmPassword,
     address: input.residentialAddress,
   };
   const body =
@@ -37,7 +36,6 @@ export async function registerOwnerRepo(input: RegisterOwnerInput): Promise<Regi
           payload.set('email', input.email);
           payload.set('phone_number', input.phone);
           payload.set('password', input.password);
-          payload.set('password_confirmation', input.confirmPassword);
           payload.set('address', input.residentialAddress);
           payload.set('profile_image', profileImage);
           return payload;
