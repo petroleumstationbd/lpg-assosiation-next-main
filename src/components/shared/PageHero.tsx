@@ -53,7 +53,7 @@ export default function PageHero({
          <div className='h-[120px]'></div>
 
          {/* content */}
-         <div className='relative flex min-h-[70%] md:min-h-[300px] flex-col items-center justify-center px-4 lpg-container pb-6 text-center text-white'>
+         <div className={`relative flex min-h-[70%] ${height == "compact" ? 'md:min-h-[300px]' : 'md:min-h-[600px]'} flex-col items-center justify-center px-4 lpg-container pb-6 text-center text-white`}>
             <h1 className='text-[24px] md:text-[38px] lg:text-[48px] font-bold leading-tight tracking-[-0.04em] mt-18 md:mt-0 mb-12'>
                {title}
             </h1>

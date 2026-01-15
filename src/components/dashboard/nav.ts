@@ -35,7 +35,7 @@ export const DASH_NAV: NavItem[] = [
       icon: LayoutDashboard,
    },
    {key: 'profile', label: 'Edit Profile', href: '/edit-profile', icon: User},
-   {key: 'invoice', label: 'Invoice', href: '/invoice', icon: Receipt},
+   // {key: 'invoice', label: 'Invoice', href: '/invoice', icon: Receipt},
    {
       key: 'membership-fees',
       label: 'Pay Membership Fee',
