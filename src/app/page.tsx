@@ -24,7 +24,7 @@ export default function Home() {
             }
             subtitle='LICENSE NO: 21/2021 II REG. NO: To-1026/2021'
             ctaLabel='Get Started'
-            ctaHref='/login'
+            ctaHref='/register'
             height='full'
          />
          <SponsorsSection />
