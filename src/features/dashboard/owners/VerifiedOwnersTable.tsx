@@ -82,7 +82,7 @@ export default function VerifiedOwnersTable() {
       return [
          {
             id: 'memberId',
-            header: 'Member ID',
+            header: 'station owner member ID',
             sortable: true,
             sortValue: r => r.memberId ?? '',
             align: 'center',

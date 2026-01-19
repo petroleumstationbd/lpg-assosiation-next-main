@@ -17,6 +17,7 @@ export type OwnersRepo = {
 
 type ApiOwnerRow = {
   id: number | string;
+  station_owner_id?: string;
   full_name: string;
   email: string;
   phone_number: string;
@@ -94,7 +95,7 @@ function mapStatus(apiStatus: string): OwnerStatus {
 function mapOwner(r: ApiOwnerRow): OwnerRow {
   return {
     id: String(r.id),
-    memberId: String(r.id),
+    memberId: String(r.station_owner_id),
     photoUrl: r.profile_image ? toAbs(r.profile_image) : DEFAULT_AVATAR,
     ownerName: r.full_name,
     phone: r.phone_number,
