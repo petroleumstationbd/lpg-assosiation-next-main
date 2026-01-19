@@ -10,11 +10,12 @@ type ApiStationLocation = {
    division?: string | null;
    district?: string | null;
    upazila?: string | null;
-   station_owner_id: string;
+
 };
 
 type ApiStationOwner = {
    id: number;
+      station_owner_id: string;
    full_name: string;
    profile_image: string | null;
    gas_stations?: {
@@ -79,6 +80,7 @@ export default function MembersOverviewSection() {
             photoUrl: resolvePhotoUrl(owner.profile_image, owner.full_name),
             ownerName: owner.full_name,
             memberId: String(owner.station_owner_id),
+            station_owner_id: owner.station_owner_id,
             stations,
             zone: location?.division ?? '',
             district: location?.district ?? '',
