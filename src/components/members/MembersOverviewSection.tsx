@@ -146,50 +146,50 @@ export default function MembersOverviewSection() {
             cell: r => <span className='text-inherit'>{r.ownerName}</span>,
          },
 
-         // {
-         //   id: 'stations',
-         //   header: 'Station Name',
-         //   sortable: true,
-         //   sortValue: (r) => (r.stations ?? []).join(' '),
-         //   csvHeader: 'Station Name',
-         //   csvValue: (r) => (r.stations ?? []).join(' | '),
-         //   cell: (r) => (
-         //     <div className="space-y-1 leading-[1.25]">
-         //       {(r.stations ?? []).map((s, idx) => (
-         //         <div key={idx} className="text-inherit">
-         //           {s}
-         //         </div>
-         //       ))}
-         //     </div>
-         //   ),
-         // },
-         // {
-         //   id: 'zone',
-         //   header: 'Zone',
-         //   sortable: true,
-         //   sortValue: (r) => r.zone,
-         //   csvHeader: 'Zone',
-         //   csvValue: (r) => r.zone,
-         //   cell: (r) => <span className="text-inherit">{r.zone}</span>,
-         // },
-         // {
-         //   id: 'district',
-         //   header: 'District',
-         //   sortable: true,
-         //   sortValue: (r) => r.district,
-         //   csvHeader: 'District',
-         //   csvValue: (r) => r.district,
-         //   cell: (r) => <span className="text-inherit">{r.district}</span>,
-         // },
-         // {
-         //   id: 'upazila',
-         //   header: 'Upazila',
-         //   sortable: true,
-         //   sortValue: (r) => r.upazila,
-         //   csvHeader: 'Upazila',
-         //   csvValue: (r) => r.upazila,
-         //   cell: (r) => <span className="text-inherit">{r.upazila}</span>,
-         // },
+         {
+           id: 'stations',
+           header: 'Station Name',
+           sortable: true,
+           sortValue: (r) => (r.stations ?? []).join(' '),
+           csvHeader: 'Station Name',
+           csvValue: (r) => (r.stations ?? []).join(' | '),
+           cell: (r) => (
+             <div className="space-y-1 leading-[1.25]">
+               {(r.stations ?? []).map((s, idx) => (
+                 <div key={idx} className="text-inherit">
+                   {s}
+                 </div>
+               ))}
+             </div>
+           ),
+         },
+          {
+           id: 'zone',
+           header: 'Zone',
+           sortable: true,
+           sortValue: (r) => r.zone,
+           csvHeader: 'Zone',
+           csvValue: (r) => r.zone,
+           cell: (r) => <span className="text-inherit">{r.zone}</span>,
+         },
+         {
+           id: 'district',
+           header: 'District',
+           sortable: true,
+           sortValue: (r) => r.district,
+           csvHeader: 'District',
+           csvValue: (r) => r.district,
+           cell: (r) => <span className="text-inherit">{r.district}</span>,
+         },
+         {
+           id: 'upazila',
+           header: 'Upazila',
+           sortable: true,
+           sortValue: (r) => r.upazila,
+           csvHeader: 'Upazila',
+           csvValue: (r) => r.upazila,
+           cell: (r) => <span className="text-inherit">{r.upazila}</span>,
+         },
       ],
       [],
    );
