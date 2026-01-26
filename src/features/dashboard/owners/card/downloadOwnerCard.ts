@@ -30,7 +30,7 @@ const drawRoundedRect = (
    y: number,
    w: number,
    h: number,
-   r: number
+   r: number,
 ) => {
    ctx.beginPath();
    ctx.moveTo(x + r, y);
@@ -51,7 +51,7 @@ const drawCoverImage = (
    x: number,
    y: number,
    w: number,
-   h: number
+   h: number,
 ) => {
    const scale = Math.max(w / image.width, h / image.height);
    const sw = w / scale;
@@ -68,7 +68,7 @@ const drawFittedText = (
    y: number,
    maxWidth: number,
    fontWeight: number,
-   fontSize: number
+   fontSize: number,
 ) => {
    let size = fontSize;
    ctx.font = `${fontWeight} ${size}px "Segoe UI", sans-serif`;
@@ -82,7 +82,7 @@ const drawFittedText = (
 const drawPhoto = (
    ctx: CanvasRenderingContext2D,
    photo: HTMLImageElement | null,
-   frame: Rect
+   frame: Rect,
 ) => {
    ctx.save();
    ctx.shadowColor = 'rgba(15, 23, 42, 0.25)';
@@ -100,7 +100,7 @@ const drawPhoto = (
       frame.y + 6,
       frame.w - 12,
       frame.h - 12,
-      12
+      12,
    );
    ctx.clip();
    if (photo) {
@@ -110,7 +110,7 @@ const drawPhoto = (
          frame.x + 6,
          frame.y + 6,
          frame.w - 12,
-         frame.h - 12
+         frame.h - 12,
       );
    } else {
       ctx.fillStyle = '#E5E7EB';
@@ -125,7 +125,7 @@ const drawPhoto = (
 const drawQr = (
    ctx: CanvasRenderingContext2D,
    qr: HTMLImageElement | null,
-   frame: Rect
+   frame: Rect,
 ) => {
    ctx.save();
    ctx.fillStyle = 'rgba(255,255,255,0.92)';
@@ -141,7 +141,7 @@ const drawQr = (
          frame.y + 4,
          frame.w - 8,
          frame.h - 8,
-         10
+         10,
       );
       ctx.clip();
       ctx.drawImage(qr, frame.x + 4, frame.y + 4, frame.w - 8, frame.h - 8);
@@ -208,13 +208,13 @@ const createPdfBlobFromCanvas = (canvas: HTMLCanvasElement) => {
 
    startObject(3);
    pushString(
-      `<< /Type /Page /Parent 2 0 R /Resources << /XObject << /Im0 4 0 R >> /ProcSet [/PDF /ImageC] >> /MediaBox [0 0 ${width} ${height}] /Contents 5 0 R >>\n`
+      `<< /Type /Page /Parent 2 0 R /Resources << /XObject << /Im0 4 0 R >> /ProcSet [/PDF /ImageC] >> /MediaBox [0 0 ${width} ${height}] /Contents 5 0 R >>\n`,
    );
    endObject();
 
    startObject(4);
    pushString(
-      `<< /Type /XObject /Subtype /Image /Width ${width} /Height ${height} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${imageBytes.length} >>\nstream\n`
+      `<< /Type /XObject /Subtype /Image /Width ${width} /Height ${height} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${imageBytes.length} >>\nstream\n`,
    );
    pushBytes(imageBytes);
    pushString('\nendstream\n');
@@ -272,7 +272,7 @@ const drawOwnerOverlay = (ctx: CanvasRenderingContext2D, owner: OwnerRow) => {
       frontHeight * 0.57,
       width * 0.52,
       700,
-      Math.round(width * 0.03)
+      Math.round(width * 0.03),
    );
 
    ctx.fillStyle = '#111827';
@@ -283,47 +283,46 @@ const drawOwnerOverlay = (ctx: CanvasRenderingContext2D, owner: OwnerRow) => {
       frontHeight * 0.65,
       width * 0.28,
       600,
-      Math.round(width * 0.026)
+      Math.round(width * 0.026),
    );
 
    return {photoFrame, qrFrame};
 };
 
-const getQrValue = (row: OwnerRow) => {
-   const pick = (...v: Array<string | null | undefined>) =>
-      v.find(s => typeof s === 'string' && s.trim().length > 0)?.trim() ?? '—';
+const pickText = (...v: Array<string | null | undefined>) =>
+   v.find(s => typeof s === 'string' && s.trim().length > 0)?.trim() ?? '—';
 
-   const ownerName = pick(
-      (row as any).ownerName,
-      (row as any).fullName,
-      (row as any).name
-   );
+const fetchStationInfoFromPublicOwners = async (memberId?: string | null) => {
+   if (!memberId) {
+      return {stationName: '—', division: '—', district: '—'};
+   }
 
-   const stationName = pick(
-      (row as any).stationName,
-      (row as any).station_name,
-      (row as any).station?.name
-   );
+   try {
+      const res = await fetch(
+         'https://admin.petroleumstationbd.com/api/public/station-owners/list?per_page=2000',
+         {cache: 'no-store'},
+      );
 
-   const division = pick(
-      (row as any).divisionName,
-      (row as any).division,
-      (row as any).division?.name
-   );
+      if (!res.ok) {
+         return {stationName: '—', division: '—', district: '—'};
+      }
 
-   const district = pick(
-      (row as any).districtName,
-      (row as any).district,
-      (row as any).district?.name
-   );
+      const data = await res.json();
+      const owners = Array.isArray(data?.data) ? data.data : [];
+      const match = owners.find(
+         (o: any) => String(o?.station_owner_id) === String(memberId),
+      );
 
-   return [
-      `Member’s: ${ownerName}`,
-      `Station's Name: ${stationName}`,
-      `Division: ${division}`,
-      `District: ${district}`,
-      `Facebook Page Link: https://www.facebook.com/bdpetroleumstation/`,
-   ].join('\n');
+      const station = match?.gas_stations?.[0];
+
+      return {
+         stationName: pickText(station?.station_name),
+         division: pickText(station?.location?.division),
+         district: pickText(station?.location?.district),
+      };
+   } catch {
+      return {stationName: '—', division: '—', district: '—'};
+   }
 };
 
 export async function downloadOwnerCard(row: OwnerRow) {
@@ -331,9 +330,30 @@ export async function downloadOwnerCard(row: OwnerRow) {
    const ctx = canvas.getContext('2d');
    if (!ctx) return;
 
-   const qrValue = getQrValue(row);
+   const stationInfo = await fetchStationInfoFromPublicOwners(row.memberId);
+
+   const ownerName = pickText(
+      (row as any).ownerName,
+      (row as any).fullName,
+      (row as any).name,
+   );
+
+   const qrValue = [
+      'PETROLEUM STATION BD',
+      'Member Information',
+      '-------------------',
+      `Member: ${ownerName}`,
+      `Member ID: ${row.memberId ?? '—'}`,
+      '',
+      `Station: ${stationInfo.stationName}`,
+      `Division: ${stationInfo.division}`,
+      `District: ${stationInfo.district}`,
+      '',
+      'Facebook: https://www.facebook.com/bdpetroleumstation/',
+   ].join('\n');
+
    const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(
-      qrValue
+      qrValue,
    )}`;
 
    const [card, photo, qr] = await Promise.all([
