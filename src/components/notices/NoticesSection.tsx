@@ -265,6 +265,7 @@ export default function NoticesSection() {
           rows={rows}
           columns={columns}
           getRowKey={(r) => r.id ?? String(r.sl)}
+          initialSort={{id: 'publishedDate', dir: 'desc'}}
           // screenshot has no export button
           exportFileName=""
           searchText={(r) => [r.title, r.publishedDate].join(' ')}
