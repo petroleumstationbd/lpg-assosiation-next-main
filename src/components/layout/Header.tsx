@@ -26,7 +26,10 @@ const downloadFile = (url: string, filename?: string) => {
 };
 
 const MAIN_NAV: NavItem[] = [
+   {key: 'home​ ', label: 'Home​', href: '/'},
    {key: 'about', label: 'ABOUT US', href: '/about'},
+      {key: 'contact', label: 'CONTACT', href: '/contact'},
+      {key: 'gallery', label: 'CONTACT', href: '/contact'},
    {
       key: 'gallery',
       label: 'GALLERY',
@@ -70,12 +73,11 @@ const MAIN_NAV: NavItem[] = [
             action: () =>
                downloadFile(
                   '/files/membership-form.pdf',
-                  'membership-form.pdf'
+                  'membership-form.pdf',
                ),
          },
       ],
    },
-   {key: 'contact', label: 'CONTACT', href: '/contact'},
    {key: 'downloads', label: 'DOWNLOAD', href: '/downloads'},
    {key: 'notices', label: 'NOTICES', href: '/notices'},
 ];
@@ -107,7 +109,7 @@ export default function Header({heroSize = ''}: {heroSize?: string}) {
    const {isLoggedIn, logout, loading} = useAuth();
 
    const closeTimerRef = useRef<ReturnType<typeof window.setTimeout> | null>(
-      null
+      null,
    );
 
    const clearCloseTimer = useCallback(() => {
@@ -128,7 +130,7 @@ export default function Header({heroSize = ''}: {heroSize?: string}) {
          clearCloseTimer();
          setOpenDropdownKey(key);
       },
-      [clearCloseTimer]
+      [clearCloseTimer],
    );
 
    const closeDropdowns = useCallback(() => {
@@ -141,7 +143,7 @@ export default function Header({heroSize = ''}: {heroSize?: string}) {
          href === '/'
             ? pathname === '/'
             : pathname === href || pathname.startsWith(href + '/'),
-      [pathname]
+      [pathname],
    );
 
    useEffect(() => {
@@ -267,7 +269,6 @@ export default function Header({heroSize = ''}: {heroSize?: string}) {
                                     onPointerEnter={clearCloseTimer}
                                     onPointerLeave={scheduleCloseDropdowns}>
                                     <div className='absolute -top-2 left-0 right-0 h-2' />
-
 
                                     <div className='dropdown-panel'>
                                        <ul className='dropdown-list flex flex-col gap-0'>
@@ -398,7 +399,7 @@ export default function Header({heroSize = ''}: {heroSize?: string}) {
                                              className='text-[10px] font-medium uppercase tracking-[0.14em] text-[#6B7280]'>
                                              {child.label}
                                           </Link>
-                                       )
+                                       ),
                                     )}
                                  </div>
                               )}

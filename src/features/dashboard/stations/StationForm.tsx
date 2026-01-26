@@ -75,7 +75,7 @@ const emptyForm: FormState = {
    fuel_type: '',
    oil_company_name: '',
    station_type: '',
-   station_status: 'Running',
+   station_status: '',
    business_type: '',
    dealership_agreement: '',
    division_id: '',
