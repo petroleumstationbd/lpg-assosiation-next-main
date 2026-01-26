@@ -23,7 +23,7 @@ export default function FramerMarqueeRow({
   return (
     <div
       className={[
-        'relative pt-2 h-[65px] flex justify-center items-center mx-auto overflow-hidden',
+        'relative pt-2 h-[70px] flex justify-center items-center mx-auto overflow-hidden',
         'max-md:pt-1 max-md:h-[56px] max-md:w-full',
         className ?? '',
       ].filter(Boolean).join(' ')}
@@ -69,7 +69,7 @@ export default function FramerMarqueeRow({
             key={`${sponsor.name}-${index}`}
             className={[
               'flex items-center justify-center bg-white',
-              'h-[50px] min-w-[130px] px-6 rounded-[12px]',
+              'h-[64px] min-w-[140px] px-6 rounded-[12px]',
               'max-md:h-[42px] max-md:min-w-[110px] max-md:px-4 max-md:rounded-[10px]',
               // FIXED shadow typo (0.2)
               'shadow-[0_0px_12px_rgba(0,0,0,0.2)]',
@@ -78,10 +78,10 @@ export default function FramerMarqueeRow({
             <Image
               src={sponsor.logo}
               alt={sponsor.name}
-              width={100}
-              height={32}
-              sizes="(max-width: 767px) 84px, 100px"
-              className="object-contain h-[32px] w-auto max-md:h-[24px]"
+              width={130}
+              height={42}
+              sizes="(max-width: 767px) 94px, 130px"
+              className="object-contain h-[43px] w-auto max-md:h-[24px]"
             />
           </div>
         ))}

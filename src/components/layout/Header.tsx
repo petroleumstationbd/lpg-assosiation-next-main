@@ -29,13 +29,13 @@ const MAIN_NAV: NavItem[] = [
    {key: 'home​ ', label: 'Home​', href: '/'},
    {key: 'about', label: 'ABOUT US', href: '/about'},
       {key: 'contact', label: 'CONTACT', href: '/contact'},
-      {key: 'gallery', label: 'CONTACT', href: '/contact'},
+      {key: 'gallery', label: 'GALLERY', href: '/gallery/photo-gallery'},
    {
-      key: 'gallery',
-      label: 'GALLERY',
+      key: 'Photogallery ',
+      label: 'Photo Gallery',
       href: '#',
       children: [
-         {label: 'PHOTO GALLERY', href: '/gallery/photo-gallery'},
+         // {label: 'PHOTO GALLERY', href: '/gallery/photo-gallery'},
          {label: 'PRINT MEDIA GALLERY', href: '/gallery/print-media-gallery'},
          {label: 'MEDIA COVERAGE', href: '/gallery/media-coverage'},
          {label: 'VIDEO GALLERY', href: '/gallery/video-gallery'},
@@ -46,9 +46,10 @@ const MAIN_NAV: NavItem[] = [
       label: 'COMMITTEE',
       href: '#',
       children: [
-         {label: 'ADVISORS', href: '/committee/advisors'},
+
          {label: 'CENTRAL COMMITTEE', href: '/committee/central-committee'},
          {label: 'ZONAL COMMITTEE', href: '/committee/zonal-committee'},
+                  {label: 'ADVISORS', href: '/committee/advisors'},
       ],
    },
    // {
@@ -58,12 +59,12 @@ const MAIN_NAV: NavItem[] = [
    // },
    {
       key: 'stations',
-      label: 'MEMBERSHIP STATION',
+      label: 'Members & Stations',
       href: '#',
       children: [
          {label: 'Member List', href: '/members/all-members'},
-         {label: 'Non-Member List', href: '/members/non-members'},
-         {label: 'Running Stations', href: '/members/running-stations'},
+         // {label: 'Non-Member List', href: '/members/non-members'},
+         // {label: 'Running Stations', href: '/members/running-stations'},
          // {label: 'On Going LPG Stations', href: '/members/on-going-stations'},
          {label: 'Total Station List', href: '/members/total-stations'},
          {label: 'Membership Fees', href: '/membership-fees'},
@@ -239,7 +240,7 @@ export default function Header({heroSize = ''}: {heroSize?: string}) {
                                        openDropdown(item.key);
                                     }
                                  }}
-                                 className={`text-[10px] xl:text-[14px] font-semibold uppercase transition-colors ${
+                                 className={`text-[9px]   2xl:text-[13px] font-semibold uppercase transition-colors ${
                                     active || isDropdownOpen
                                        ? 'text-[#75B553]'
                                        : 'text-[#1C2537] hover:text-[#75B553]'

@@ -8,6 +8,7 @@ import Modal from '@/components/ui/modal/Modal';
 import {toAbsoluteUrl} from '@/lib/http/url';
 
 import {MOCK_DOWNLOADS, type DownloadRow} from './mockDownloads';
+import {Download} from 'lucide-react';
 
 function cx(...v: Array<string | false | null | undefined>) {
    return v.filter(Boolean).join(' ');
@@ -262,7 +263,39 @@ export default function DownloadsSection() {
 
          <div className='pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(900px_520px_at_18%_10%,rgba(45,138,45,0.10),transparent_60%),radial-gradient(900px_520px_at_82%_10%,rgba(45,138,45,0.10),transparent_60%)]' />
 
-         <div className='lpg-container relative z-10'>
+         <div className='lpg-container relative z-10 space-y-3'>
+
+
+      <div className="rounded-[12px] border border-black/10 bg-white px-6 py-8 shadow-[0_14px_30px_rgba(9,30,66,0.12)]">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div>
+            <h1 className="text-[18px] font-semibold text-[#133374]">Membership Form </h1>
+            {/* <p className="mt-1 text-[12px] text-[#7B8EA3]">
+              Review submitted membership forms and download the application template.
+            </p> */}
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2">
+            {/* <Link
+              href="/dashboard-downloads"
+              className="inline-flex h-9 items-center gap-2 rounded-[6px] border border-[#CFE1F5] bg-white px-3 text-[11px] font-semibold text-[#133374] shadow-sm hover:bg-[#F5F8FF]"
+            >
+              <FileText size={14} />
+              Downloads
+            </Link> */}
+            <a
+              href="/files/membership-form.pdf"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex h-9 items-center gap-2 rounded-[6px] bg-[#009970] px-4 text-[11px] font-semibold text-white shadow-sm hover:brightness-110"
+            >
+              <Download size={14} />
+              Download Form
+            </a>
+          </div>
+        </div>
+      </div>
+
             {errorMsg ? (
                <p className='mb-4 text-[12px] font-medium text-[#FC7160]'>
                   {errorMsg}

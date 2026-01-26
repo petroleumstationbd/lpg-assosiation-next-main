@@ -21,12 +21,10 @@ import sponserImg1 from '@/assets/sponser-img/mgi.png';
 // import prtromax from '@/assets/sponser-img/prtromax.png';
 // import universal from '@/assets/sponser-img/universal.png';
 
-
 import bpc from '@/assets/sponser-img/bpc.jpeg';
 import jamuna from '@/assets/sponser-img/jamuna.jpeg';
 import meghna from '@/assets/sponser-img/meghna.jpeg';
 import padna from '@/assets/sponser-img/padna.jpeg';
-
 
 import arrowuiIcon from '@/assets/ui-icons/Layer_1 (3).png';
 import SectionHeading from '@components/ui/SectionHeading';
@@ -50,7 +48,7 @@ const sponsors: Sponsor[] = [
    {name: 'MGI', logo: bpc},
    {name: 'jamuna', logo: jamuna},
    {name: 'meghna', logo: meghna},
-   {name: 'padma', logo: padna}
+   {name: 'padma', logo: padna},
 
    // {name: 'Navana LPG', logo: navama},
    // {name: 'G Gas', logo: ggas},
@@ -63,15 +61,11 @@ const leaders: Leader[] = [
    {
       name: 'Syed Sajjadul Karim Kabul',
       title: 'PRESIDENT',
-      bio: `Bangladesh Petroleum Dealers, Distributors, Agents and Petrol Pump Owners Association
-Petroleum dealers, distributors, agents and petrol pumps are a traditional and ancient business industry sector in Bangladesh. But in the current global context, ensuring energy security along with protecting the environment has become the most important challenge for all nations. Bangladesh is no exception. Due to limited domestic natural gas reserves and the ever-increasing demand for energy, the country is facing a permanent energy crisis. In this reality, the use of alternative and environmentally friendly fuels has emerged as a strategic necessity rather than an option.
-Liquefied Petroleum Gas (LPG) Autogas has already proven itself as a clean, efficient and affordable alternative to conventional fuels like petrol, octane, diesel and CNG in Bangladesh and around the world.
-Our association members – petroleum dealers, distributors, agents and petrol pump owners – have played a key role in this transformation by investing significant resources, ensuring fuel supply and maintaining quality of service for consumers.
-However, despite these positive developments, we must also acknowledge the challenges faced by stakeholders in this sector. Some provisions of the existing policy and the complex, multi-tiered licensing and approval process have created serious operational difficulties. Entrepreneurs often have to seek permission from numerous authorities, resulting in delays, increased costs and uncertainty. These complexities are discouraging honest and capable investors and putting significant investments at risk, which may adversely affect the future growth of the sector.
+      bio: `Bangladesh Petroleum Dealer's, Distributor's, Agent's & Petrol Pump Owner's Association
+Syed Sajjadul Karim Kabul is a prominent leader and Present Convenar of the Bangladesh petroleum dealer's Distributor's Agent's & Petrol Pump Owner's Association. With years of experience in the petroleum industry, he has been a dedicated advocate for petrol pump owners, dealers, and Distributor's Agent's, and fuel traders across the country. He has been actively representing the interests of petrol pump owners, dealers, and Distributor's Agent's across the country, advocating for fair policies, improved commission structures, and better support for the fuel distribution business. Under his leadership, the association has engaged in national-level discussions with authorities on key industry issues, including sales commission rates and regulatory reforms to support the petroleum trade.
 
-On behalf of the Bangladesh Petroleum Dealers, Distributors, Agents and Petrol Pump Owners Association, I respectfully request the concerned authorities to take realistic and timely steps to address these challenges. We strongly believe that introducing a one-stop service system for licensing will enable traders to conduct business without harassment and will increase confidence in the sector.
-Our association is fully committed to working hand in hand with the government, regulatory agencies and all stakeholders to build a safe, efficient and sustainable petroleum distribution system. Through collective efforts and visionary policies, we firmly believe that the petroleum sector can play a vital role in shaping a prosperous and energy-secure future for Bangladesh.
-Together, let us move forward for a cleaner, safer and more sustainable energy future.
+Syed Sajjadul Karim Kabul is widely respected for his commitment to improving the fuel distribution sector, protecting the rights of stakeholders, and fostering a professional and transparent industry environment. Under his visionary leadership, the association works to ensure fair business practices, support for its members, and constructive dialogue with regulatory authorities.  His efforts have made him a trusted and influential voice in Bangladesh’s petroleum sector.
+
 `,
       photo: leaderImg1,
    },
@@ -79,8 +73,7 @@ Together, let us move forward for a cleaner, safer and more sustainable energy f
       name: 'Mir Ahasan Uddin Farvez',
       title: 'Member SECRETARY',
       bio: `Bangladesh Petroleum Dealer's, Distributor's, Agent's & Petrol Pump Owner's Association
-The role of the energy sector in keeping Bangladesh's economic progress and development momentum going is immense. Our members are working tirelessly to ensure the country's energy security, provide consumer-friendly services and promote the use of environmentally friendly energy.
-In the current energy crisis and global reality, the importance of using alternative energy has increased. In this context, the coordinated efforts of petrol pump owners, dealers, distributors and agents are playing an important role in keeping the country's energy supply system sustainable and reliable.
+The role of the energy sector in keeping Bangladesh's economic progress and development momentum going is immense. Our members are working tirelessly in order to provide uninterrupted supply of fuel and delivering it to people's doorsteps. However, our unity aims to resolve the challenges that dealers and distributors face at various times while providing this service and to coordinate all relevant departments.
 We believe that it is possible to build a safe, modern and strong energy sector through mutual cooperation and realistic policy-making between the government, regulatory agencies and businessmen. Our association will always play a responsible role towards this goal.
 `,
       photo: leaderImg2,
@@ -107,7 +100,6 @@ export default function SponsorsSection() {
       },
    ];
 
-   
    return (
       <section className='relative z-0 pb-20 pt-12'>
          <div className='pointer-events-none absolute inset-x-0 top-0 h-4' />
@@ -125,9 +117,15 @@ export default function SponsorsSection() {
                </div>
 
                <div className='lpg-container'>
-                  <SectionHeading
+                  {/* <SectionHeading
                      title=' SPONSORS'
                      subtitle='Proudly supported by trusted sponsors who contribute to the growth, sustainability, and advancement of Bangladesh’s petroleum and energy sector.'
+                  /> */}
+                  <SectionHeading
+                     title=' Our Associated Brands
+'
+                     subtitle='Our station is associated with reputed Oil Marketing Companies of Bangladesh such as Padma Oil Company, Bangladesh Petroleum Corporation (BPC), Meghna Petroleum, and Jamuna Oil. With their support, we deliver quality fuel and dependable service to ensure customer satisfaction and safety every day.
+'
                   />
 
                   <div className='mt-7 flex w-full flex-col items-center gap-4'>
@@ -146,10 +144,20 @@ export default function SponsorsSection() {
 
             <div className='relative'>
                <div className='pointer-events-none absolute inset-y-0 -top-1/2 left-0 hidden w-[330px] opacity-10 lg:block'>
-                  <Image src={arrowuiIcon} alt='' fill className='object-contain' />
+                  <Image
+                     src={arrowuiIcon}
+                     alt=''
+                     fill
+                     className='object-contain'
+                  />
                </div>
                <div className='pointer-events-none absolute inset-y-0 -top-1/2 right-0 hidden w-[330px] -scale-x-100 transform opacity-10 lg:block'>
-                  <Image src={arrowuiIcon} alt='' fill className='object-contain' />
+                  <Image
+                     src={arrowuiIcon}
+                     alt=''
+                     fill
+                     className='object-contain'
+                  />
                </div>
 
                <div className='lpg-container relative mt-24 grid justify-items-center gap-18 lg:grid-cols-2 lg:items-stretch'>
@@ -181,7 +189,9 @@ export default function SponsorsSection() {
                            <div className='mt-2 space-y-2 text-[15px] font-light'>
                               {leader.lines &&
                                  leader.lines.map(line => (
-                                    <div className='font-light opacity-80' key={line}>
+                                    <div
+                                       className='font-light opacity-80'
+                                       key={line}>
                                        {line}
                                     </div>
                                  ))}
