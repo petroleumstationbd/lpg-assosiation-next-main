@@ -6,7 +6,7 @@ import Header from '@/components/layout/Header';
 import defaultBanner from '@assets/bg-img/bg-banner.jpg';
 
 type PageHeroProps = {
-   title: React.ReactNode;
+   title?: React.ReactNode;
    subtitle?: string;
    ctaLabel?: string;
    ctaHref?: string;

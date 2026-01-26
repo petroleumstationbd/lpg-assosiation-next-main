@@ -136,7 +136,7 @@ export default function CentralCommitteeSection() {
                      name: item.full_name,
                      descriptionLines: buildDescriptionLines(
                         item.designation,
-                        item.company_name
+                        item.company_name,
                      ),
                      photo: photoUrl ?? leaderImg1, // if API has no image, keep a safe placeholder image (not fallback list)
                      socials: buildSocials(item),
@@ -149,7 +149,7 @@ export default function CentralCommitteeSection() {
             if ((error as DOMException).name === 'AbortError') return;
             if (!active) return;
             setErrorMsg(
-               (error as Error).message || 'Failed to load committee members'
+               (error as Error).message || 'Failed to load committee members',
             );
             setMembers([]);
          } finally {
@@ -172,10 +172,12 @@ export default function CentralCommitteeSection() {
          <div className='pointer-events-none absolute -left-24 top-[120px] h-[260px] w-[260px] rounded-[40px] bg-[radial-gradient(circle_at_center,_#D5E6FF66,_transparent_70%)]' />
 
          <div className='lpg-container relative'>
-            {/* <SectionHeading
+            <SectionHeading
                title='CENTRAL COMMITTEE'
-               subtitle='The current committee has been formed in a general meeting held on 27 February, 2021. About 200 owners of autogas stations and conversion workshops were present at the meeting chaired by Engr. Mohammad Serajul Mawla. The panel of Engr. Mohammad Serajul Mawla and SMT Energy Ltd. was elected to the present committee. The following panel members are playing important roles in promoting LPG Autogas and LPG Conversion Center across the country as the General Secretary of this association.'
-            /> */}
+               subtitle='The present committee was formed in a general meeting held on January 1, 2000. The meeting was chaired by Syed Sajjadul Karim Kabul and was attended by about 200 petrol pump station owners and various individuals. Syed Sajjadul Karim Kabul, Mir Ahsan Uddin Parvez and a 41-member panel are running the present committee. The following panel members are playing an important role in promoting the Bangladesh Petroleum Dealers, Distributors, Agents and Petrol Pump Owners Association throughout the country as the general secretaries of this association.
+
+'
+            />
 
             {loading ? (
                <LoadingBar />

@@ -32,6 +32,6 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
-  ],
+, "src/app/loading.tsx_prod"  ],
   "exclude": ["node_modules"]
 }

@@ -2,6 +2,8 @@
 
 import {useEffect, useMemo, useState} from 'react';
 import Image, {StaticImageData} from 'next/image';
+import {animate, useMotionValue} from 'framer-motion';
+
 import aboutImg from './../img/Group 46.png';
 import SectionHeading from '@components/ui/SectionHeading';
 import iconImg1 from './../img/Group 360.png';
@@ -12,22 +14,22 @@ import objectanimation from './../../../assets/ui-icons/OBJECTS.png';
 type VisionStat = {
    icon: StaticImageData;
    label: string;
-   value: string;
+   value: number;
 };
 
 export default function AboutUsSection() {
-   const [totalMembers, setTotalMembers] = useState('0');
-   const [totalStations, setTotalStations] = useState('0');
+   const [totalMembers, setTotalMembers] = useState(0);
+   const [totalStations, setTotalStations] = useState(0);
 
    useEffect(() => {
       const fetchStats = async () => {
          try {
             const [stationsResponse, membersResponse] = await Promise.all([
                fetch(
-                  'https://admin.petroleumstationbd.com/api/public/gas-stations/approved'
+                  'https://admin.petroleumstationbd.com/api/public/gas-stations/approved',
                ),
                fetch(
-                  'https://admin.petroleumstationbd.com/api/public/station-owners/list'
+                  'https://admin.petroleumstationbd.com/api/public/station-owners/list',
                ),
             ]);
 
@@ -35,7 +37,7 @@ export default function AboutUsSection() {
                const stationsData = await stationsResponse.json();
                const total = Number(stationsData?.total);
                if (Number.isFinite(total)) {
-                  setTotalStations(total.toLocaleString());
+                  setTotalStations(total);
                }
             }
 
@@ -43,7 +45,7 @@ export default function AboutUsSection() {
                const membersData = await membersResponse.json();
                const total = Number(membersData?.total);
                if (Number.isFinite(total)) {
-                  setTotalMembers(total.toLocaleString());
+                  setTotalMembers(total);
                }
             }
          } catch (error) {
@@ -67,15 +69,12 @@ export default function AboutUsSection() {
             value: totalStations,
          },
       ],
-      [totalMembers, totalStations]
+      [totalMembers, totalStations],
    );
 
    return (
       <section className='relative  md:py-16'>
-         {/* subtle background geometry */}
-
          <div className='lpg-container relative'>
-            {/* main heading */}
             <div className='mb-10 text-center'>
                <SectionHeading title=' ABOUT US' />
                <h2 className='text-[22px] font-semibold tracking-[0.22em] text-[#203566]'></h2>
@@ -92,19 +91,8 @@ export default function AboutUsSection() {
                </p>
             </div>
 
-            {/* content grid */}
             <div className='grid gap-10 items-start lg:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)]'>
-               {/* left: vision + stats */}
                <div className='max-w-xl'>
-                  {/* <h3 className='text-[14px] font-semibold '>
-                     OUR VISION
-                  </h3>
-
-                  <p className='mt-3 text-[12px] leading-relaxed text-[#5F6F85]'>
-To develop a safe, sustainable and modern fuel supply system in Bangladesh—where the collective participation of petrol pump owners, dealers, distributors and agents ensures a balanced combination of consumer-friendly services, energy security and environmental protection
-                  </p> */}
-
-                  {/* stats cards */}
                   <div className='mt-7 grid gap-4 place-items-center sm:grid-cols-2 sm:place-items-start'>
                      {visionStats.map((stat, idx) => (
                         <VisionStatCard key={idx} {...stat} />
@@ -112,10 +100,7 @@ To develop a safe, sustainable and modern fuel supply system in Bangladesh—whe
                   </div>
                </div>
 
-               {/* right: station illustration */}
                <div className='relative mx-auto mt-6  w-full max-w-[580px] items-center justify-center lg:mt-0 hidden lg:flex'>
-                  {/* soft glow behind image */}
-                  {/* <div className='pointer-events-none absolute inset-x-6 bottom-0 top-6 rounded-[32px] bg-[radial-gradient(circle_at_center,_#7CDF6A55,_transparent_70%)]' /> */}
                   <div className='relative w-full overflow-hidden rounded-[26px] '>
                      <Image
                         src={aboutImg}
@@ -152,7 +137,6 @@ function VisionStatCard({icon, label, value}: VisionStat) {
             <Image src={subtrackImg} fill alt='' />
          </div>
 
-         {/* top-right green corner tab */}
          <div
             className='
           pointer-events-none
@@ -161,9 +145,7 @@ function VisionStatCard({icon, label, value}: VisionStat) {
           bg-[#75B551] z-0'
          />
 
-         {/* content */}
          <div className='relative flex flex-1 flex-col px-7 pt-7 pb-6 z-2'>
-            {/* icon */}
             <div className='h-[76px] w-[76px]'>
                <Image
                   src={icon}
@@ -172,16 +154,39 @@ function VisionStatCard({icon, label, value}: VisionStat) {
                />
             </div>
 
-            {/* label + value pinned toward bottom like design */}
             <div className='mt-auto'>
                <p className='text-[14px] font-semibold uppercase tracking-[0.0em] '>
                   {label}
                </p>
                <p className='mt-2 text-[50px] font-semibold leading-none '>
-                  {value}
+                  <AnimatedCounter value={value} />
                </p>
             </div>
          </div>
       </article>
    );
+}
+
+function AnimatedCounter({value}: {value: number}) {
+   const mv = useMotionValue(0);
+   const [display, setDisplay] = useState('0');
+
+   useEffect(() => {
+      const controls = animate(mv, value, {
+         duration: 1.2,
+         ease: 'easeOut',
+      });
+
+      const unsub = mv.on('change', (latest) => {
+         const rounded = Math.max(0, Math.round(latest));
+         setDisplay(rounded.toLocaleString());
+      });
+
+      return () => {
+         controls.stop();
+         unsub();
+      };
+   }, [mv, value]);
+
+   return <span>{display}</span>;
 }
