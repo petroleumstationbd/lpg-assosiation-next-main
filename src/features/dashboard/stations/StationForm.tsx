@@ -11,6 +11,7 @@ import {otherBusinessesRepo} from '@/features/dashboard/settings/other-businesse
 import {getStationDetailsRepo} from './verified/repo';
 import type {StationUpsertPayload} from './formData';
 import {CloudUpload} from 'lucide-react';
+import {formatPhoneInput, normalizePhone} from '@/lib/phone';
 
 export type Mode = 'create' | 'edit' | 'view';
 
@@ -244,7 +245,7 @@ function mapStationDetailsToForm(data: any): FormState {
       station_address: str(data?.station_address),
       commencement_date: toDateInput(data?.commencement_date),
       contact_person_name: str(data?.contact_person_name),
-      contact_person_phone: str(data?.contact_person_phone),
+      contact_person_phone: formatPhoneInput(str(data?.contact_person_phone)),
       other_businesses: mapOtherBusinesses(
          pick(
             data?.other_businesses,
@@ -595,8 +596,8 @@ export default function StationForm({
       }
    }, [form.station_owner_id, ownerOptions, stationOwnerSearch]);
 
-   const trimmedPhone = form.contact_person_phone.trim();
-   const phoneOk = !trimmedPhone || /^\d{11}$/.test(trimmedPhone);
+   const normalizedPhone = normalizePhone(form.contact_person_phone);
+   const phoneOk = !normalizedPhone || normalizedPhone.length === 11;
 
    const requiredFilled =
       isValidOptionId(ownerOptions, form.station_owner_id) &&
@@ -675,7 +676,7 @@ export default function StationForm({
          return;
       }
 
-      if (trimmedPhone && !/^\d{11}$/.test(trimmedPhone)) {
+      if (normalizedPhone && normalizedPhone.length !== 11) {
          setValidationError('Contact person phone must be exactly 11 digits.');
          return;
       }
@@ -772,7 +773,7 @@ export default function StationForm({
          station_address: form.station_address,
          commencement_date: form.commencement_date || null,
          contact_person_name: form.contact_person_name || null,
-         contact_person_phone: form.contact_person_phone || null,
+         contact_person_phone: normalizedPhone || null,
          other_businesses: form.other_businesses
             .map(id => toNumberOrUndefined(id) ?? id)
             .filter(Boolean),
@@ -1209,7 +1210,7 @@ export default function StationForm({
                         onChange={e =>
                            setForm(prev => ({
                               ...prev,
-                              contact_person_phone: e.target.value,
+                              contact_person_phone: formatPhoneInput(e.target.value),
                            }))
                         }
                         placeholder='Type Contact Person 11 digit Phone'

@@ -5,6 +5,7 @@ import {useRouter} from 'next/navigation';
 import TablePanel from '@/components/ui/table-panel/TablePanel';
 import type {ColumnDef} from '@/components/ui/table-panel/types';
 import Loader from '@/components/shared/Loader';
+import {formatPhoneInput} from '@/lib/phone';
 import {useOwnerDetails, useOwnerStations} from './queries';
 import type {OwnerStationRow} from './types';
 
@@ -77,7 +78,11 @@ export default function OwnerProfileSection({ownerId}: Props) {
             sortable: false,
             csvHeader: 'Phone',
             csvValue: r => r.phone ?? '',
-            cell: r => <span className='text-[#133374]'>{r.phone || '—'}</span>,
+            cell: r => (
+               <span className='text-[#133374]'>
+                  {r.phone ? formatPhoneInput(r.phone) : '—'}
+               </span>
+            ),
          },
          {
             id: 'stationType',
@@ -153,7 +158,10 @@ export default function OwnerProfileSection({ownerId}: Props) {
                <div className='mt-4 divide-y divide-[#E5E7EB]'>
                   <InfoRow label='Full Name' value={owner.ownerName} />
                   <InfoRow label='Email' value={owner.email} />
-                  <InfoRow label='Phone' value={owner.phone} />
+                  <InfoRow
+                     label='Phone'
+                     value={owner.phone ? formatPhoneInput(owner.phone) : '—'}
+                  />
                   <InfoRow label='Address' value={owner.address} />
                </div>
             </div>

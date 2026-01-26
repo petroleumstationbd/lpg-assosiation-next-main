@@ -1,4 +1,5 @@
 import type { RegisterOwnerInput, RegisterOwnerResult } from './types';
+import { normalizePhone } from '@/lib/phone';
 
 async function readJsonOrThrow(res: Response) {
   const data = await res.json().catch(() => null);
@@ -21,10 +22,11 @@ async function readJsonOrThrow(res: Response) {
 
 export async function registerOwnerRepo(input: RegisterOwnerInput): Promise<RegisterOwnerResult> {
   const profileImage = input.profileImage?.item(0) ?? null;
+  const normalizedPhone = normalizePhone(input.phone);
   const payload = {
     full_name: input.stationOwnerName,
     email: input.email,
-    phone_number: input.phone,
+    phone_number: normalizedPhone,
     password: input.password,
     address: input.residentialAddress,
   };
@@ -34,7 +36,7 @@ export async function registerOwnerRepo(input: RegisterOwnerInput): Promise<Regi
           const payload = new FormData();
           payload.set('full_name', input.stationOwnerName);
           payload.set('email', input.email);
-          payload.set('phone_number', input.phone);
+          payload.set('phone_number', normalizedPhone);
           payload.set('password', input.password);
           payload.set('address', input.residentialAddress);
           payload.set('profile_image', profileImage);

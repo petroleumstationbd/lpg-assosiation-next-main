@@ -7,6 +7,7 @@ import TablePanel from '@/components/ui/table-panel/TablePanel';
 import type {ColumnDef} from '@/components/ui/table-panel/types';
 import {exportRowsToCsv} from '@/components/ui/table-panel/exportCsv';
 import Loader from '@/components/shared/Loader';
+import {formatPhoneInput} from '@/lib/phone';
 import {
    Database,
    Eye,
@@ -144,7 +145,9 @@ export default function UnverifiedStationsSection() {
             headerClassName: 'w-[180px]',
             csvHeader: 'Phone',
             csvValue: r => r.phone,
-            cell: r => <span className='text-[#133374]'>{r.phone}</span>,
+            cell: r => (
+               <span className='text-[#133374]'>{formatPhoneInput(r.phone)}</span>
+            ),
          },
          {
             id: 'division',

@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import Modal from '@/components/ui/modal/Modal';
 import type { OwnerRow } from './types';
+import { formatPhoneInput, normalizePhone } from '@/lib/phone';
 
 export default function EditOwnerModal({
   open,
@@ -33,7 +34,7 @@ export default function EditOwnerModal({
   useEffect(() => {
     if (!open || !owner) return;
     setFullName(owner.ownerName ?? '');
-    setPhoneNumber(owner.phone ?? '');
+    setPhoneNumber(formatPhoneInput(owner.phone ?? ''));
     setEmail(owner.email ?? '');
     setAddress(owner.address ?? '');
     setProfileImage(null);
@@ -93,7 +94,7 @@ export default function EditOwnerModal({
           <div className="text-[11px] font-semibold text-[#2B3A4A] md:text-right">Phone number</div>
           <input
             value={phoneNumber}
-            onChange={(e) => setPhoneNumber(e.target.value)}
+            onChange={(e) => setPhoneNumber(formatPhoneInput(e.target.value))}
             className="h-9 w-full rounded-[8px] border border-black/10 bg-[#F7F9FC] px-3 text-[12px] text-[#2B3A4A] outline-none focus:border-[#009970]"
           />
         </div>
@@ -128,7 +129,15 @@ export default function EditOwnerModal({
 
           <button
             type="button"
-            onClick={() => onSave({ fullName, phoneNumber, email, address, profileImage })}
+            onClick={() =>
+              onSave({
+                fullName,
+                phoneNumber: normalizePhone(phoneNumber),
+                email,
+                address,
+                profileImage,
+              })
+            }
             disabled={busy}
             className="h-9 rounded-[8px] bg-[#009970] px-8 text-[12px] font-semibold text-white shadow-sm hover:brightness-110 active:brightness-95 disabled:opacity-60"
           >

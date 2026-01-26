@@ -9,6 +9,7 @@ import TablePanel from '@/components/ui/table-panel/TablePanel';
 import type {ColumnDef} from '@/components/ui/table-panel/types';
 import {exportRowsToCsv} from '@/components/ui/table-panel/exportCsv';
 import Loader from '@/components/shared/Loader';
+import {formatPhoneInput} from '@/lib/phone';
 
 import type {VerifiedStationRow} from './types';
 import {useDeleteStation, useVerifiedStations} from './queries';
@@ -146,7 +147,11 @@ export default function VerifiedStationsTable() {
             headerClassName: 'w-[210px]',
             csvHeader: 'Owner Phone',
             csvValue: r => r.ownerPhone,
-            cell: r => <span className='text-[#133374]'>{r.ownerPhone}</span>,
+            cell: r => (
+               <span className='text-[#133374]'>
+                  {formatPhoneInput(r.ownerPhone)}
+               </span>
+            ),
          },
          {
             id: 'division',
