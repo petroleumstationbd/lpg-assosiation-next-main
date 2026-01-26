@@ -4,6 +4,7 @@ import Link from 'next/link';
 import {useMemo, useState} from 'react';
 import {useRouter} from 'next/navigation';
 import MeshCorners from '@/components/ui/MeshCorners';
+import {formatPhoneInput, isValidBangladeshPhone, normalizePhone} from '@/lib/phone';
 
 type Step = 'FORM' | 'DONE';
 
@@ -20,17 +21,12 @@ function cx(...v: Array<string | false | null | undefined>) {
   return v.filter(Boolean).join(' ');
 }
 
-function onlyDigits(s: string) {
-  return s.replace(/\D/g, '');
-}
-
 function isValidEmail(v: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
 }
 
 function isValidPhone(v: string) {
-  const d = onlyDigits(v);
-  return d.length >= 10 && d.length <= 14;
+  return isValidBangladeshPhone(v);
 }
 
 async function safeJson(res: Response) {
@@ -87,7 +83,9 @@ export default function RegisterSection() {
 
   const onChange =
     (key: keyof FormState) => (e: React.ChangeEvent<HTMLInputElement>) => {
-      setForm(prev => ({...prev, [key]: e.target.value}));
+      const nextValue =
+        key === 'phone' ? formatPhoneInput(e.target.value) : e.target.value;
+      setForm(prev => ({...prev, [key]: nextValue}));
     };
 
   const submit = async () => {
@@ -112,7 +110,7 @@ export default function RegisterSection() {
       const payload = {
         full_name: form.stationOwnerName.trim(),
         email: form.email.trim(),
-        phone_number: form.phone.trim(),
+        phone_number: normalizePhone(form.phone),
         password: form.password,
         address: form.address.trim(),
         // backend supports these, optional:

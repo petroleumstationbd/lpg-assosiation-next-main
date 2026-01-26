@@ -12,6 +12,7 @@ import {
 } from './queries';
 import type {ChangePasswordInput, UpdateProfileInput} from './types';
 import Loader from '@/components/shared/Loader';
+import {formatPhoneInput} from '@/lib/phone';
 
 const BRAND = '#009970';
 
@@ -42,13 +43,14 @@ export default function EditProfileSection() {
     resolver: zodResolver(updateProfileSchema),
     defaultValues: {fullName: '', email: '', phone: '', address: ''},
   });
+  const phoneValue = infoForm.watch('phone');
 
   useEffect(() => {
     if (!meQ.data) return;
     infoForm.reset({
       fullName: meQ.data.fullName,
       email: meQ.data.email,
-      phone: meQ.data.phone,
+      phone: formatPhoneInput(meQ.data.phone),
       address: meQ.data.address,
     });
   }, [meQ.data, infoForm]);
@@ -152,7 +154,16 @@ export default function EditProfileSection() {
           </Row>
 
           <Row label="Phone">
-            <input className={INPUT} {...infoForm.register('phone')} />
+            <input
+              className={INPUT}
+              {...infoForm.register('phone')}
+              value={phoneValue}
+              onChange={(e) =>
+                infoForm.setValue('phone', formatPhoneInput(e.target.value), {
+                  shouldValidate: true,
+                })
+              }
+            />
             <ErrorLine msg={infoForm.formState.errors.phone?.message} />
           </Row>
 

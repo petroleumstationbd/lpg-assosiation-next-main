@@ -1,4 +1,5 @@
 import type { ChangePasswordInput, Profile, UpdateProfileInput } from './types';
+import { normalizePhone } from '@/lib/phone';
 
 export type ProfileRepo = {
   getMe: () => Promise<Profile>;
@@ -111,13 +112,14 @@ const apiProfileRepo: ProfileRepo = {
 
 
   async updateProfile(input) {
+    const normalizedPhone = normalizePhone(input.phone);
     const res = await fetch('/api/update-profile', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
       body: JSON.stringify({
         full_name: input.fullName,
         email: input.email,
-        phone_number: input.phone,
+        phone_number: normalizedPhone,
         address: input.address,
       }),
     });

@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { useMemo, useState } from 'react';
+import { formatPhoneInput, normalizePhone } from '@/lib/phone';
 import captchaImage from './img/capcha.png';
 
 type ContactFormPanelProps = {
@@ -128,7 +129,7 @@ export default function ContactFormPanel({ mapUrl }: ContactFormPanelProps) {
         body: JSON.stringify({
           sender_name: form.sender_name.trim(),
           sender_email: form.sender_email.trim(),
-          sender_phone: form.sender_phone.trim(),
+          sender_phone: normalizePhone(form.sender_phone),
           subject: form.subject.trim(),
           message: form.message.trim(),
         }),
@@ -215,7 +216,9 @@ export default function ContactFormPanel({ mapUrl }: ContactFormPanelProps) {
             className={`h-12 px-4 sm:h-[60px] md:h-[80px] ${fieldBase}`}
             required
             value={form.sender_phone}
-            onChange={(e) => setForm((p) => ({ ...p, sender_phone: e.target.value }))}
+            onChange={(e) =>
+              setForm((p) => ({ ...p, sender_phone: formatPhoneInput(e.target.value) }))
+            }
           />
         </div>
 
