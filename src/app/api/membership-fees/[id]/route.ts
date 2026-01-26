@@ -36,7 +36,7 @@ export async function POST(
     const data = await laravelFetch(`/membership-fees/${id}?_method=PUT`, {
       method: 'POST',
       auth: true,
-      body,
+      body: JSON.stringify(body),
     });
 
     return NextResponse.json(data, { status: 200 });
