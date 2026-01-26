@@ -5,12 +5,20 @@ import TablePanel from '@/components/ui/table-panel/TablePanel';
 import type {ColumnDef} from '@/components/ui/table-panel/types';
 import MeshCorners from '@/components/ui/MeshCorners';
 
-import {MOCK_NOTICES, type NoticeRow} from './mockNotices';
-import PublicNoticeModal from './PublicNoticeModal';
 import {toAbsoluteUrl} from '@/lib/http/url';
+import PublicNoticeModal from './PublicNoticeModal';
 
 const LARAVEL_ORIGIN =
   process.env.NEXT_PUBLIC_LARAVEL_ORIGIN ?? 'https://admin.petroleumstationbd.com';
+
+type NoticeRow = {
+  id?: string;
+  sl: number;
+  title: string;
+  publishedDate: string;
+  viewUrl?: string;
+  downloadUrl?: string;
+};
 
 function cx(...v: Array<string | false | null | undefined>) {
   return v.filter(Boolean).join(' ');
@@ -114,7 +122,7 @@ function parseDate(value: string) {
 }
 
 export default function NoticesSection() {
-  const [rows, setRows] = useState<NoticeRow[]>(MOCK_NOTICES);
+  const [rows, setRows] = useState<NoticeRow[]>([]);
   const [viewOpen, setViewOpen] = useState(false);
   const [activeRow, setActiveRow] = useState<NoticeRow | null>(null);
 
