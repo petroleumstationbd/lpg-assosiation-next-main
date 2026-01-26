@@ -6,6 +6,7 @@ import TablePanel from '@/components/ui/table-panel/TablePanel';
 import type {ColumnDef} from '@/components/ui/table-panel/types';
 import {Check, Eye, Pencil, Plus, Trash2} from 'lucide-react';
 import Loader from '@/components/shared/Loader';
+import {formatPhoneInput} from '@/lib/phone';
 import type {OwnerRow} from './types';
 import {useVerifiedOwners, useRejectOwner, useUpdateOwner} from './queries';
 import EditOwnerModal from './EditOwnerModal';
@@ -128,7 +129,9 @@ export default function VerifiedOwnersTable() {
             sortValue: r => r.phone,
             csvHeader: 'Phone',
             csvValue: r => r.phone,
-            cell: r => <span className='text-[#133374]'>{r.phone}</span>,
+            cell: r => (
+               <span className='text-[#133374]'>{formatPhoneInput(r.phone)}</span>
+            ),
          },
          {
             id: 'address',
