@@ -1,9 +1,11 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import TablePanel from '@/components/ui/table-panel/TablePanel';
 import type { ColumnDef } from '@/components/ui/table-panel/types';
 import Loader from '@/components/shared/Loader';
+import { useVerifyStation } from '@/features/dashboard/stations/unverified/queries';
 import {
   useCreatePaymentRecord,
   useDeletePaymentRecord,
@@ -36,10 +38,13 @@ const buildDownloadUrl = (url: string) =>
   `/api/station-documents/download?url=${encodeURIComponent(url)}`;
 
 export default function PaymentRecordSection() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const recordsQ = usePaymentRecords();
   const stationsQ = useUnverifiedStationOptions(true);
   const createM = useCreatePaymentRecord();
   const deleteM = useDeletePaymentRecord();
+  const verifyM = useVerifyStation();
 
   const [stationId, setStationId] = useState('');
   const [stationSearch, setStationSearch] = useState('');
@@ -51,8 +56,22 @@ export default function PaymentRecordSection() {
 
   const stationOptions = stationsQ.data ?? [];
   const loadingStations = stationsQ.isLoading;
+  const stationIdParam = searchParams.get('stationId') ?? '';
+  const shouldAutoVerify = searchParams.get('autoVerify') === '1';
+  const returnTo = searchParams.get('returnTo') ?? '';
 
   const { isPending: deleteIsPending, mutate: deleteMutate } = deleteM;
+
+  useEffect(() => {
+    if (!stationIdParam || stationId) return;
+    setStationId(stationIdParam);
+  }, [stationIdParam, stationId]);
+
+  useEffect(() => {
+    if (!stationIdParam || stationSearch || !stationOptions.length) return;
+    const match = stationOptions.find((option) => option.id === stationIdParam);
+    if (match) setStationSearch(match.label);
+  }, [stationIdParam, stationSearch, stationOptions]);
 
   const columns = useMemo<ColumnDef<PaymentRecordRow>[]>(() => {
     return [
@@ -212,12 +231,19 @@ export default function PaymentRecordSection() {
                   paymentDoc,
                 });
 
+                if (shouldAutoVerify && stationId.trim()) {
+                  await verifyM.mutateAsync(stationId.trim());
+                }
+
                 setStationId('');
                 setStationSearch('');
                 setBankName('');
                 setAmountPaid('');
                 setNote('');
                 setPaymentDoc(null);
+                if (returnTo) {
+                  router.push(returnTo);
+                }
               } catch (err: any) {
                 setFormError(err?.message ?? 'Failed to create payment record');
               }

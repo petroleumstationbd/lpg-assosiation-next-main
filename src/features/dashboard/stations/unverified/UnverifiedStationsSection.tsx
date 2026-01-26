@@ -192,9 +192,12 @@ export default function UnverifiedStationsSection() {
                   type='button'
                   onClick={() => {
                      if (verifyM.isPending) return;
-                     const ok = window.confirm('Approve this station?');
-                     if (!ok) return;
-                     verifyM.mutate(r.id);
+                     const params = new URLSearchParams({
+                        stationId: r.id,
+                        autoVerify: '1',
+                        returnTo: '/manage-stations/unverified',
+                     });
+                     router.push(`/membership-fees?${params.toString()}`);
                   }}
                   disabled={verifyM.isPending}
                   className={cx(
