@@ -28,14 +28,14 @@ const downloadFile = (url: string, filename?: string) => {
 const MAIN_NAV: NavItem[] = [
    {key: 'home​ ', label: 'Home​', href: '/'},
    {key: 'about', label: 'ABOUT US', href: '/about'},
-      {key: 'contact', label: 'CONTACT', href: '/contact'},
-      {key: 'gallery', label: 'GALLERY', href: '/gallery/photo-gallery'},
+   {key: 'contact', label: 'CONTACT', href: '/contact'},
+   // {key: 'gallery', label: 'GALLERY', href: '/gallery/photo-gallery'},
    {
       key: 'Photogallery ',
       label: 'Photo Gallery',
       href: '#',
       children: [
-         // {label: 'PHOTO GALLERY', href: '/gallery/photo-gallery'},
+         {label: 'PHOTO GALLERY', href: '/gallery/photo-gallery'},
          {label: 'PRINT MEDIA GALLERY', href: '/gallery/print-media-gallery'},
          {label: 'MEDIA COVERAGE', href: '/gallery/media-coverage'},
          {label: 'VIDEO GALLERY', href: '/gallery/video-gallery'},
@@ -46,10 +46,9 @@ const MAIN_NAV: NavItem[] = [
       label: 'COMMITTEE',
       href: '#',
       children: [
-
          {label: 'CENTRAL COMMITTEE', href: '/committee/central-committee'},
          {label: 'ZONAL COMMITTEE', href: '/committee/zonal-committee'},
-                  {label: 'ADVISORS', href: '/committee/advisors'},
+         {label: 'ADVISORS', href: '/committee/advisors'},
       ],
    },
    // {

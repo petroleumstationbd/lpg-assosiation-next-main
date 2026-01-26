@@ -50,17 +50,17 @@ export default function StationDocumentsTable() {
 
   const columns = useMemo<ColumnDef<StationDocumentRow>[]>(() => {
     return [
-      {
-        id: 'sl',
-        header: 'SL#',
-        sortable: true,
-        sortValue: (r) => r.sl,
-        align: 'center',
-        headerClassName: 'w-[90px]',
-        csvHeader: 'SL',
-        csvValue: (r) => r.sl,
-        cell: (r) => String(r.sl).padStart(2, '0'),
-      },
+      // {
+      //   id: 'sl',
+      //   header: 'SL#',
+      //   sortable: true,
+      //   sortValue: (r) => r.sl,
+      //   align: 'center',
+      //   headerClassName: 'w-[90px]',
+      //   csvHeader: 'SL',
+      //   csvValue: (r) => r.sl,
+      //   cell: (r) => String(r.sl).padStart(2, '0'),
+      // },
       {
         id: 'station',
         header: 'Station ID',
