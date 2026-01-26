@@ -205,28 +205,28 @@ export default function DownloadsSection() {
             minWidth: 160,
             cell: r => <span className='text-inherit'>{r.publishedDate}</span>,
          },
-         // {
-         //    id: 'view',
-         //    header: 'View',
-         //    sortable: false,
-         //    csvHeader: 'View',
-         //    csvValue: () => '',
-         //    minWidth: 120,
-         //    cell: r => (
-         //       <div className='w-full flex justify-center'>
-         //          <ActionButton
-         //             label='View'
-         //             href={r.viewUrl}
-         //             variant='view'
-         //             onClick={() => {
-         //                if (!r.viewUrl) return;
-         //                setActiveRow(r);
-         //                setOpen(true);
-         //             }}
-         //          />
-         //       </div>
-         //    ),
-         // },
+         {
+            id: 'view',
+            header: 'View',
+            sortable: false,
+            csvHeader: 'View',
+            csvValue: () => '',
+            minWidth: 120,
+            cell: r => (
+               <div className='w-full flex justify-center'>
+                  <ActionButton
+                     label='View'
+                     href={r.viewUrl}
+                     variant='view'
+                     onClick={() => {
+                        if (!r.viewUrl) return;
+                        setActiveRow(r);
+                        setOpen(true);
+                     }}
+                  />
+               </div>
+            ),
+         },
          {
             id: 'download',
             header: 'Download',
