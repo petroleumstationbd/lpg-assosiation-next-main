@@ -93,6 +93,7 @@ type Props<T> = {
    controlsRightSlot?: ReactNode;
    showControlsRow?: boolean; // default true
    showFooter?: boolean; // default true
+   initialSort?: SortState;
 };
 
 export default function TablePanel<T>({
@@ -111,8 +112,9 @@ export default function TablePanel<T>({
    controlsRightSlot,
    showControlsRow = true,
    showFooter = true,
+   initialSort,
 }: Props<T>) {
-   const s = useTablePanel({rows, columns, searchText});
+   const s = useTablePanel({rows, columns, searchText, initialSort});
 
    const headerLeft = totalLabel?.(s.filteredTotal) ?? (
       <div className='text-[14px] font-semibold text-[#2D8A2D]'>
