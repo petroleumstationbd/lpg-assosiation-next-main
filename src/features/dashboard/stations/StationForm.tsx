@@ -97,9 +97,7 @@ const emptyForm: FormState = {
    membership_form: null,
 };
 
-const createDefaults: Pick<FormState, 'station_status'> = {
-   station_status: '',
-};
+const createDefaults: Partial<Pick<FormState, 'station_status'>> = {};
 
 function pick<T>(...vals: Array<T | null | undefined>) {
    for (const v of vals) if (v != null && v !== ('' as any)) return v;
