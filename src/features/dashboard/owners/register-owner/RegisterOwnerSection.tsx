@@ -7,6 +7,7 @@ import {zodResolver} from '@hookform/resolvers/zod';
 import {registerOwnerSchema} from './schemas';
 import type {RegisterOwnerInput} from './types';
 import {useRegisterOwner} from './queries';
+import {formatPhoneInput} from '@/lib/phone';
 
 const BRAND = '#009970';
 
@@ -30,6 +31,7 @@ export default function RegisterOwnerSection() {
          profileImage: null,
       },
    });
+   const phoneValue = form.watch('phone');
 
    const onSubmit = form.handleSubmit(async values => {
       try {
@@ -109,6 +111,12 @@ export default function RegisterOwnerSection() {
                      <input
                         className='h-9 w-full rounded-[8px] border border-black/10 bg-[#F7F9FC] px-3 text-[12px] text-[#2B3A4A] outline-none focus:border-[#009970]'
                         {...form.register('phone')}
+                        value={phoneValue}
+                        onChange={e =>
+                           form.setValue('phone', formatPhoneInput(e.target.value), {
+                              shouldValidate: true,
+                           })
+                        }
                      />
                   </FieldRow>
 

@@ -5,6 +5,7 @@ import {useState} from 'react';
 import {useRouter} from 'next/navigation';
 import MeshCorners from '@/components/ui/MeshCorners';
 import {useAuth} from '@/features/auth/AuthProvider';
+import {formatPhoneInput, isValidBangladeshPhone, normalizePhone} from '@/lib/phone';
 
 type Step = 'PHONE' | 'CREDS' | 'DONE';
 
@@ -12,19 +13,14 @@ function cx(...v: Array<string | false | null | undefined>) {
    return v.filter(Boolean).join(' ');
 }
 
-function onlyDigits(s: string) {
-   return s.replace(/\D/g, '');
-}
-
 function maskPhone(p: string) {
-   const d = onlyDigits(p);
+   const d = normalizePhone(p);
    if (d.length <= 4) return d;
    return `${d.slice(0, 3)}******${d.slice(-2)}`;
 }
 
 function isValidPhone(p: string) {
-   const d = onlyDigits(p);
-   return d.length >= 10 && d.length <= 14;
+   return isValidBangladeshPhone(p);
 }
 
 /*
@@ -54,7 +50,7 @@ export default function LoginSection() {
 
    const submitPhone = async () => {
       setError(null);
-      const p = phone.trim();
+      const p = normalizePhone(phone);
       if (!isValidPhone(p)) {
          setError('Please enter a valid phone number.');
          return;
@@ -67,7 +63,7 @@ export default function LoginSection() {
    const submitCreds = async () => {
       setError(null);
 
-      const p = phone.trim();
+      const p = normalizePhone(phone);
 
       if (!isValidPhone(p)) {
          setError('Please enter a valid phone number.');
@@ -159,7 +155,7 @@ export default function LoginSection() {
                               </label>
                               <input
                                  value={phone}
-                                 onChange={e => setPhone(e.target.value)}
+                                 onChange={e => setPhone(formatPhoneInput(e.target.value))}
                                  placeholder=''
                                  inputMode='tel'
                                  autoComplete='tel'

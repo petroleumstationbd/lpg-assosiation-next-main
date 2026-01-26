@@ -1,10 +1,16 @@
 import {z} from 'zod';
+import {isValidBangladeshPhone} from '@/lib/phone';
 
 export const registerOwnerSchema = z
   .object({
     stationOwnerName: z.string().min(2, 'Name is required'),
     email: z.string().email('Invalid email'),
-    phone: z.string().min(6, 'Phone is required'),
+    phone: z
+      .string()
+      .min(6, 'Phone is required')
+      .refine((value) => isValidBangladeshPhone(value), {
+        message: 'Phone must be 11 digits',
+      }),
     password: z.string().min(8, 'Password must be at least 8 characters'),
     confirmPassword: z.string().min(8, 'Confirm password is required'),
     residentialAddress: z.string().min(3, 'Address is required'),
