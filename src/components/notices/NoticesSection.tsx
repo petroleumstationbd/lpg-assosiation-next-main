@@ -7,6 +7,10 @@ import MeshCorners from '@/components/ui/MeshCorners';
 
 import {MOCK_NOTICES, type NoticeRow} from './mockNotices';
 import PublicNoticeModal from './PublicNoticeModal';
+import {toAbsoluteUrl} from '@/lib/http/url';
+
+const LARAVEL_ORIGIN =
+  process.env.NEXT_PUBLIC_LARAVEL_ORIGIN ?? 'https://admin.petroleumstationbd.com';
 
 function cx(...v: Array<string | false | null | undefined>) {
   return v.filter(Boolean).join(' ');
@@ -28,10 +32,71 @@ function ViewButton({onClick}: {onClick: () => void}) {
   );
 }
 
+function DownloadButton({href}: {href?: string}) {
+  return (
+    <a
+      href={href ?? '#'}
+      className={cx(
+        'inline-flex h-6 items-center justify-center rounded-[4px] px-4',
+        'bg-[#009970] text-[10px] font-semibold text-white shadow-sm',
+        'transition hover:brightness-110 active:brightness-95'
+      )}
+      target={href ? '_blank' : undefined}
+      rel={href ? 'noreferrer noopener' : undefined}
+      download={href ? '' : undefined}
+      onClick={(event) => {
+        if (!href || href === '#') event.preventDefault();
+      }}
+    >
+      Download
+    </a>
+  );
+}
+
 function normalizeList(raw: any) {
   if (Array.isArray(raw)) return raw;
   if (Array.isArray(raw?.data)) return raw.data;
   return [];
+}
+
+function normalizeAttachments(raw: any) {
+  if (!raw) return [] as Array<{url: string}>;
+
+  if (Array.isArray(raw) && raw.length && typeof raw[0] === 'object') {
+    return raw
+      .map((item: any) => {
+        const fileUrl =
+          item?.file_url ?? item?.url ?? item?.path ?? item?.file ?? '';
+        if (!fileUrl) return null;
+        return {url: toAbsoluteUrl(LARAVEL_ORIGIN, String(fileUrl))};
+      })
+      .filter(Boolean) as Array<{url: string}>;
+  }
+
+  if (Array.isArray(raw) && raw.every((x) => typeof x === 'string')) {
+    return raw.map((fileUrl: string) => ({
+      url: toAbsoluteUrl(LARAVEL_ORIGIN, fileUrl),
+    }));
+  }
+
+  if (Array.isArray(raw?.data)) return normalizeAttachments(raw.data);
+
+  return [];
+}
+
+function extractDownloadUrl(n: any) {
+  const direct =
+    n?.download_url ??
+    n?.downloadUrl ??
+    n?.file_url ??
+    n?.fileUrl ??
+    n?.attachment_url ??
+    n?.attachmentUrl;
+
+  if (direct) return toAbsoluteUrl(LARAVEL_ORIGIN, String(direct));
+
+  const attachments = normalizeAttachments(n?.attachments);
+  return attachments[0]?.url ?? '';
 }
 
 function pickDate(v?: string | null) {
@@ -39,6 +104,13 @@ function pickDate(v?: string | null) {
   const s = String(v);
   const m = s.match(/^(\d{4}-\d{2}-\d{2})/);
   return m ? m[1] : s;
+}
+
+function parseDate(value: string) {
+  if (!value) return null;
+  const ts = Date.parse(value);
+  if (Number.isNaN(ts)) return null;
+  return ts;
 }
 
 export default function NoticesSection() {
@@ -66,6 +138,7 @@ export default function NoticesSection() {
           title: n?.title ?? '',
           publishedDate: pickDate(n?.publish_date ?? n?.created_at ?? ''),
           viewUrl: n?.id ? `/notices/${n.id}` : undefined,
+          downloadUrl: extractDownloadUrl(n),
         }));
 
         setRows(mapped);
@@ -78,6 +151,20 @@ export default function NoticesSection() {
     load();
     return () => controller.abort();
   }, []);
+
+  const newestKey = useMemo(() => {
+    let latest: {key: string; ts: number} | null = null;
+    rows.forEach((row) => {
+      const ts = parseDate(row.publishedDate);
+      if (!ts) return;
+      const key = row.id ?? String(row.sl);
+      if (!latest || ts > latest.ts) latest = {key, ts};
+    });
+
+    if (!latest) return null;
+    const weekAgo = Date.now() - 7 * 24 * 60 * 60 * 1000;
+    return latest.ts >= weekAgo ? latest.key : null;
+  }, [rows]);
 
   const columns = useMemo<ColumnDef<NoticeRow>[]>(() => [
     {
@@ -99,7 +186,20 @@ export default function NoticesSection() {
       csvHeader: 'Title',
       csvValue: (r) => r.title,
       minWidth: 420,
-      cell: (r) => <span className="text-inherit">{r.title}</span>,
+      cell: (r) => {
+        const key = r.id ?? String(r.sl);
+        const isNew = newestKey === key;
+        return (
+          <div className="flex items-center gap-2 text-inherit">
+            <span>{r.title}</span>
+            {isNew ? (
+              <span className="rounded-full bg-[#F97316] px-2 py-0.5 text-[9px] font-semibold uppercase tracking-wide text-white">
+                New
+              </span>
+            ) : null}
+          </div>
+        );
+      },
     },
     {
       id: 'publishedDate',
@@ -129,7 +229,20 @@ export default function NoticesSection() {
         </div>
       ),
     },
-  ], []);
+    {
+      id: 'download',
+      header: 'Download',
+      sortable: false,
+      csvHeader: 'Download',
+      csvValue: () => '',
+      minWidth: 160,
+      cell: (r) => (
+        <div className="flex w-full justify-center">
+          <DownloadButton href={r.downloadUrl} />
+        </div>
+      ),
+    },
+  ], [newestKey]);
 
   return (
     <section className="relative overflow-hidden bg-[#F4F9F4] py-14">
