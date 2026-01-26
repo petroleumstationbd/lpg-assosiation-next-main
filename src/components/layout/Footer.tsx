@@ -5,6 +5,7 @@ import Link from 'next/link';
 import {Logo} from './../ui/Logo';
 import footerbggridwrap from './../../assets/wrappers/footer-bg-wrapper.png';
 import paywithimg from './../../assets/paywith.png';
+import {Facebook, Youtube} from 'lucide-react';
 
 const usefulLinks = [
    {label: 'Home', href: '/'},
@@ -29,6 +30,19 @@ const services = [
 //    '/icons/bkash.svg',
 //    '/icons/nagad.svg',
 // ];
+
+const socialLinks = [
+   {
+      label: 'Facebook',
+      href: 'https://www.facebook.com/bdpetroleumstation/',
+      Icon: Facebook,
+   },
+   {
+      label: 'YouTube',
+      href: 'https://www.youtube.com/@PetroleumStationBD',
+      Icon: Youtube,
+   },
+];
 
 export default function Footer() {
    return (
@@ -61,17 +75,18 @@ export default function Footer() {
                      </div>
                   </div>
 
-                  <p className='mt-3 text-[18px] leading-[17px] text-white/60'>
+                  {/* <p className='mt-3 text-[18px] leading-[17px] text-white/60'>
                      We represent Bangladesh petroleum dealer's Distributor's
                      Agent's & Petrol Pump Owner's Association across
                      Bangladesh, working to ensure safety, compliance and
                      sustainable growth of the sector.
-                  </p>
+                  </p> */}
 
                   <div className='mt-4 space-y-0 text-[12px] text-white/75'>
                      <div>
                         <span className='font-semibold'>Address:</span> 2/2
-                        Gulfesha Plaza, Left-10, Suite No-10/O, 69 Outer Circular Rd, MoghBazar Mor, Dhaka 1217
+                        Gulfesha Plaza, Left-10, Suite No-10/O, 69 Outer
+                        Circular Rd, MoghBazar Mor, Dhaka 1217
                      </div>
                      <div>
                         <span className='font-semibold'>Phone:</span>{' '}
@@ -139,16 +154,29 @@ export default function Footer() {
                      </button>
                   </form>
 
-                  <div className='mt-5 flex items-center gap-3 text-[11px] text-white/75'>
-                     <span className='inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-xs font-semibold'>
+                  {/* <div className='mt-5 flex items-center gap-3 text-[11px] text-white/75'>
+                     <Link href="" className='inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-xs font-semibold'>
                         f
-                     </span>
+                     </Link>
                      <span className='inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-xs font-semibold'>
                         in
                      </span>
                      <span className='inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-xs font-semibold'>
                         yt
                      </span>
+                  </div> */}
+                  <div className='mt-5 flex items-center gap-3 text-[11px] text-white/75'>
+                     {socialLinks.map(({href, label, Icon}) => (
+                        <a
+                           key={href}
+                           href={href}
+                           target='_blank'
+                           rel='noopener noreferrer'
+                           aria-label={label}
+                           className='inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/10 transition-colors hover:bg-white/15'>
+                           <Icon className='h-4 w-4 text-white/90' />
+                        </a>
+                     ))}
                   </div>
                </div>
             </div>
@@ -179,9 +207,9 @@ export default function Footer() {
                   </div>
                </div>
                <p className='text-center text-[11px] text-white/75  w-full'>
-                  © {new Date().getFullYear()} Bangladesh petroleum dealer's Distributor's Agent's &
-Petrol Pump Owner's Association. All Rights
-                  Reserved.
+                  © {new Date().getFullYear()} Bangladesh petroleum dealer's
+                  Distributor's Agent's & Petrol Pump Owner's Association. All
+                  Rights Reserved.
                </p>
             </div>
          </div>

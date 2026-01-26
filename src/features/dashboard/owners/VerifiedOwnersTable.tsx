@@ -87,7 +87,7 @@ export default function VerifiedOwnersTable() {
             sortable: true,
             sortValue: r => r.memberId ?? '',
             align: 'center',
-            headerClassName: 'w-[140px]',
+            headerClassName: 'w-[120px]',
             csvHeader: 'Member ID',
             csvValue: r => r.memberId ?? '',
             cell: r => (

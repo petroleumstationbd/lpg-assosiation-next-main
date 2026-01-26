@@ -252,8 +252,8 @@ const drawOwnerOverlay = (ctx: CanvasRenderingContext2D, owner: OwnerRow) => {
    const photoFrame: Rect = {
       x: width * 0.075,
       y: frontHeight * 0.44,
-      w: width * 0.2,
-      h: frontHeight * 0.38,
+      w: width * 0.18,
+      h: frontHeight * 0.34,
    };
 
    const qrSize = width * 0.22;
@@ -289,22 +289,52 @@ const drawOwnerOverlay = (ctx: CanvasRenderingContext2D, owner: OwnerRow) => {
    return {photoFrame, qrFrame};
 };
 
+const getQrValue = (row: OwnerRow) => {
+   const pick = (...v: Array<string | null | undefined>) =>
+      v.find(s => typeof s === 'string' && s.trim().length > 0)?.trim() ?? '—';
+
+   const ownerName = pick(
+      (row as any).ownerName,
+      (row as any).fullName,
+      (row as any).name
+   );
+
+   const stationName = pick(
+      (row as any).stationName,
+      (row as any).station_name,
+      (row as any).station?.name
+   );
+
+   const division = pick(
+      (row as any).divisionName,
+      (row as any).division,
+      (row as any).division?.name
+   );
+
+   const district = pick(
+      (row as any).districtName,
+      (row as any).district,
+      (row as any).district?.name
+   );
+
+   return [
+      `Member’s: ${ownerName}`,
+      `Station's Name: ${stationName}`,
+      `Division: ${division}`,
+      `District: ${district}`,
+      `Facebook Page Link: https://www.facebook.com/bdpetroleumstation/`,
+   ].join('\n');
+};
+
 export async function downloadOwnerCard(row: OwnerRow) {
    const canvas = document.createElement('canvas');
    const ctx = canvas.getContext('2d');
    if (!ctx) return;
 
-   const ownerId = row.id ?? '';
-   const ownerPath = ownerId ? `/manage-owners/verified/${ownerId}` : '';
-   const ownerUrl =
-      ownerPath && typeof window !== 'undefined'
-         ? `${window.location.origin}${ownerPath}`
-         : '';
-   const qrUrl = ownerUrl
-      ? `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(
-           ownerUrl
-        )}`
-      : '';
+   const qrValue = getQrValue(row);
+   const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(
+      qrValue
+   )}`;
 
    const [card, photo, qr] = await Promise.all([
       loadImage(CARD_IMAGE_PATH),
