@@ -5,6 +5,8 @@ import {useRouter} from 'next/navigation';
 import Loader from '@/components/shared/Loader';
 import TablePanel from '@/components/ui/table-panel/TablePanel';
 import type {ColumnDef} from '@/components/ui/table-panel/types';
+import {usePaymentRecords} from '@/features/dashboard/membership-payments/queries';
+import type {PaymentRecordRow} from '@/features/dashboard/membership-payments/types';
 import {useStationDetails} from './queries';
 
 function pick<T>(...v: Array<T | null | undefined>) {
@@ -22,6 +24,13 @@ function formatDate(value?: string) {
    const parsed = new Date(value);
    if (Number.isNaN(parsed.getTime())) return value;
    return parsed.toISOString().slice(0, 10);
+}
+
+function money(amount: number) {
+   return new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+   }).format(amount);
 }
 
 function InfoRow({label, value}: {label: string; value?: string}) {
@@ -97,6 +106,7 @@ type Props = {
 export default function StationProfileSection({stationId}: Props) {
    const router = useRouter();
    const q = useStationDetails(stationId);
+   const paymentsQ = usePaymentRecords();
 
    const paymentColumns = useMemo<ColumnDef<PaymentRow>[]>(() => {
       return [
@@ -135,7 +145,25 @@ export default function StationProfileSection({stationId}: Props) {
       ];
    }, []);
 
-   const paymentRows: PaymentRow[] = [];
+   const paymentRows = useMemo<PaymentRow[]>(() => {
+      const stationKey = String(stationId ?? '').trim();
+      if (!stationKey || !paymentsQ.data?.length) return [];
+
+      return paymentsQ.data
+         .filter((record: PaymentRecordRow) => String(record.stationId ?? '').trim() === stationKey)
+         .sort((a, b) => {
+            const aTime = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+            const bTime = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+            return bTime - aTime;
+         })
+         .map((record) => ({
+            id: record.id,
+            date: formatDate(record.createdAt),
+            amount: money(record.amountPaid),
+            method: record.bankName || '—',
+            status: record.note || 'Paid',
+         }));
+   }, [paymentsQ.data, stationId]);
 
    if (q.isLoading) return <Loader label='Loading...' />;
    if (q.isError || !q.data) {
@@ -216,9 +244,11 @@ export default function StationProfileSection({stationId}: Props) {
                <h3 className='text-[14px] font-semibold text-[#2B3A4A]'>
                   Payment History
                </h3>
-               <span className='text-[12px] text-[#6B7280]'>
-                  Payment history will be available soon.
-               </span>
+               {paymentsQ.isLoading ? (
+                  <span className='text-[12px] text-[#6B7280]'>
+                     Loading payment history...
+                  </span>
+               ) : null}
             </div>
 
             <TablePanel<PaymentRow>
@@ -233,7 +263,11 @@ export default function StationProfileSection({stationId}: Props) {
                showExport={false}
                className='shadow-[0_18px_55px_rgba(0,0,0,0.10)]'
             />
-            {paymentRows.length === 0 ? (
+            {paymentsQ.isError ? (
+               <div className='rounded-[12px] bg-white/80 py-6 text-center text-sm text-red-600 shadow-[0_18px_55px_rgba(0,0,0,0.05)]'>
+                  Failed to load payment history.
+               </div>
+            ) : paymentRows.length === 0 ? (
                <div className='rounded-[12px] bg-white/80 py-6 text-center text-sm text-[#6B7280] shadow-[0_18px_55px_rgba(0,0,0,0.05)]'>
                   No payment history available yet.
                </div>
