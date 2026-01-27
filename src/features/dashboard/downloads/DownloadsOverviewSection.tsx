@@ -25,17 +25,17 @@ export default function DownloadsOverviewSection() {
   const [activeRow, setActiveRow] = useState<DownloadDocumentRow | null>(null);
   const [formError, setFormError] = useState('');
 
-  const columns = useMemo<ColumnDef<DownloadDocumentRow>[]>(() => {
+  const columns = useMemo<ColumnDef<DownloadDocumentRow>[]>(() =>{
     return [
-      {
-        id: 'sl',
-        header: 'SL#',
-        sortable: true,
-        sortValue: (r) => r.sl,
-        headerClassName: 'w-[80px]',
-        minWidth: 80,
-        cell: (r) => String(r.sl).padStart(2, '0'),
-      },
+      // {
+      //   id: 'sl',
+      //   header: 'SL#',
+      //   sortable: true,
+      //   sortValue: (r) => r.sl,
+      //   headerClassName: 'w-[80px]',
+      //   minWidth: 80,
+      //   cell: (r) => String(r.sl).padStart(2, '0'),
+      // },
       {
         id: 'title',
         header: 'Title',

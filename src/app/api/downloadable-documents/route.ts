@@ -3,7 +3,7 @@ import {laravelFetch, LaravelHttpError} from '@/lib/http/laravelFetch';
 
 export async function GET() {
   try {
-    const data = await laravelFetch('/downloadable-documents', {
+    const data = await laravelFetch('/dashboard/downloadable-documents', {
       method: 'GET',
       auth: true,
     });

@@ -362,7 +362,7 @@ export default function StationForm({
       district: false,
       upazila: false,
    });
-
+console.log(form)
    const isView = mode === 'view';
 
    const stationDetailsQ = useQuery({
