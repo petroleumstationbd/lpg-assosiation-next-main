@@ -26,8 +26,11 @@ type ApiGasStationResponse = {
 
 type TotalStationRow = {
   sl: number;
+  stationId: number;
+  stationOwnerId?: number;
   stationName: string;
   status: string;
+  isVerified: boolean;
   zone: string;
   district: string;
   upazila: string;
@@ -55,6 +58,11 @@ function StatusBadge({status}: {status: string}) {
   );
 }
 
+const isVerifiedStatus = (status: string) => {
+  const normalized = status.toUpperCase();
+  return normalized === 'APPROVED' || normalized === 'VERIFIED';
+};
+
 export default function TotalStationsSection() {
   const totalQ = useQuery({
     queryKey: ['public', 'gas-stations', 'total'],
@@ -62,11 +70,14 @@ export default function TotalStationsSection() {
   });
 
   const rows = useMemo<TotalStationRow[]>(() => {
-    const items = totalQ.data?.data ?? [];
+    const items = [...(totalQ.data?.data ?? [])].sort((a, b) => b.id - a.id);
     return items.map((station, index) => ({
       sl: index + 1,
+      stationId: station.id,
+      stationOwnerId: station.station_owner_id,
       stationName: station.station_name,
       status: station.verification_status ?? 'UNKNOWN',
+      isVerified: isVerifiedStatus(station.verification_status ?? 'UNKNOWN'),
       zone: station.location?.division ?? '',
       district: station.location?.district ?? '',
       upazila: station.location?.upazila ?? '',
@@ -93,7 +104,16 @@ export default function TotalStationsSection() {
       csvHeader: 'Station Name',
       csvValue: (r) => r.stationName,
       minWidth: 320,
-      cell: (r) => <span className="text-inherit">{r.stationName}</span>,
+      cell: (r) => (
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="text-inherit">{r.stationName}</span>
+          {r.isVerified ? (
+            <span className="inline-flex items-center rounded-full bg-[#EAF7EA] px-2 py-0.5 text-[9px] font-semibold uppercase text-[#2D8A2D]">
+              Verified
+            </span>
+          ) : null}
+        </div>
+      ),
     },
     {
       id: 'status',
@@ -104,6 +124,26 @@ export default function TotalStationsSection() {
       csvValue: (r) => r.status,
       minWidth: 140,
       cell: (r) => <StatusBadge status={r.status} />,
+    },
+    {
+      id: 'stationId',
+      header: 'ID',
+      sortable: true,
+      sortValue: (r) => r.stationId,
+      csvHeader: 'ID',
+      csvValue: (r) => r.stationId,
+      minWidth: 160,
+      cell: (r) =>
+        r.isVerified ? (
+          <span className="text-inherit">{r.stationOwnerId ?? r.stationId}</span>
+        ) : (
+          <a
+            href={`/membership-fees?stationId=${encodeURIComponent(String(r.stationId))}`}
+            className="inline-flex h-7 items-center justify-center rounded-sm bg-[#133374] px-3 text-[10px] font-semibold text-white shadow-sm hover:opacity-90"
+          >
+            Apply for membership
+          </a>
+        ),
     },
     {
       id: 'zone',
@@ -175,7 +215,9 @@ export default function TotalStationsSection() {
                 Total Stations : <span className="text-[#133374]">{total}</span>
               </div>
             )}
-            searchText={(r) => [r.stationName, r.status, r.zone, r.district, r.upazila].join(' ')}
+            searchText={(r) =>
+              [r.stationName, r.status, r.zone, r.district, r.upazila, r.stationId].join(' ')
+            }
           />
         </div>
       </div>
