@@ -70,7 +70,7 @@ export default function TotalStationsSection() {
   });
 
   const rows = useMemo<TotalStationRow[]>(() => {
-    const items = totalQ.data?.data ?? [];
+    const items = [...(totalQ.data?.data ?? [])].sort((a, b) => b.id - a.id);
     return items.map((station, index) => ({
       sl: index + 1,
       stationId: station.id,
