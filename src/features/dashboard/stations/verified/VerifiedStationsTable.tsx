@@ -97,19 +97,23 @@ export default function VerifiedStationsTable() {
    const columns = useMemo<ColumnDef<VerifiedStationRow>[]>(() => {
       return [
          {
-            id: 'sl',
-            header: 'SL#',
+            id: 'id',
+            header: 'Id',
             sortable: true,
             sortValue: r => r.sl,
             align: 'center',
             headerClassName: 'w-[90px]',
-            csvHeader: 'SL',
+            csvHeader: 'Id',
             csvValue: r => r.sl,
-            cell: r => (
+            cell: r => {
+               console.log(r)
+
+               return(
                <span className='text-[#133374]'>
-                  {String(r.sl).padStart(2, '0')}
+                  {String(r.id).padStart(2, '0')}
                </span>
-            ),
+            )
+            },
          },
          {
             id: 'stationName',

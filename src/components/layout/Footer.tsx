@@ -84,7 +84,7 @@ export default function Footer() {
 
                   <div className='mt-4 space-y-0 text-[12px] text-white/75'>
                      <div>
-                        <span className='font-semibold'>Address:</span> 2/2
+                        <span className='font-semibold'>Address:</span> 
                         Gulfesha Plaza, Left-10, Suite No-10/O, 69 Outer
                         Circular Rd, MoghBazar Mor, Dhaka 1217
                      </div>
