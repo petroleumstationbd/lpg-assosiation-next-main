@@ -120,7 +120,7 @@ export default function OwnerProfileSection({ownerId}: Props) {
 
    const owner = q.data;
    const stations = stationsQ.data ?? [];
-
+// console.log(owner)
    return (
       <div className='space-y-6'>
          <div className='flex items-center justify-between'>

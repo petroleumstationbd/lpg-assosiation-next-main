@@ -2,7 +2,7 @@ export type OwnerStatus = 'UNVERIFIED' | 'VERIFIED' | 'REJECTED';
 
 export type OwnerRow = {
   id: string;
-  // station_owner_id: string;
+  station_owner_id?: string;
   memberId?: string;
   photoUrl: string;
   ownerName: string;
@@ -35,6 +35,7 @@ export type OwnerDetails = {
   phone?: string;
   email?: string;
   address?: string;
+  station_owner_id?: string;
 };
 
 export type UpdateOwnerInput = {
