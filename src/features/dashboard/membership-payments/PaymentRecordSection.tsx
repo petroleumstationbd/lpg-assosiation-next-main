@@ -65,7 +65,9 @@ export default function PaymentRecordSection() {
     const records = recordsQ.data ?? [];
     const trimmedStationId = stationId.trim();
     if (!trimmedStationId) return records;
-    return records.filter((record) => record.stationId === trimmedStationId);
+    return records.filter(
+      (record) => String(record.stationId ?? '').trim() === trimmedStationId
+    );
   }, [recordsQ.data, stationId]);
 
   useEffect(() => {
