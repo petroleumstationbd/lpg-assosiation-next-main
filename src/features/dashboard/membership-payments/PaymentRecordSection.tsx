@@ -63,8 +63,9 @@ export default function PaymentRecordSection() {
   const { isPending: deleteIsPending, mutate: deleteMutate } = deleteM;
   const filteredRecords = useMemo(() => {
     const records = recordsQ.data ?? [];
-    if (!stationId.trim()) return [];
-    return records.filter((record) => record.stationId === stationId.trim());
+    const trimmedStationId = stationId.trim();
+    if (!trimmedStationId) return records;
+    return records.filter((record) => record.stationId === trimmedStationId);
   }, [recordsQ.data, stationId]);
 
   useEffect(() => {
