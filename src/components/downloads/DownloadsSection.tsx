@@ -77,6 +77,21 @@ function resolveFileUrl(item: DownloadApiItem) {
    return '';
 }
 
+function buildDownloadHref(rawUrl?: string) {
+   if (!rawUrl) return '';
+   try {
+      const parsed = new URL(rawUrl);
+      if (parsed.origin === LARAVEL_ORIGIN) {
+         return `/api/station-documents/download?url=${encodeURIComponent(
+            parsed.toString(),
+         )}`;
+      }
+   } catch {
+      return rawUrl;
+   }
+   return rawUrl;
+}
+
 function mapDownloadRow(item: DownloadApiItem, idx: number): DownloadRow {
    const title =
       item.title ??
@@ -111,6 +126,8 @@ function ActionButton({
       'inline-flex h-6 items-center justify-center rounded-[4px] px-4 text-[10px] font-semibold text-white shadow-sm transition hover:brightness-110 active:brightness-95';
 
    const cls = variant === 'view' ? 'bg-[#133374]' : 'bg-[#009970]';
+   const resolvedHref =
+      variant === 'download' ? buildDownloadHref(href) : href ?? '';
 
    if (variant === 'view') {
       return (
@@ -126,13 +143,11 @@ function ActionButton({
 
    return (
       <a
-         href={href ?? '#'}
+         href={resolvedHref || '#'}
          className={cx(base, cls)}
-         target={href ? '_blank' : undefined}
-         rel={href ? 'noreferrer noopener' : undefined}
-         download={variant === 'download' && href ? '' : undefined}
+         download={variant === 'download' && resolvedHref ? '' : undefined}
          onClick={e => {
-            if (!href || href === '#') e.preventDefault();
+            if (!resolvedHref || resolvedHref === '#') e.preventDefault();
          }}>
          {label}
       </a>
@@ -285,8 +300,7 @@ export default function DownloadsSection() {
             </Link> */}
             <a
               href="/files/membership-form.pdf"
-              target="_blank"
-              rel="noreferrer"
+              download="membership-form.pdf"
               className="inline-flex h-9 items-center gap-2 rounded-[6px] bg-[#009970] px-4 text-[11px] font-semibold text-white shadow-sm hover:brightness-110"
             >
               <Download size={14} />
