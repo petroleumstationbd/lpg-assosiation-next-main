@@ -391,6 +391,10 @@ export default function PaymentRecordSection() {
           <Loader label="Loading records..." />
         ) : recordsQ.isError ? (
           <div className="text-sm text-red-600">Failed to load payment records.</div>
+        ) : !stationId.trim() ? (
+          <div className="text-sm text-slate-500">
+            Enter a station ID to view payment history.
+          </div>
         ) : (
           <TablePanel<PaymentRecordRow>
             rows={filteredRecords}
