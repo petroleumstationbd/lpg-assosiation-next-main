@@ -61,6 +61,11 @@ export default function PaymentRecordSection() {
   const returnTo = searchParams.get('returnTo') ?? '';
 
   const { isPending: deleteIsPending, mutate: deleteMutate } = deleteM;
+  const filteredRecords = useMemo(() => {
+    const records = recordsQ.data ?? [];
+    if (!stationId.trim()) return [];
+    return records.filter((record) => record.stationId === stationId.trim());
+  }, [recordsQ.data, stationId]);
 
   useEffect(() => {
     if (!stationIdParam || stationId) return;
@@ -385,9 +390,13 @@ export default function PaymentRecordSection() {
           <Loader label="Loading records..." />
         ) : recordsQ.isError ? (
           <div className="text-sm text-red-600">Failed to load payment records.</div>
+        ) : !stationId.trim() ? (
+          <div className="text-sm text-slate-500">
+            Enter a station ID to view payment history.
+          </div>
         ) : (
           <TablePanel<PaymentRecordRow>
-            rows={recordsQ.data ?? []}
+            rows={filteredRecords}
             columns={columns}
             getRowKey={(r) => r.id}
             searchText={(r) => `${r.stationName} ${r.bankName} ${r.amountPaid}`}
