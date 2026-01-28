@@ -25,6 +25,21 @@ function cx(...v: Array<string | false | null | undefined>) {
    return v.filter(Boolean).join(' ');
 }
 
+function buildDownloadHref(rawUrl?: string) {
+   if (!rawUrl) return '';
+   try {
+      const parsed = new URL(rawUrl);
+      if (parsed.origin === LARAVEL_ORIGIN) {
+         return `/api/station-documents/download?url=${encodeURIComponent(
+            parsed.toString(),
+         )}`;
+      }
+   } catch {
+      return rawUrl;
+   }
+   return rawUrl;
+}
+
 function ViewButton({onClick}: {onClick: () => void}) {
    return (
       <button
@@ -41,19 +56,18 @@ function ViewButton({onClick}: {onClick: () => void}) {
 }
 
 function DownloadButton({href}: {href?: string}) {
+   const downloadHref = buildDownloadHref(href);
    return (
       <a
-         href={href ?? '#'}
+         href={downloadHref || '#'}
          className={cx(
             'inline-flex h-6 items-center justify-center rounded-[4px] px-4',
             'bg-[#009970] text-[10px] font-semibold text-white shadow-sm',
             'transition hover:brightness-110 active:brightness-95',
          )}
-         target={href ? '_blank' : undefined}
-         rel={href ? 'noreferrer noopener' : undefined}
-         download={href ? '' : undefined}
+         download={downloadHref ? '' : undefined}
          onClick={event => {
-            if (!href || href === '#') event.preventDefault();
+            if (!downloadHref || downloadHref === '#') event.preventDefault();
          }}>
          Download
       </a>

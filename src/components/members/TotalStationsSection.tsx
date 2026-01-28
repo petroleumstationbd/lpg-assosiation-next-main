@@ -63,6 +63,11 @@ const isVerifiedStatus = (status: string) => {
   return normalized === 'APPROVED' || normalized === 'VERIFIED';
 };
 
+const formatStationId = (value?: number | null) => {
+  if (value === null || value === undefined) return '';
+  return String(value).padStart(6, '0');
+};
+
 export default function TotalStationsSection() {
   const totalQ = useQuery({
     queryKey: ['public', 'gas-stations', 'total'],
@@ -131,11 +136,11 @@ export default function TotalStationsSection() {
       sortable: true,
       sortValue: (r) => r.stationId,
       csvHeader: 'ID',
-      csvValue: (r) => r.stationId,
+      csvValue: (r) => formatStationId(r.stationOwnerId ?? r.stationId),
       minWidth: 160,
       cell: (r) =>
         r.isVerified ? (
-          <span className="text-inherit">{r.stationOwnerId ?? r.stationId}</span>
+          <span className="text-inherit">{formatStationId(r.stationOwnerId ?? r.stationId)}</span>
         ) : (
           <a
             href={`/membership-fees?stationId=${encodeURIComponent(String(r.stationId))}`}
