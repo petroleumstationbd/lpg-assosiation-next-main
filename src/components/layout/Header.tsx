@@ -32,11 +32,11 @@ const MAIN_NAV: NavItem[] = [
    // {key: 'gallery', label: 'GALLERY', href: '/gallery/photo-gallery'},
    {
       key: 'Photogallery ',
-      label: 'Photo Gallery',
+      label: 'Gallery',
       href: '#',
       children: [
          {label: 'PHOTO GALLERY', href: '/gallery/photo-gallery'},
-         {label: 'PRINT MEDIA GALLERY', href: '/gallery/print-media-gallery'},
+          {label: 'PRINT MEDIA GALLERY', href: '/gallery/print-media-gallery'},
          {label: 'MEDIA COVERAGE', href: '/gallery/media-coverage'},
          {label: 'VIDEO GALLERY', href: '/gallery/video-gallery'},
       ],
@@ -66,16 +66,16 @@ const MAIN_NAV: NavItem[] = [
          // {label: 'Running Stations', href: '/members/running-stations'},
          // {label: 'On Going LPG Stations', href: '/members/on-going-stations'},
          {label: 'Total Station List', href: '/members/total-stations'},
-         {label: 'Membership Fees', href: '/membership-fees'},
-         {
-            label: 'Download Membership Form',
-            href: '/files/membership-form.pdf',
-            action: () =>
-               downloadFile(
-                  '/files/membership-form.pdf',
-                  'membership-form.pdf',
-               ),
-         },
+         // {label: 'Membership Fees', href: '/membership-fees'},
+         // {
+         //    label: 'Download Membership Form',
+         //    href: '/files/membership-form.pdf',
+         //    action: () =>
+         //       downloadFile(
+         //          '/files/membership-form.pdf',
+         //          'membership-form.pdf',
+         //       ),
+         // },
       ],
    },
    {key: 'downloads', label: 'DOWNLOAD', href: '/downloads'},
@@ -207,7 +207,7 @@ export default function Header({heroSize = ''}: {heroSize?: string}) {
                </Link>
 
                <div className='ml-12 flex flex-1 items-center justify-between gap-2 overflow-visible md:ml-36'>
-                  <nav className='hidden flex-1 items-center justify-center lg:gap-[3px] lg:flex  xl:gap-2 overflow-visible'>
+                  <nav className='hidden flex-1 items-center justify-center lg:gap-[8px] lg:flex  xl:gap-4 overflow-visible'>
                      {MAIN_NAV.map(item => {
                         const hasChildren = !!item.children?.length;
                         const isDropdownOpen = openDropdownKey === item.key;

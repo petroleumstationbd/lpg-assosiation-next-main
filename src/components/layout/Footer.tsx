@@ -94,7 +94,7 @@ export default function Footer() {
                      </div>
                      <div>
                         <span className='font-semibold'>Email:</span>
-                        info@petroleumstationbd.com
+                        petroleumstationbd@gmail.com
                      </div>
                   </div>
                </div>

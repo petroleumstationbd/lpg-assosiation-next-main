@@ -35,7 +35,7 @@ function ActionDot({
          onClick={onClick}
          className={cx(
             'grid h-6 w-6 place-items-center rounded-full shadow-sm',
-            bg
+            bg,
          )}>
          {children}
       </button>
@@ -68,7 +68,9 @@ export default function VerifiedOwnersTable() {
             ownerPhone: row.phone ?? '',
             ownerAddress: row.address ?? '',
          });
-         router.push(`/manage-stations/create-station?${params.toString()}`);
+         const url = `/manage-stations/create-station?${params.toString()}`;
+
+         window.open(url, '_blank', 'noopener,noreferrer');
       };
 
       const onVerify = (id: string) => {
@@ -130,7 +132,9 @@ export default function VerifiedOwnersTable() {
             csvHeader: 'Phone',
             csvValue: r => r.phone,
             cell: r => (
-               <span className='text-[#133374]'>{formatPhoneInput(r.phone)}</span>
+               <span className='text-[#133374]'>
+                  {formatPhoneInput(r.phone)}
+               </span>
             ),
          },
          {
@@ -236,14 +240,14 @@ export default function VerifiedOwnersTable() {
                if (!active) return;
                updateM.mutate({
                   id: active.id,
-               input: {
-                  fullName: input.fullName,
-                  phoneNumber: input.phoneNumber,
-                  email: input.email,
-                  address: input.address,
-                  profileImage: input.profileImage,
-               },
-            });
+                  input: {
+                     fullName: input.fullName,
+                     phoneNumber: input.phoneNumber,
+                     email: input.email,
+                     address: input.address,
+                     profileImage: input.profileImage,
+                  },
+               });
                setEditOpen(false);
                setActive(null);
             }}

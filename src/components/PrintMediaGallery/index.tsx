@@ -130,12 +130,12 @@ const PrintMediaGallery = () => {
             cardsPerPage={CARDS_PER_PAGE}
             cardSlides={cardSlides}
          />
-         <GridCardSection
+         {/* <GridCardSection
             columnPerRow='grid gap-5 sm:grid-cols-2 lg:grid-cols-3'
             sectionCardData={sectionCardData}
             title='Print Media Gallery'
             description="We are Largest one and only LPG Auto Gas Station & Conversion Workshop Owner's Association in Bangladesh. Welcome to our Gallery"
-         />
+         /> */}
 
          <Footer />
       </main>
