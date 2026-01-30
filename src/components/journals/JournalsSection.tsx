@@ -10,6 +10,7 @@ import placeholderImage from '@/components/PrintMediaGallery/img/news1.png';
 const LARAVEL_ORIGIN =
   process.env.NEXT_PUBLIC_LARAVEL_ORIGIN ??
   'https://admin.petroleumstationbd.com';
+const documentThumbnail = '/images/document-thumbnail.svg';
 
 const DEFAULT_DESCRIPTION =
   "We are Largest one and only LPG Auto Gas Station & Conversion Workshop Owner's Association in Bangladesh. Welcome to our Gallery.";
@@ -119,8 +120,7 @@ export default function JournalsSection() {
         setJournals(mapped);
 
         const cardData: AlbumCardData[] = mapped.map((item) => {
-          const hasMedia =
-            (item.type === 'video' || item.type === 'image') && Boolean(item.fileUrl);
+          const hasVideo = item.type === 'video' && Boolean(item.fileUrl);
           return {
             id: item.id,
             title: item.title,
@@ -129,11 +129,12 @@ export default function JournalsSection() {
             image:
               item.type === 'image' && item.fileUrl
                 ? item.fileUrl
+                : item.type === 'document'
+                ? documentThumbnail
                 : placeholderImage,
-            mediaType: item.type === 'video' ? 'video' : item.type === 'image' ? 'image' : undefined,
-            videos: hasMedia,
-            videoUrl:
-              item.type === 'video' || item.type === 'image' ? item.fileUrl : null,
+            mediaType: item.type,
+            videos: hasVideo,
+            videoUrl: item.type === 'video' ? item.fileUrl : null,
           };
         });
 
@@ -158,6 +159,12 @@ export default function JournalsSection() {
           const match = journals.find((item) => item.id === album.id);
           if (!match) return;
           if (match.type !== 'image' && match.type !== 'video') return;
+          setActive(match);
+          setViewOpen(true);
+        }}
+        onCardClick={(album) => {
+          const match = journals.find((item) => item.id === album.id);
+          if (!match) return;
           setActive(match);
           setViewOpen(true);
         }}
