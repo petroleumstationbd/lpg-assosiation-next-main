@@ -1,15 +1,18 @@
 'use client';
 
-import {useEffect, useMemo, useState} from 'react';
-import TablePanel from '@/components/ui/table-panel/TablePanel';
-import type {ColumnDef} from '@/components/ui/table-panel/types';
-import MeshCorners from '@/components/ui/MeshCorners';
+import {useEffect, useState} from 'react';
+import GridCardSection from '@/components/shared/GridCardsSection';
+import type {AlbumCardData} from '@/components/shared/GridCardsSection/Card';
 import {toAbsoluteUrl} from '@/lib/http/url';
 import PublicJournalModal from './PublicJournalModal';
+import placeholderImage from '@/components/PrintMediaGallery/img/news1.png';
 
 const LARAVEL_ORIGIN =
   process.env.NEXT_PUBLIC_LARAVEL_ORIGIN ??
   'https://admin.petroleumstationbd.com';
+
+const DEFAULT_DESCRIPTION =
+  "We are Largest one and only LPG Auto Gas Station & Conversion Workshop Owner's Association in Bangladesh. Welcome to our Gallery.";
 
 type JournalApiItem = {
   id?: number | string;
@@ -29,14 +32,14 @@ type JournalApiItem = {
   is_active?: boolean | number | string | null;
 };
 
-type JournalRow = {
-  id?: string;
-  sl: number;
+type JournalItem = {
+  id: number;
+  publicId?: string;
   title: string;
-  type: string;
-  publishedDate: string;
-  fileUrl: string;
+  type: 'video' | 'image' | 'document';
   description: string;
+  publishDate: string;
+  fileUrl: string;
 };
 
 function normalizeList(raw: any) {
@@ -65,6 +68,11 @@ function resolveFileUrl(item: JournalApiItem) {
   return '';
 }
 
+function normalizeType(value?: string | null): JournalItem['type'] {
+  if (value === 'video' || value === 'image' || value === 'document') return value;
+  return 'document';
+}
+
 function isActive(item: JournalApiItem) {
   if (item.is_active === false) return false;
   if (typeof item.is_active === 'string') return item.is_active !== '0';
@@ -72,53 +80,26 @@ function isActive(item: JournalApiItem) {
   return true;
 }
 
-function buildDownloadHref(rawUrl?: string) {
-  if (!rawUrl) return '';
-  try {
-    const parsed = new URL(rawUrl);
-    if (parsed.origin === LARAVEL_ORIGIN) {
-      return `/api/station-documents/download?url=${encodeURIComponent(
-        parsed.toString()
-      )}`;
-    }
-  } catch {
-    return rawUrl;
-  }
-  return rawUrl;
-}
+function mapJournal(item: JournalApiItem, idx: number): JournalItem {
+  const id = Number(item.id ?? idx + 1);
+  const publicId = item.public_id ?? item.journal_id;
 
-function ViewButton({onClick}: {onClick: () => void}) {
-  return (
-    <button
-      type="button"
-      className="inline-flex h-6 items-center justify-center rounded-[4px] bg-[#133374] px-4 text-[10px] font-semibold text-white shadow-sm transition hover:brightness-110"
-      onClick={onClick}
-    >
-      View
-    </button>
-  );
-}
-
-function DownloadButton({href}: {href?: string}) {
-  const downloadHref = buildDownloadHref(href);
-  return (
-    <a
-      href={downloadHref || '#'}
-      className="inline-flex h-6 items-center justify-center rounded-[4px] bg-[#009970] px-4 text-[10px] font-semibold text-white shadow-sm transition hover:brightness-110"
-      download={downloadHref ? '' : undefined}
-      onClick={(event) => {
-        if (!downloadHref || downloadHref === '#') event.preventDefault();
-      }}
-    >
-      Download
-    </a>
-  );
+  return {
+    id,
+    publicId: publicId ? String(publicId) : undefined,
+    title: item.title ?? `Journal ${idx + 1}`,
+    type: normalizeType(item.type),
+    description: item.description ?? DEFAULT_DESCRIPTION,
+    publishDate: pickDate(item.publish_date ?? item.created_at ?? item.updated_at),
+    fileUrl: resolveFileUrl(item),
+  };
 }
 
 export default function JournalsSection() {
-  const [rows, setRows] = useState<JournalRow[]>([]);
+  const [cards, setCards] = useState<AlbumCardData[]>([]);
+  const [journals, setJournals] = useState<JournalItem[]>([]);
   const [viewOpen, setViewOpen] = useState(false);
-  const [activeRow, setActiveRow] = useState<JournalRow | null>(null);
+  const [active, setActive] = useState<JournalItem | null>(null);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -134,24 +115,28 @@ export default function JournalsSection() {
         const data = await res.json().catch(() => null);
         const list = normalizeList(data).filter(isActive);
 
-        const mapped: JournalRow[] = list.map((item, idx) => {
-          const idRaw =
-            item.public_id ?? item.journal_id ?? item.id ?? String(idx + 1);
+        const mapped = list.map(mapJournal);
+        setJournals(mapped);
 
+        const cardData: AlbumCardData[] = mapped.map((item) => {
+          const hasMedia =
+            (item.type === 'video' || item.type === 'image') && Boolean(item.fileUrl);
           return {
-            id: idRaw ? String(idRaw) : undefined,
-            sl: idx + 1,
-            title: item.title ?? `Journal ${idx + 1}`,
-            type: item.type ?? 'document',
-            publishedDate: pickDate(
-              item.publish_date ?? item.created_at ?? item.updated_at
-            ),
-            fileUrl: resolveFileUrl(item),
-            description: item.description ?? '',
+            id: item.id,
+            title: item.title,
+            date: item.publishDate,
+            description: item.description,
+            image:
+              item.type === 'image' && item.fileUrl
+                ? item.fileUrl
+                : placeholderImage,
+            videos: hasMedia,
+            videoUrl:
+              item.type === 'video' || item.type === 'image' ? item.fileUrl : null,
           };
         });
 
-        setRows(mapped);
+        setCards(cardData);
       } catch (error: any) {
         if (error?.name === 'AbortError') return;
         console.error('Failed to load journals', error);
@@ -162,129 +147,31 @@ export default function JournalsSection() {
     return () => controller.abort();
   }, []);
 
-  const columns = useMemo<ColumnDef<JournalRow>[]>(
-    () => [
-      {
-        id: 'sl',
-        header: 'SL#',
-        sortable: true,
-        sortValue: (r) => r.sl,
-        csvHeader: 'SL',
-        csvValue: (r) => r.sl,
-        headerClassName: 'w-[70px]',
-        minWidth: 70,
-        cell: (r) => String(r.sl).padStart(2, '0'),
-      },
-      {
-        id: 'title',
-        header: 'Title',
-        sortable: true,
-        sortValue: (r) => r.title,
-        csvHeader: 'Title',
-        csvValue: (r) => r.title,
-        minWidth: 320,
-        cell: (r) => <span className="text-inherit">{r.title}</span>,
-      },
-      {
-        id: 'type',
-        header: 'Type',
-        sortable: true,
-        sortValue: (r) => r.type,
-        csvHeader: 'Type',
-        csvValue: (r) => r.type,
-        headerClassName: 'w-[140px]',
-        minWidth: 140,
-        cell: (r) => (
-          <span className="rounded-full bg-[#E6EEF9] px-3 py-1 text-[10px] font-semibold uppercase text-[#12306B]">
-            {r.type}
-          </span>
-        ),
-      },
-      {
-        id: 'publishedDate',
-        header: 'Published Date',
-        sortable: true,
-        sortValue: (r) => r.publishedDate,
-        csvHeader: 'Published Date',
-        csvValue: (r) => r.publishedDate,
-        minWidth: 180,
-        cell: (r) => <span className="text-inherit">{r.publishedDate}</span>,
-      },
-      {
-        id: 'view',
-        header: 'View',
-        sortable: false,
-        csvHeader: 'View',
-        csvValue: () => '',
-        minWidth: 140,
-        cell: (r) => (
-          <div className="flex w-full justify-center">
-            <ViewButton
-              onClick={() => {
-                setActiveRow(r);
-                setViewOpen(true);
-              }}
-            />
-          </div>
-        ),
-      },
-      {
-        id: 'download',
-        header: 'Download',
-        sortable: false,
-        csvHeader: 'Download',
-        csvValue: () => '',
-        minWidth: 160,
-        cell: (r) => (
-          <div className="flex w-full justify-center">
-            <DownloadButton href={r.fileUrl} />
-          </div>
-        ),
-      },
-    ],
-    []
-  );
-
   return (
-    <section className="relative overflow-hidden bg-[#F4F9F4] py-14">
-      <div className="absolute inset-x-0 top-0 h-[3px] bg-[#6CC12A]" />
-
-      <MeshCorners
-        className="z-0"
-        color="#2D8A2D"
-        opacity={0.18}
-        width={760}
-        height={480}
-        strokeWidth={1}
+    <>
+      <GridCardSection
+        sectionCardData={cards}
+        title="Journals"
+        description={DEFAULT_DESCRIPTION}
+        onPlay={(album) => {
+          const match = journals.find((item) => item.id === album.id);
+          if (!match) return;
+          if (match.type !== 'image' && match.type !== 'video') return;
+          setActive(match);
+          setViewOpen(true);
+        }}
       />
-
-      <div className="pointer-events-none absolute inset-0 z-0 bg-[radial-gradient(900px_520px_at_18%_10%,rgba(45,138,45,0.10),transparent_60%),radial-gradient(900px_520px_at_82%_10%,rgba(45,138,45,0.10),transparent_60%)]" />
-
-      <div className="lpg-container relative z-10">
-        <TablePanel
-          rows={rows}
-          columns={columns}
-          getRowKey={(r) => r.id ?? String(r.sl)}
-          exportFileName=""
-          searchText={(r) => [r.title, r.type, r.publishedDate].join(' ')}
-          totalLabel={(total) => (
-            <div className="text-[14px] font-semibold text-[#2D8A2D]">
-              Total Journals : <span className="text-[#133374]">{total}</span>
-            </div>
-          )}
-        />
-      </div>
 
       <PublicJournalModal
         open={viewOpen}
-        journalId={activeRow?.id ?? null}
-        title={activeRow?.title}
-        publishedDate={activeRow?.publishedDate}
-        description={activeRow?.description}
-        type={activeRow?.type}
-        fileUrl={activeRow?.fileUrl}
+        journalId={active?.publicId ?? (active ? String(active.id) : null)}
+        title={active?.title}
+        publishedDate={active?.publishDate}
+        description={active?.description}
+        type={active?.type}
+        fileUrl={active?.fileUrl}
         onClose={() => setViewOpen(false)}
       />
-    </section>
+    </>
   );
 }
