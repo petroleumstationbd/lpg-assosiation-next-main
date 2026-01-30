@@ -130,6 +130,7 @@ export default function JournalsSection() {
               item.type === 'image' && item.fileUrl
                 ? item.fileUrl
                 : placeholderImage,
+            mediaType: item.type === 'video' ? 'video' : item.type === 'image' ? 'image' : undefined,
             videos: hasMedia,
             videoUrl:
               item.type === 'video' || item.type === 'image' ? item.fileUrl : null,
