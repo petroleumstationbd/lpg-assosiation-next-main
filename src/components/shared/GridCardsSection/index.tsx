@@ -11,6 +11,7 @@ type GridCardSectionProps = {
   videos?: boolean;
   onPlay?: (album: AlbumCardData) => void;
   getHref?: (album: AlbumCardData) => string | undefined;
+  onCardClick?: (album: AlbumCardData) => void;
 };
 
 export default function GridCardSection({
@@ -20,7 +21,8 @@ export default function GridCardSection({
   description,
   videos,
   onPlay,
-  getHref
+  getHref,
+  onCardClick
 }: GridCardSectionProps) {
   return (
     <section className="relative bg-[linear-gradient(180deg,#F6FCF7_0%,#EDF8F1_100%)] pb-16 pt-10 md:pb-24 md:pt-14">
@@ -42,6 +44,7 @@ export default function GridCardSection({
               videos={videos}
               onPlay={onPlay}
               href={getHref?.(album)}
+              onCardClick={onCardClick}
             />
           ))}
         </div>

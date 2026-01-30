@@ -1,0 +1,11 @@
+<svg width="640" height="420" viewBox="0 0 640 420" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="640" height="420" rx="28" fill="#F3F6FA"/>
+  <rect x="140" y="70" width="360" height="280" rx="20" fill="#FFFFFF" stroke="#D7E0EA" stroke-width="2"/>
+  <path d="M420 70V150H500" fill="#E9F0F8"/>
+  <path d="M420 70V150H500" stroke="#D7E0EA" stroke-width="2" stroke-linejoin="round"/>
+  <rect x="185" y="160" width="270" height="12" rx="6" fill="#DCE5F0"/>
+  <rect x="185" y="190" width="235" height="12" rx="6" fill="#DCE5F0"/>
+  <rect x="185" y="220" width="200" height="12" rx="6" fill="#DCE5F0"/>
+  <rect x="185" y="260" width="140" height="34" rx="17" fill="#6CC12A"/>
+  <text x="255" y="282" text-anchor="middle" font-family="Arial, Helvetica, sans-serif" font-size="14" font-weight="700" fill="#FFFFFF">DOC</text>
+</svg>

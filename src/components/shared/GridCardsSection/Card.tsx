@@ -1,5 +1,6 @@
 import Image, {type StaticImageData} from 'next/image';
 import Link from 'next/link';
+import type {KeyboardEvent, MouseEvent} from 'react';
 
 export type AlbumCardData = {
    id: number;
@@ -9,7 +10,7 @@ export type AlbumCardData = {
    image: StaticImageData | string;
    videos?: boolean;
    videoUrl?: string | null;
-   mediaType?: 'video' | 'image';
+   mediaType?: 'video' | 'image' | 'document';
 };
 
 type AlbumCardProps = {
@@ -17,12 +18,37 @@ type AlbumCardProps = {
    videos?: boolean;
    onPlay?: (album: AlbumCardData) => void;
    href?: string;
+   onCardClick?: (album: AlbumCardData) => void;
 };
 
-export default function AlbumCard({album, videos, onPlay, href}: AlbumCardProps) {
+export default function AlbumCard({
+   album,
+   videos,
+   onPlay,
+   href,
+   onCardClick
+}: AlbumCardProps) {
    const showVideo = album.videos ?? videos;
    const canPlay = Boolean(showVideo && onPlay && album.videoUrl);
    const isVideoThumbnail = album.mediaType === 'video' && album.videoUrl;
+   const isClickable = Boolean(onCardClick);
+   const mediaLabel = album.mediaType ?? (isVideoThumbnail ? 'video' : 'image');
+
+   const handleCardClick = (event: MouseEvent<HTMLElement>) => {
+      if (!onCardClick) return;
+      const target = event.target as HTMLElement | null;
+      if (target?.closest('button, a, video, source')) return;
+      onCardClick(album);
+   };
+
+   const handleKeyDown = (event: KeyboardEvent<HTMLElement>) => {
+      if (!onCardClick) return;
+      if (event.key === 'Enter' || event.key === ' ') {
+         event.preventDefault();
+         onCardClick(album);
+      }
+   };
+
    const content = (
       <article className='relative flex h-full flex-col overflow-hidden rounded-[18px] bg-white shadow-[0_18px_40px_rgba(0,0,0,0.12)]'>
          {/* top image */}
@@ -31,6 +57,7 @@ export default function AlbumCard({album, videos, onPlay, href}: AlbumCardProps)
                <video
                   className='h-full w-full object-cover'
                   src={album.videoUrl ?? undefined}
+                  controls
                   muted
                   playsInline
                   preload='metadata'
@@ -44,7 +71,13 @@ export default function AlbumCard({album, videos, onPlay, href}: AlbumCardProps)
                />
             )}
 
-            {showVideo ? (
+            {mediaLabel ? (
+               <span className='absolute left-3 top-3 rounded-full bg-white/90 px-3 py-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#11306C] shadow-sm'>
+                  {mediaLabel}
+               </span>
+            ) : null}
+
+            {showVideo && !isVideoThumbnail ? (
                <div className='absolute z-10 flex h-full w-full items-center justify-center'>
                   <button
                      type='button'
@@ -106,5 +139,16 @@ export default function AlbumCard({album, videos, onPlay, href}: AlbumCardProps)
       );
    }
 
-   return <div className='group h-full'>{content}</div>;
+   return (
+      <div
+         className='group h-full'
+         role={isClickable ? 'button' : undefined}
+         tabIndex={isClickable ? 0 : undefined}
+         onClick={isClickable ? handleCardClick : undefined}
+         onKeyDown={isClickable ? handleKeyDown : undefined}
+         aria-label={isClickable ? album.title : undefined}
+      >
+         {content}
+      </div>
+   );
 }
