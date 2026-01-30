@@ -7,6 +7,7 @@ import PageHero from '@/components/shared/PageHero';
 import Footer from '@/components/layout/Footer';
 import Loader from '@/components/shared/Loader';
 import SectionHeading from '@/components/ui/SectionHeading';
+import Modal from '@/components/ui/modal/Modal';
 import newsHero from '@assets/newsfeed-img/banner.png';
 import {normalizeList} from '@/lib/http/normalize';
 import {toAbsoluteUrl} from '@/lib/http/url';
@@ -75,6 +76,9 @@ export default function AlbumDetail({albumId}: {albumId: string}) {
    const [images, setImages] = useState<AlbumImageRow[]>([]);
    const [loading, setLoading] = useState(true);
    const [error, setError] = useState('');
+   const [selectedImage, setSelectedImage] = useState<AlbumImageRow | null>(
+      null
+   );
 
    useEffect(() => {
       const controller = new AbortController();
@@ -144,9 +148,12 @@ export default function AlbumDetail({albumId}: {albumId: string}) {
       return (
          <div className='grid gap-5 sm:grid-cols-2 lg:grid-cols-3'>
             {images.map(image => (
-               <div
+               <button
                   key={image.id}
-                  className='group relative aspect-[4/3] overflow-hidden rounded-[16px] bg-slate-100 shadow-[0_10px_30px_rgba(0,0,0,0.08)]'
+                  type='button'
+                  onClick={() => setSelectedImage(image)}
+                  className='group relative aspect-[4/3] overflow-hidden rounded-[16px] bg-slate-100 text-left shadow-[0_10px_30px_rgba(0,0,0,0.08)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#009970]'
+                  aria-label={`View ${title}`}
                >
                   <Image
                      src={image.url}
@@ -154,7 +161,8 @@ export default function AlbumDetail({albumId}: {albumId: string}) {
                      fill
                      className='object-cover transition-transform duration-300 group-hover:scale-110'
                   />
-               </div>
+                  <span className='absolute inset-0 bg-black/0 transition group-hover:bg-black/20' />
+               </button>
             ))}
          </div>
       );
@@ -191,6 +199,26 @@ export default function AlbumDetail({albumId}: {albumId: string}) {
          </section>
 
          <Footer />
+         <Modal
+            open={Boolean(selectedImage)}
+            title={title}
+            onClose={() => setSelectedImage(null)}
+            maxWidthClassName='max-w-[1000px]'
+         >
+            <div className='p-4'>
+               {selectedImage ? (
+                  <div className='overflow-hidden rounded-[12px] bg-white'>
+                     <Image
+                        src={selectedImage.url}
+                        alt={title}
+                        width={1800}
+                        height={1200}
+                        className='h-auto w-full object-contain'
+                     />
+                  </div>
+               ) : null}
+            </div>
+         </Modal>
       </main>
    );
 }
