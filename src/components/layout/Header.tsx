@@ -39,6 +39,7 @@ const MAIN_NAV: NavItem[] = [
           {label: 'PRINT MEDIA GALLERY', href: '/gallery/print-media-gallery'},
          {label: 'MEDIA COVERAGE', href: '/gallery/media-coverage'},
          {label: 'VIDEO GALLERY', href: '/gallery/video-gallery'},
+         {label: 'JOURNALS', href: '/gallery/journals'},
       ],
    },
    {
