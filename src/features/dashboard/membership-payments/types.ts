@@ -22,3 +22,10 @@ export type PaymentRecordInput = {
   note?: string;
   paymentDoc: File;
 };
+
+export type PaymentRecordUpdateInput = {
+  bankName?: string;
+  amountPaid?: number;
+  note?: string;
+  paymentDoc?: File | null;
+};
