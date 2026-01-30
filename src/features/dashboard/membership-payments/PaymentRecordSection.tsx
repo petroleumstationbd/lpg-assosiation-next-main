@@ -10,9 +10,11 @@ import {
   useCreatePaymentRecord,
   useDeletePaymentRecord,
   usePaymentRecords,
+  useUpdatePaymentRecord,
   useUnverifiedStationOptions,
 } from './queries';
 import type { PaymentRecordRow } from './types';
+import PaymentRecordEditModal from './PaymentRecordEditModal';
 
 const PAYMENT_METHODS = ['VISA', 'bKash', 'Nagad', 'Rocket', 'Mastercard', 'Amex'];
 
@@ -44,6 +46,7 @@ export default function PaymentRecordSection() {
   const stationsQ = useUnverifiedStationOptions(true);
   const createM = useCreatePaymentRecord();
   const deleteM = useDeletePaymentRecord();
+  const updateM = useUpdatePaymentRecord();
   const verifyM = useVerifyStation();
 
   const [stationId, setStationId] = useState('');
@@ -53,6 +56,9 @@ export default function PaymentRecordSection() {
   const [note, setNote] = useState('');
   const [paymentDoc, setPaymentDoc] = useState<File | null>(null);
   const [formError, setFormError] = useState('');
+  const [editOpen, setEditOpen] = useState(false);
+  const [editRow, setEditRow] = useState<PaymentRecordRow | null>(null);
+  const [editError, setEditError] = useState('');
 
   const stationOptions = stationsQ.data ?? [];
   const loadingStations = stationsQ.isLoading;
@@ -172,6 +178,28 @@ export default function PaymentRecordSection() {
             </a>
           );
         },
+      },
+      {
+        id: 'edit',
+        header: 'Edit',
+        sortable: false,
+        align: 'center',
+        headerClassName: 'w-[120px]',
+        csvHeader: 'Edit',
+        csvValue: () => '',
+        cell: (r) => (
+          <button
+            type="button"
+            onClick={() => {
+              setEditError('');
+              setEditRow(r);
+              setEditOpen(true);
+            }}
+            className="h-7 rounded-sm bg-[#133374] px-4 text-[11px] font-semibold text-white shadow-sm"
+          >
+            Edit
+          </button>
+        ),
       },
       {
         id: 'delete',
@@ -403,6 +431,44 @@ export default function PaymentRecordSection() {
           />
         )}
       </div>
+      <PaymentRecordEditModal
+        open={editOpen}
+        record={editRow}
+        saving={updateM.isPending}
+        error={editError}
+        onClose={() => {
+          setEditOpen(false);
+          setEditRow(null);
+          setEditError('');
+        }}
+        onSubmit={async (payload) => {
+          if (!editRow) return;
+          setEditError('');
+          if (!payload.bankName?.trim()) {
+            setEditError('Bank name is required');
+            return;
+          }
+          if (!Number.isFinite(payload.amountPaid) || (payload.amountPaid ?? 0) <= 0) {
+            setEditError('Amount paid must be a valid number');
+            return;
+          }
+
+          try {
+            await updateM.mutateAsync({
+              id: editRow.id,
+              payload: {
+                ...payload,
+                bankName: payload.bankName.trim(),
+                note: payload.note?.trim() ?? '',
+              },
+            });
+            setEditOpen(false);
+            setEditRow(null);
+          } catch (err: any) {
+            setEditError(err?.message ?? 'Failed to update payment record');
+          }
+        }}
+      />
     </div>
   );
 }

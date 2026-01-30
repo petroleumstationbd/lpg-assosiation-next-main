@@ -1,6 +1,11 @@
 import { normalizeList } from '@/lib/http/normalize';
 import { toAbsoluteUrl } from '@/lib/http/url';
-import type { PaymentRecordInput, PaymentRecordRow, StationOption } from './types';
+import type {
+  PaymentRecordInput,
+  PaymentRecordRow,
+  PaymentRecordUpdateInput,
+  StationOption,
+} from './types';
 
 type PaymentRecordApiRow = {
   id?: string | number | null;
@@ -138,6 +143,28 @@ export async function deletePaymentRecord(id: string) {
 
   const data = await safeJson(res);
   if (!res.ok) throw new Error(data?.message ?? 'Failed to delete payment record');
+}
+
+export async function updatePaymentRecord(
+  id: string,
+  input: PaymentRecordUpdateInput
+) {
+  const formData = new FormData();
+  if (input.bankName != null) formData.append('bank_name', input.bankName);
+  if (input.amountPaid != null) {
+    formData.append('amount_paid', String(input.amountPaid));
+  }
+  if (input.note != null) formData.append('note', input.note);
+  if (input.paymentDoc) formData.append('payment_doc', input.paymentDoc);
+
+  const res = await fetch(`/api/payment-records/${id}`, {
+    method: 'POST',
+    body: formData,
+    headers: { Accept: 'application/json' },
+  });
+
+  const data = await safeJson(res);
+  if (!res.ok) throw new Error(data?.message ?? 'Failed to update payment record');
 }
 
 export async function listUnverifiedStations(): Promise<StationOption[]> {

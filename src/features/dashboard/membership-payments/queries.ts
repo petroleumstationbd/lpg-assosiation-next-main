@@ -6,8 +6,9 @@ import {
   deletePaymentRecord,
   listPaymentRecords,
   listUnverifiedStations,
+  updatePaymentRecord,
 } from './repo';
-import type { PaymentRecordInput } from './types';
+import type { PaymentRecordInput, PaymentRecordUpdateInput } from './types';
 
 const KEY_PAYMENTS = ['payment-records'] as const;
 const KEY_STATIONS = ['stations', 'unverified', 'options'] as const;
@@ -43,6 +44,18 @@ export function useDeletePaymentRecord() {
 
   return useMutation({
     mutationFn: (id: string) => deletePaymentRecord(id),
+    onSuccess: async () => {
+      await qc.invalidateQueries({ queryKey: KEY_PAYMENTS });
+    },
+  });
+}
+
+export function useUpdatePaymentRecord() {
+  const qc = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, payload }: { id: string; payload: PaymentRecordUpdateInput }) =>
+      updatePaymentRecord(id, payload),
     onSuccess: async () => {
       await qc.invalidateQueries({ queryKey: KEY_PAYMENTS });
     },

@@ -1,11 +1,15 @@
 'use client';
 
-import {useMemo} from 'react';
+import {useMemo, useState} from 'react';
 import {useRouter} from 'next/navigation';
 import Loader from '@/components/shared/Loader';
 import TablePanel from '@/components/ui/table-panel/TablePanel';
 import type {ColumnDef} from '@/components/ui/table-panel/types';
-import {usePaymentRecords} from '@/features/dashboard/membership-payments/queries';
+import {
+   usePaymentRecords,
+   useUpdatePaymentRecord,
+} from '@/features/dashboard/membership-payments/queries';
+import PaymentRecordEditModal from '@/features/dashboard/membership-payments/PaymentRecordEditModal';
 import type {PaymentRecordRow} from '@/features/dashboard/membership-payments/types';
 import {useStationDetails} from './queries';
 
@@ -97,6 +101,7 @@ type PaymentRow = {
    amount: string;
    method: string;
    status: string;
+   record: PaymentRecordRow;
 };
 
 type Props = {
@@ -107,6 +112,10 @@ export default function StationProfileSection({stationId}: Props) {
    const router = useRouter();
    const q = useStationDetails(stationId);
    const paymentsQ = usePaymentRecords();
+   const updateM = useUpdatePaymentRecord();
+   const [editOpen, setEditOpen] = useState(false);
+   const [editRow, setEditRow] = useState<PaymentRecordRow | null>(null);
+   const [editError, setEditError] = useState('');
 
    const paymentColumns = useMemo<ColumnDef<PaymentRow>[]>(() => {
       return [
@@ -142,6 +151,27 @@ export default function StationProfileSection({stationId}: Props) {
             csvValue: row => row.status,
             cell: row => <span className='text-[#133374]'>{row.status}</span>,
          },
+         {
+            id: 'edit',
+            header: 'Edit',
+            sortable: false,
+            align: 'center',
+            headerClassName: 'w-[120px]',
+            csvHeader: 'Edit',
+            csvValue: () => '',
+            cell: row => (
+               <button
+                  type='button'
+                  onClick={() => {
+                     setEditError('');
+                     setEditRow(row.record);
+                     setEditOpen(true);
+                  }}
+                  className='h-7 rounded-sm bg-[#133374] px-4 text-[11px] font-semibold text-white shadow-sm'>
+                  Edit
+               </button>
+            ),
+         },
       ];
    }, []);
 
@@ -162,6 +192,7 @@ export default function StationProfileSection({stationId}: Props) {
             amount: money(record.amountPaid),
             method: record.bankName || '—',
             status: record.note || 'Paid',
+            record,
          }));
    }, [paymentsQ.data, stationId]);
 
@@ -273,6 +304,47 @@ export default function StationProfileSection({stationId}: Props) {
                </div>
             ) : null}
          </div>
+         <PaymentRecordEditModal
+            open={editOpen}
+            record={editRow}
+            saving={updateM.isPending}
+            error={editError}
+            onClose={() => {
+               setEditOpen(false);
+               setEditRow(null);
+               setEditError('');
+            }}
+            onSubmit={async (payload) => {
+               if (!editRow) return;
+               setEditError('');
+               if (!payload.bankName?.trim()) {
+                  setEditError('Bank name is required');
+                  return;
+               }
+               if (
+                  !Number.isFinite(payload.amountPaid) ||
+                  (payload.amountPaid ?? 0) <= 0
+               ) {
+                  setEditError('Amount paid must be a valid number');
+                  return;
+               }
+
+               try {
+                  await updateM.mutateAsync({
+                     id: editRow.id,
+                     payload: {
+                        ...payload,
+                        bankName: payload.bankName.trim(),
+                        note: payload.note?.trim() ?? '',
+                     },
+                  });
+                  setEditOpen(false);
+                  setEditRow(null);
+               } catch (err: any) {
+                  setEditError(err?.message ?? 'Failed to update payment record');
+               }
+            }}
+         />
       </div>
    );
 }
