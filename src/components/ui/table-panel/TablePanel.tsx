@@ -103,7 +103,7 @@ export default function TablePanel<T>({
    searchText,
    exportFileName = 'export.csv',
    exportLabel = 'Export to Excel',
-   totalLabel,
+   totalLabel ,
    className,
    showTopBar = true,
    showExport = true,

@@ -423,8 +423,10 @@ export default function PaymentRecordSection() {
           <div className="text-sm text-red-600">Failed to load payment records.</div>
         ) : (
           <TablePanel<PaymentRecordRow>
+           
             rows={filteredRecords}
             columns={columns}
+            showTopBar={false}
             getRowKey={(r) => r.id}
             searchText={(r) => `${r.stationName} ${r.bankName} ${r.amountPaid}`}
             showExport={false}

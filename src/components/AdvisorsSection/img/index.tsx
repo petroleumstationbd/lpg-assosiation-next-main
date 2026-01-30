@@ -1179,7 +1179,7 @@ export default function AdvisorsSection() {
    return (
       <section className='relative overflow-hidden bg-[#F4F9F4] py-14'>
          {/* thin green line at top (like your site sections) */}
-         <div className='absolute inset-x-0 top-0 h-[3px] bg-[#6CC12A]' />
+         {/* <div className='absolute inset-x-0 top-0 h-[3px] bg-[#6CC12A]' />
 
          <MeshCorners />
 
@@ -1188,10 +1188,6 @@ export default function AdvisorsSection() {
                <h2 className='text-[30px] font-semibold tracking-tight text-[#133374] md:text-[36px]'>
                   Our Advisors
                </h2>
-               {/* <p className='mt-2 text-[11px] leading-relaxed text-[#8A9CB0] md:text-[12px]'>
-                  Lorem ipsum dolor sit amet consectetur. Vitae ornare cursus
-                  justo libero venenatis donec.
-               </p> */}
             </div>
 
             <div className='mt-10 space-y-14'>
@@ -1199,7 +1195,7 @@ export default function AdvisorsSection() {
                   <AdvisorRow key={a.id} advisor={a} reverse={idx % 2 === 1} />
                ))}
             </div>
-         </div>
+         </div> */}
       </section>
    );
 }
