@@ -9,6 +9,7 @@ export type AlbumCardData = {
    image: StaticImageData | string;
    videos?: boolean;
    videoUrl?: string | null;
+   mediaType?: 'video' | 'image';
 };
 
 type AlbumCardProps = {
@@ -19,19 +20,31 @@ type AlbumCardProps = {
 };
 
 export default function AlbumCard({album, videos, onPlay, href}: AlbumCardProps) {
-   const canPlay = Boolean(videos && onPlay && album.videoUrl);
+   const showVideo = album.videos ?? videos;
+   const canPlay = Boolean(showVideo && onPlay && album.videoUrl);
+   const isVideoThumbnail = album.mediaType === 'video' && album.videoUrl;
    const content = (
       <article className='relative flex h-full flex-col overflow-hidden rounded-[18px] bg-white shadow-[0_18px_40px_rgba(0,0,0,0.12)]'>
          {/* top image */}
          <div className='relative h-[185px] w-full md:h-[200px]'>
-            <Image
-               src={album.image}
-               alt={album.title}
-               fill
-               className='object-cover transition-transform duration-300 group-hover:scale-105'
-            />
+            {isVideoThumbnail ? (
+               <video
+                  className='h-full w-full object-cover'
+                  src={album.videoUrl ?? undefined}
+                  muted
+                  playsInline
+                  preload='metadata'
+               />
+            ) : (
+               <Image
+                  src={album.image}
+                  alt={album.title}
+                  fill
+                  className='object-cover transition-transform duration-300 group-hover:scale-105'
+               />
+            )}
 
-            {videos ? (
+            {showVideo ? (
                <div className='absolute z-10 flex h-full w-full items-center justify-center'>
                   <button
                      type='button'
