@@ -1,6 +1,6 @@
 'use client';
 
-import {useEffect, useMemo, useState} from 'react';
+import {useEffect, useMemo, useState, type ChangeEvent} from 'react';
 import {useQuery} from '@tanstack/react-query';
 import Loader from '@/components/shared/Loader';
 import {normalizeList} from '@/lib/http/normalize';
@@ -362,8 +362,9 @@ export default function StationForm({
       district: false,
       upazila: false,
    });
-console.log(form)
    const isView = mode === 'view';
+   const maxFileSizeBytes = 15 * 1024 * 1024;
+   const maxFileSizeLabel = '15MB';
 
    const stationDetailsQ = useQuery({
       queryKey: ['stations', 'details', stationId],
@@ -614,10 +615,27 @@ console.log(form)
    >(null);
    const [loadingExisting, setLoadingExisting] = useState(false);
 
+   const handleFileChange =
+      (field: keyof Pick<
+         FormState,
+         'nid' | 'tin' | 'explosive_license' | 'trade_license' | 'membership_form'
+      >, label: string) =>
+      (event: ChangeEvent<HTMLInputElement>) => {
+         const file = event.target.files?.[0] ?? null;
+         if (file && file.size > maxFileSizeBytes) {
+            setValidationError(
+               `${label} file size must be ${maxFileSizeLabel} or smaller.`
+            );
+            event.target.value = '';
+            setForm(prev => ({...prev, [field]: null}));
+            return;
+         }
+         setValidationError(null);
+         setForm(prev => ({...prev, [field]: file}));
+      };
+
    const handleSubmit = () => {
       setValidationError(null);
-
-      const maxFileSizeBytes = 20 * 1024 * 1024;
 
       if (
          !form.station_owner_id ||
@@ -716,12 +734,12 @@ console.log(form)
       }
 
       if (form.nid && form.nid.size > maxFileSizeBytes) {
-         setValidationError('NID file size must be 20MB or smaller.');
+         setValidationError(`NID file size must be ${maxFileSizeLabel} or smaller.`);
          return;
       }
 
       if (form.tin && form.tin.size > maxFileSizeBytes) {
-         setValidationError('TIN file size must be 20MB or smaller.');
+         setValidationError(`TIN file size must be ${maxFileSizeLabel} or smaller.`);
          return;
       }
 
@@ -730,13 +748,15 @@ console.log(form)
          form.explosive_license.size > maxFileSizeBytes
       ) {
          setValidationError(
-            'Explosive license file size must be 20MB or smaller.'
+            `Explosive license file size must be ${maxFileSizeLabel} or smaller.`
          );
          return;
       }
 
       if (form.trade_license && form.trade_license.size > maxFileSizeBytes) {
-         setValidationError('Trade license file size must be 20MB or smaller.');
+         setValidationError(
+            `Trade license file size must be ${maxFileSizeLabel} or smaller.`
+         );
          return;
       }
 
@@ -745,7 +765,7 @@ console.log(form)
          form.membership_form.size > maxFileSizeBytes
       ) {
          setValidationError(
-            'Membership form file size must be 20MB or smaller.'
+            `Membership form file size must be ${maxFileSizeLabel} or smaller.`
          );
          return;
       }
@@ -795,7 +815,6 @@ console.log(form)
          membership_form: form.membership_form,
       };
 
-      console.log(payload);
       onSubmit(payload);
    };
 
@@ -808,6 +827,24 @@ console.log(form)
 
    return (
       <div className='space-y-4'>
+         {saving ? (
+            <div className='fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 px-4'>
+               <div className='w-full max-w-sm rounded-[12px] bg-white p-6 text-center shadow-xl'>
+                  <Loader
+                     size='lg'
+                     label={
+                        mode === 'create'
+                           ? 'Creating station and uploading files...'
+                           : 'Updating station and uploading files...'
+                     }
+                     className='flex-col gap-4 text-[13px] font-medium text-[#2B3A4A]'
+                  />
+                  <p className='mt-3 text-[11px] text-[#6F8093]'>
+                     Please wait while we securely process your submission.
+                  </p>
+               </div>
+            </div>
+         ) : null}
          {loadingDetails ? (
             <Loader label='Loading station...' />
          ) : stationDetailsQ.isError ? (
@@ -1326,6 +1363,14 @@ console.log(form)
                      </>
                   ) : null}
 
+                  <div className='md:col-span-2'>
+                     <p className='text-[11px] font-medium text-[#6F8093]'>
+                        Upload documents in PDF, JPG, or PNG format. Maximum
+                        file size is {maxFileSizeLabel}; larger files will be
+                        rejected.
+                     </p>
+                  </div>
+
                   <div>
                      <label className='mb-1 block text-[11px] font-semibold text-[#173A7A]'>
                         NID
@@ -1351,12 +1396,7 @@ console.log(form)
                            type='file'
                            disabled={isView}
                            accept='.pdf,.jpg,.jpeg,.png'
-                           onChange={e =>
-                              setForm(prev => ({
-                                 ...prev,
-                                 nid: e.target.files?.[0] ?? null,
-                              }))
-                           }
+                           onChange={handleFileChange('nid', 'NID')}
                            className='absolute inset-0 cursor-pointer opacity-0'
                         />
                      </div>
@@ -1387,12 +1427,7 @@ console.log(form)
                            type='file'
                            disabled={isView}
                            accept='.pdf,.jpg,.jpeg,.png'
-                           onChange={e =>
-                              setForm(prev => ({
-                                 ...prev,
-                                 tin: e.target.files?.[0] ?? null,
-                              }))
-                           }
+                           onChange={handleFileChange('tin', 'TIN')}
                            className='absolute inset-0 cursor-pointer opacity-0'
                         />
                      </div>
@@ -1424,12 +1459,10 @@ console.log(form)
                            type='file'
                            disabled={isView}
                            accept='.pdf,.jpg,.jpeg,.png'
-                           onChange={e =>
-                              setForm(prev => ({
-                                 ...prev,
-                                 explosive_license: e.target.files?.[0] ?? null,
-                              }))
-                           }
+                           onChange={handleFileChange(
+                              'explosive_license',
+                              'Explosive license'
+                           )}
                            className='absolute inset-0 cursor-pointer opacity-0'
                         />
                      </div>
@@ -1460,12 +1493,10 @@ console.log(form)
                            type='file'
                            disabled={isView}
                            accept='.pdf,.jpg,.jpeg,.png'
-                           onChange={e =>
-                              setForm(prev => ({
-                                 ...prev,
-                                 trade_license: e.target.files?.[0] ?? null,
-                              }))
-                           }
+                           onChange={handleFileChange(
+                              'trade_license',
+                              'Trade license'
+                           )}
                            className='absolute inset-0 cursor-pointer opacity-0'
                         />
                      </div>
@@ -1497,12 +1528,10 @@ console.log(form)
                            type='file'
                            disabled={isView}
                            accept='.pdf,.jpg,.jpeg,.png'
-                           onChange={e =>
-                              setForm(prev => ({
-                                 ...prev,
-                                 membership_form: e.target.files?.[0] ?? null,
-                              }))
-                           }
+                           onChange={handleFileChange(
+                              'membership_form',
+                              'Membership form'
+                           )}
                            className='absolute inset-0 cursor-pointer opacity-0'
                         />
                      </div>
