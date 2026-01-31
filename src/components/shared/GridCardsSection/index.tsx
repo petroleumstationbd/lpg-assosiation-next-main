@@ -6,7 +6,7 @@ import AlbumCard, {type AlbumCardData} from './Card';
 type GridCardSectionProps = {
    sectionCardData: AlbumCardData[];
    columnPerRow?: string;
-   title: string;
+   title?: string;
    description?: string;
    videos?: boolean;
    onPlay?: (album: AlbumCardData) => void;
@@ -28,7 +28,7 @@ export default function GridCardSection({
       <section className='relative bg-[linear-gradient(180deg,#F6FCF7_0%,#EDF8F1_100%)] pb-16 pt-10 md:pb-24 md:pt-14'>
          <div className='lpg-container relative space-y-8 md:space-y-10'>
             <div className='text-center'>
-               <SectionHeading title={title} />
+               {title && <SectionHeading title={title} />}
                {description ? (
                   <p className='mt-2 text-[13px] text-[#5A6B7B] md:text-[14px]'>
                      {description}

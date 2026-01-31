@@ -36,10 +36,10 @@ const MAIN_NAV: NavItem[] = [
       href: '#',
       children: [
          {label: 'PHOTO GALLERY', href: '/gallery/photo-gallery'},
-          {label: 'PRINT MEDIA GALLERY', href: '/gallery/print-media-gallery'},
+          {label: 'PRINT MEDIA GALLERY', href: '/gallery/journals'},
          {label: 'MEDIA COVERAGE', href: '/gallery/media-coverage'},
          {label: 'VIDEO GALLERY', href: '/gallery/video-gallery'},
-         {label: 'JOURNALS', href: '/gallery/journals'},
+         // {label: 'JOURNALS', href: '/gallery/journals'},
       ],
    },
    {

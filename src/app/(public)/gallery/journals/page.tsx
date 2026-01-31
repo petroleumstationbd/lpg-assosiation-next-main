@@ -6,7 +6,7 @@ import heroBg from '@assets/newsfeed-img/banner.png';
 export default function JournalsPage() {
   return (
     <div>
-      <PageHero title="Journals" backgroundImage={heroBg} height="compact" />
+      <PageHero title="Print Media Gallery" backgroundImage={heroBg} height="compact" />
       <JournalsSection />
       <Footer />
     </div>

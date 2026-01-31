@@ -133,8 +133,8 @@ const PhotoGallery = () => {
          <GridCardSection
             columnPerRow='grid gap-5 sm:grid-cols-2 lg:grid-cols-3'
             sectionCardData={sectionCardData}
-            title='Photo Gallery'
-            description="We are Largest one and only LPG Auto Gas Station & Conversion Workshop Owner's Association in Bangladesh. Welcome to our Gallery"
+            // title='Photo Gallery'
+            // description="We are Largest one and only LPG Auto Gas Station & Conversion Workshop Owner's Association in Bangladesh. Welcome to our Gallery"
             getHref={album => `/gallery/photo-gallery/${album.id}`}
          />
 

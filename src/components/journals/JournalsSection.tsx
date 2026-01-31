@@ -153,8 +153,8 @@ export default function JournalsSection() {
     <>
       <GridCardSection
         sectionCardData={cards}
-        title="Journals"
-        description={DEFAULT_DESCRIPTION}
+        // title="Journals"
+        // description={DEFAULT_DESCRIPTION}
         onPlay={(album) => {
           const match = journals.find((item) => item.id === album.id);
           if (!match) return;

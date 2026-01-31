@@ -84,7 +84,7 @@ export const DASH_NAV: NavItem[] = [
          {label: 'Banners', href: '/multimedia/banners'},
          {label: 'Photo Gallery', href: '/multimedia/photo-gallery'},
          {label: 'Video Gallery', href: '/multimedia/video-gallery'},
-         {label: 'Journals', href: '/multimedia/journals'},
+         {label: 'Print Media Gallery', href: '/multimedia/journals'},
          {label: 'POPUP Ads', href: '/multimedia/popup-ads'},
       ],
    },

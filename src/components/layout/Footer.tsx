@@ -5,7 +5,13 @@ import Link from 'next/link';
 import {Logo} from './../ui/Logo';
 import footerbggridwrap from './../../assets/wrappers/footer-bg-wrapper.png';
 import paywithimg from './../../assets/paywith.png';
-import {Facebook, Youtube} from 'lucide-react';
+import {
+   FaFacebookF,
+   FaYoutube,
+   FaSkype,
+   FaLinkedinIn,
+   FaTwitter,
+} from 'react-icons/fa';
 
 const usefulLinks = [
    {label: 'Home', href: '/'},
@@ -35,13 +41,18 @@ const socialLinks = [
    {
       label: 'Facebook',
       href: 'https://www.facebook.com/bdpetroleumstation/',
-      Icon: Facebook,
+      Icon: FaFacebookF,
    },
    {
       label: 'YouTube',
       href: 'https://www.youtube.com/@PetroleumStationBD',
-      Icon: Youtube,
+      Icon: FaYoutube,
    },
+
+   // no-link icons (as you requested)
+   {label: 'Skype', Icon: FaSkype},
+   {label: 'LinkedIn', Icon: FaLinkedinIn},
+   {label: 'Twitter', Icon: FaTwitter},
 ];
 
 export default function Footer() {
@@ -61,7 +72,7 @@ export default function Footer() {
             <div className='flex flex-col gap-10 lg:flex-row lg:gap-12'>
                {/* left: logo + org info */}
                <div className='lg:w-[38%]'>
-                  <div className='flex items-start flex-col gap-2'>
+                  <div className='flex items-center flex-col gap-2'>
                      <Link
                         href='/'
                         className='flex h-16 w-16 items-center justify-center rounded-full bg-white shadow-[0_10px_30px_rgba(0,0,0,0.35)]'>
@@ -84,7 +95,7 @@ export default function Footer() {
 
                   <div className='mt-4 space-y-0 text-[12px] text-white/75'>
                      <div>
-                        <span className='font-semibold'>Address:</span> 
+                        <span className='font-semibold'>Address:</span>
                         Gulfesha Plaza, Left-10, Suite No-10/O, 69 Outer
                         Circular Rd, MoghBazar Mor, Dhaka 1217
                      </div>
@@ -166,17 +177,27 @@ export default function Footer() {
                      </span>
                   </div> */}
                   <div className='mt-5 flex items-center gap-3 text-[11px] text-white/75'>
-                     {socialLinks.map(({href, label, Icon}) => (
-                        <a
-                           key={href}
-                           href={href}
-                           target='_blank'
-                           rel='noopener noreferrer'
-                           aria-label={label}
-                           className='inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/10 transition-colors hover:bg-white/15'>
-                           <Icon className='h-4 w-4 text-white/90' />
-                        </a>
-                     ))}
+                     {socialLinks.map(({href, label, Icon}) =>
+                        href ? (
+                           <a
+                              key={label}
+                              href={href}
+                              target='_blank'
+                              rel='noopener noreferrer'
+                              aria-label={label}
+                              className='inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/10 transition-colors hover:bg-white/15'>
+                              <Icon className='h-4 w-4 text-white/90' />
+                           </a>
+                        ) : (
+                           <span
+                              key={label}
+                              aria-label={label}
+                              title={label}
+                              className='inline-flex h-8 w-8 items-center justify-center rounded-full bg-white/10 opacity-90'>
+                              <Icon className='h-4 w-4 text-white/90' />
+                           </span>
+                        ),
+                     )}
                   </div>
                </div>
             </div>

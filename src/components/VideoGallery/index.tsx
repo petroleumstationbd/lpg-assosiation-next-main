@@ -166,9 +166,9 @@ const slides: CardSlide[] = list.map(video => {
          <GridCardSection
             columnPerRow='grid gap-5 sm:grid-cols-2 lg:grid-cols-3'
             sectionCardData={sectionCardData}
-            title='Video Gallery'
+            // title='Video Gallery'
             videos={true}
-            description={DEFAULT_DESCRIPTION}
+            // description={DEFAULT_DESCRIPTION}
             onPlay={(album) => {
                if (!album.videoUrl) return;
                const embedUrl = toYouTubeEmbedUrl(album.videoUrl);

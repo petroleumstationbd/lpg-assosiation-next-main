@@ -348,7 +348,7 @@ export default function JournalsSection() {
   return (
     <section className="min-w-0">
       <h2 className="text-center text-[14px] font-semibold text-[#133374]">
-        Overview of Journals
+        Overview of Print Media Gallery
       </h2>
 
       <div className="mt-4 flex items-center justify-end">
@@ -358,7 +358,7 @@ export default function JournalsSection() {
           className="inline-flex h-8 items-center gap-2 rounded-[4px] bg-[#009970] px-4 text-[11px] font-semibold text-white shadow-sm hover:brightness-110 active:brightness-95"
         >
           <Plus size={14} />
-          Add Journal
+          Add Media
         </button>
       </div>
 
@@ -373,7 +373,7 @@ export default function JournalsSection() {
           showExport={false}
           totalLabel={(n) => (
             <div className="text-[14px] font-semibold text-[#2D8A2D]">
-              Total Journals : <span className="text-[#133374]">{n}</span>
+              Total Media : <span className="text-[#133374]">{n}</span>
             </div>
           )}
           cellWrapClassName="min-h-[58px] py-2 flex items-center"
