@@ -70,7 +70,7 @@ Syed Sajjadul Karim Kabul is widely respected for his commitment to improving th
       photo: leaderImg1,
    },
    {
-      name: 'Mir Ahasan Uddin Farvez',
+      name: 'Mir Ahasan Uddin Parvez',
       title: 'Member SECRETARY',
       bio: `Bangladesh Petroleum Dealer's, Distributor's, Agent's & Petrol Pump Owner's Association
 The role of the energy sector in keeping Bangladesh's economic progress and development momentum going is immense. Our members are working tirelessly in order to provide uninterrupted supply of fuel and delivering it to people's doorsteps. However, our unity aims to resolve the challenges that dealers and distributors face at various times while providing this service and to coordinate all relevant departments.
